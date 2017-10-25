@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#303f9f</color>
+    <color name="colorPrimaryDark">#1a237e</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="custom_progress_background">#afaaaaaa</color>
+
+    <color name="custom_progress_todo_progress">#ffffee77</color>
+    <color name="custom_progress_todo_progress_half">#7fffee77</color>
+
+    <color name="custom_progress_semi_progress">#43a047</color>
+    <color name="custom_progress_semi_progress_half">#9f8c9eff</color>
+
+    <!--<color name="custom_progress_semi_progress">#ffaaaaaa</color>-->
+    <!--<color name="custom_progress_semi_progress_half">#ffffee77</color>-->
+
+    <color name="colorRemark">#43a047</color>
+    <color name="colorTodo">#536dfe</color>
+
+</resources>
