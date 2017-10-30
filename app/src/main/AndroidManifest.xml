@@ -20,9 +20,6 @@
         <activity android:name="com.pepg.todolist.DetailActivity" />
         <activity android:name="com.pepg.todolist.UpdateActivity" />
         <activity android:name="com.pepg.todolist.AddguideActivity" />
-        <activity
-            android:name="com.pepg.todolist.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
     </application>
 
 </manifest>

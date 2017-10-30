@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvInfo = (TextView) findViewById(R.id.mainA_tv_info);
 
         // TODO: BUILD INFO SET
-        tvInfo.setText("build 0.171025.1026");
+        tvInfo.setText("build 0.171025.1604");
 
         btnList.setOnClickListener(this);
         btnSetting.setOnClickListener(this);

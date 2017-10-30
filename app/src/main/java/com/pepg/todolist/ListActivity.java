@@ -69,8 +69,8 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent;
         switch (v.getId()) {
             case (R.id.listA_btn_setting):
-                intent = new Intent(ListActivity.this, SettingsActivity.class);
-                startActivity(intent);
+//                intent = new Intent(ListActivity.this, SettingsFragment.class);
+//                startActivity(intent);
                 break;
             case (R.id.listA_btn_category):
                 DialogOption();
