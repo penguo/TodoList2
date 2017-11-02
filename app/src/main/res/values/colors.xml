@@ -18,4 +18,6 @@
     <color name="colorRemark">#43a047</color>
     <color name="colorTodo">#536dfe</color>
 
+    <color name="widgetTheme">#48e1ff</color>
+
 </resources>

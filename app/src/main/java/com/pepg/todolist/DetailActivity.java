@@ -84,11 +84,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
     public void updateAch() {
         pb.setProgress(dbManager.DATA_ACH);
-        if(dbManager.DATA_ACH == 100){
-            pb.setProgressColor(R.color.colorRemark);
-        }else{
-            pb.setProgressColor(R.color.custom_progress_todo_progress);
-        }
+//        if(dbManager.DATA_ACH == 100){
+//            pb.setProgressColor(R.color.colorRemark);
+//        }else{
+//            pb.setProgressColor(R.color.custom_progress_todo_progress);
+//        }
     }
 
     private void setRcvSemi() {

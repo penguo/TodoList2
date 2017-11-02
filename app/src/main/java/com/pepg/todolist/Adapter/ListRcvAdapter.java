@@ -72,11 +72,11 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
         holder.tvDate.setText(dbManager.DATA_DATE);
         holder.tvCategory.setText(dbManager.DATA_CATEGORY);
         holder.pb.setProgress(dbManager.DATA_ACH);
-        if(dbManager.DATA_ACH == 100){
-            holder.pb.setProgressColor(R.color.colorRemark);
-        }else{
-            holder.pb.setProgressColor(R.color.custom_progress_todo_progress);
-        }
+//        if(dbManager.DATA_ACH == 100){
+//            holder.pb.setProgressColor(R.color.colorRemark);
+//        }else{
+//            holder.pb.setProgressColor(R.color.custom_progress_todo_progress);
+//        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

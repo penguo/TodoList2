@@ -38,8 +38,11 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:layout_weight="1"
-            android:background="@drawable/xml_border"
-            android:text="ENTER" />
+            android:background="@null"
+            android:gravity="bottom|center_horizontal"
+            android:paddingBottom="20dp"
+            android:text="화면을 클릭하면 이동합니다."
+            android:textSize="24sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -59,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="add today's" />
+            android:text="test_button" />
 
     </LinearLayout>
 </LinearLayout>
