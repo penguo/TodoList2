@@ -103,11 +103,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         finish();
     }
 
-    @Override
-    public void onContentChanged() {
-        super.onContentChanged();
-    }
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Manager.RC_DETAIL_TO_UPDATE) {

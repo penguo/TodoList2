@@ -30,6 +30,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView rcvDialog;
     AlertDialog.Builder builder;
     Toolbar toolbar;
+    AlertDialog dialog;
 
     final dbManager dbManager = new dbManager(this, "todolist2.db", null, MainActivity.DBVERSION);
 
@@ -52,6 +53,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
 //        btnSetting.setOnClickListener(this);
         btnCategory.setOnClickListener(this);
         fabAdd.setOnClickListener(this);
+        toolbar.setOnClickListener(this);
         setToolbar();
     }
 
@@ -85,6 +87,9 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
 //                intent.putExtra("_id", 0);
 //                startActivityForResult(intent, Manager.RC_LIST_TO_UPDATE);
 //                break;
+            case(R.id.listA_toolbar_sort):
+                DialogOption();
+                break;
         }
     }
 
@@ -126,7 +131,6 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         rcvDialog.setLayoutManager(new LinearLayoutManager(this));
         SimpleRcvAdapter simpleRcvAdapter = new SimpleRcvAdapter(dbManager, this, "category", "forSort");
         rcvDialog.setAdapter(simpleRcvAdapter);
-        AlertDialog dialog;
 
         builder.setView(content);
 
@@ -136,7 +140,9 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void refresh(){
-        finish();
-        startActivity(getIntent());
+        listRcvAdapter = new ListRcvAdapter(dbManager, this);
+        rcvTodo.setAdapter(listRcvAdapter);
+        setToolbar();
+        dialog.dismiss();
     }
 }

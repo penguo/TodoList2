@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
     Calendar cal;
     SimpleDateFormat CurDateFormat;
     CharSequence[] itemsCS, itemsDetailCS;
+    int i;
 
     public SimpleRcvAdapter(dbManager dbManager, Activity activity, String type) {
         this.dbManager = dbManager;
@@ -62,11 +64,13 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvDetail;
+        LinearLayout layout;
 
         public ViewHolder(View itemView) {
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.simple_tv_title);
             tvDetail = (TextView) itemView.findViewById(R.id.simple_tv_detail);
+            layout = (LinearLayout) itemView.findViewById(R.id.simple_layout);
         }
     }
 
@@ -83,28 +87,48 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
         if (type.equals("date")) {
             holder.tvDetail.setVisibility(View.VISIBLE);
             holder.tvDetail.setText(itemsDetailCS[position].toString());
+            if (dbManager.DATA_temporaryInteger == position) {
+                holder.layout.setBackgroundResource(R.drawable.xml_border_line_selected);
+            } else {
+                holder.layout.setBackgroundResource(R.drawable.xml_border_line);
+            }
+            if (position == itemsCS.length - 1) {
+                if (dbManager.DATA_temporaryInteger == position) {
+                    holder.tvDetail.setText(dbManager.DATA_DATE);
+                }else{
+                    holder.tvDetail.setVisibility(View.GONE);
+                }
+            }
         } else {
             holder.tvDetail.setVisibility(View.GONE);
+            if (dbManager.DATA_CATEGORY.equals(itemsCS[position].toString())) {
+                holder.layout.setBackgroundResource(R.drawable.xml_border_line_selected);
+            } else {
+                holder.layout.setBackgroundResource(R.drawable.xml_border_line);
+            }
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch(type){
-                    case("date"):
+                switch (type) {
+                    case ("date"):
                         if (!itemsCS[position].toString().equals(activity.getString(R.string.new_date))) {
                             dbManager.DATA_DATE = itemsDetailCS[position].toString();
                             ((AddguideActivity) activity).setData(3);
+                            dbManager.DATA_temporaryInteger = position;
+                            notifyDataSetChanged();
                         } else {
                             SimpleDateFormat CurYearFormat = new SimpleDateFormat("yyyy");
                             SimpleDateFormat CurMonthFormat = new SimpleDateFormat("MM");
                             SimpleDateFormat CurDayFormat = new SimpleDateFormat("dd");
                             DatePickerDialog dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(CurYearFormat.format(date).toString()), Integer.parseInt(CurMonthFormat.format(date).toString()) - 1, Integer.parseInt(CurDayFormat.format(date).toString()));
+                            i = position;
                             dpDialog.show();
                         }
                         break;
-                    case("category"):
-                        switch(option){
-                            case("forSort"):
+                    case ("category"):
+                        switch (option) {
+                            case ("forSort"):
                                 if (!itemsCS[position].toString().equals(activity.getString(R.string.all))) {
                                     dbManager.DATA_SORTTYPE = "CATEGORY";
                                     dbManager.DATA_SORTTYPEEQUAL = itemsCS[position].toString();
@@ -112,9 +136,9 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                                     dbManager.DATA_SORTTYPE = "DEFAULT";
                                     dbManager.DATA_SORTTYPEEQUAL = "";
                                 }
-                                ((ListActivity)activity).refresh();
+                                ((ListActivity) activity).refresh();
                                 break;
-                            case("forEdit"): //TODO
+                            case ("forEdit"): //TODO
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(activity);
                                 dialog.setMessage("어떤 행동을 하시겠습니까?");
                                 dialog.setCancelable(true);
@@ -141,6 +165,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                                 }
                                 break;
                         }
+                        notifyDataSetChanged();
                 }
             }
         });
@@ -148,8 +173,8 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
 
     private void dataSet() {
         items = dbManager.getSettingList(type); // date, category 일 때 items에 추가.
-        switch(type){
-            case("date"):
+        switch (type) {
+            case ("date"):
                 items.add(activity.getString(R.string.new_date));
                 long now = System.currentTimeMillis();
                 date = new Date(now);
@@ -181,11 +206,11 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                 itemsDetail.add("");
                 itemsDetailCS = itemsDetail.toArray(new String[itemsDetail.size()]);
                 break;
-            case("category"):
+            case ("category"):
                 items.add(activity.getString(R.string.new_category));
                 break;
         }
-        if(option.equals("forSort")){
+        if (option.equals("forSort")) {
             items.add(0, activity.getString(R.string.all));
         }
         itemsCS = items.toArray(new String[items.size()]);
@@ -206,6 +231,8 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
             }
             sb.append(dayOfMonth + ".");
             dbManager.DATA_DATE = sb.toString();
+            dbManager.DATA_temporaryInteger = i;
+            notifyDataSetChanged();
             ((AddguideActivity) activity).setData(3);
         }
     };

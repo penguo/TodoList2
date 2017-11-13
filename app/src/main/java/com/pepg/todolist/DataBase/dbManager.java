@@ -29,6 +29,7 @@ public class dbManager extends SQLiteOpenHelper {
     public static int DATA_semi_id, DATA_semi_position, DATA_semi_parentId, DATA_semi_WEIGHT, DATA_semi_ACH, DATA_semi_ACHMAX;
     public static String DATA_semi_TITLE, DATA_semi_DATE;
     public static String DATA_SORTTYPE = "DEFAULT", DATA_SORTTYPEEQUAL = "";
+    public static int DATA_temporaryInteger;
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -270,6 +271,7 @@ public class dbManager extends SQLiteOpenHelper {
         DATA_DATE = "";
         DATA_semi_TITLE = "";
         DATA_semi_DATE = "";
+        DATA_temporaryInteger = -1;
     }
 
     public int getSize() {

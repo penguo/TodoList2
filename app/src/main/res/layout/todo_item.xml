@@ -3,17 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="95dp"
-    android:layout_marginLeft="3dp"
-    android:layout_marginRight="3dp"
-    android:layout_marginTop="3dp">
+    android:layout_height="95dp">
 
 
     <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
         android:id="@+id/todo_pb"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="2dp"
+        android:padding="5dp"
         app:rcBackgroundColor="@color/custom_progress_background"
         app:rcBackgroundPadding="4dp"
         app:rcMax="100"
@@ -23,26 +20,28 @@
         app:rcSecondaryProgress="0"
         app:rcSecondaryProgressColor="@color/custom_progress_todo_progress_half" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="3dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp">
 
         <ImageView
             android:id="@+id/todo_iv_logo"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_margin="5dp"
+            android:layout_marginLeft="16dp"
             app:srcCompat="@mipmap/ic_launcher" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
+            android:layout_marginLeft="72dp"
+            android:layout_marginRight="16dp"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
@@ -85,6 +84,6 @@
             </RelativeLayout>
 
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

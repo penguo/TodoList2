@@ -22,12 +22,12 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <ImageButton
+            <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/listA_btn_category"
                 style="@style/icon"
                 app:srcCompat="@drawable/ic_sort" />
 
-            <TextView
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/listA_tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -36,7 +36,7 @@
                 android:text="TodoList"
                 android:textSize="32sp" />
 
-            <ImageButton
+            <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/listA_btn_setting"
                 style="@style/icon"
                 app:srcCompat="@drawable/ic_setting" />

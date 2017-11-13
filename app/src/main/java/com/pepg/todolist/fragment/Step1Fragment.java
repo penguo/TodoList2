@@ -34,8 +34,8 @@ public class Step1Fragment extends Fragment{
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_step1, container, false);
 
         dbM = new dbManager(this.getContext(), "todolist2.db", null, MainActivity.DBVERSION);
-        dbM.DATA_TITLE = "";
         etTitle = (EditText) layout.findViewById(R.id.fs1_et);
+        etTitle.setText(dbM.DATA_TITLE);
         etTitle.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         etTitle.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
