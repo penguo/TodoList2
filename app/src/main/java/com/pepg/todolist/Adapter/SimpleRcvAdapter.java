@@ -176,7 +176,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                 items.add(activity.getString(R.string.new_date));
                 long now = System.currentTimeMillis();
                 date = new Date(now);
-                CurDateFormat = new SimpleDateFormat("yyyy. MM. dd.");
+                CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 itemsDetail = new ArrayList<>();
                 for (int i = 0; i < 5; i++) {
                     cal = Calendar.getInstance();
@@ -198,7 +198,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                             break;
                     }
                     if (i != 4) {
-                        itemsDetail.add("~ " + CurDateFormat.format(cal.getTime()));
+                        itemsDetail.add(CurDateFormat.format(cal.getTime())+"");
                     }
                 }
                 itemsDetail.add("");
@@ -219,16 +219,16 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             StringBuffer sb = new StringBuffer();
-            sb.append("~ " + year + ". ");
+            sb.append(year + "-");
             monthOfYear++;
             if (monthOfYear < 10) {
                 sb.append("0");
             }
-            sb.append(monthOfYear + ". ");
+            sb.append(monthOfYear + "-");
             if (dayOfMonth < 10) {
                 sb.append("0");
             }
-            sb.append(dayOfMonth + ".");
+            sb.append(dayOfMonth + "");
             dbManager.DATA_DATE = sb.toString();
             selectedPosition = itemsCS.length - 1;
             notifyDataSetChanged();

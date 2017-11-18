@@ -1,8 +1,10 @@
 package com.pepg.todolist;
 
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -16,10 +18,10 @@ import com.pepg.todolist.DataBase.dbManager;
 
 import com.pepg.todolist.R;
 
-public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class DetailActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     TextView tvTitle, tvCategory, tvDate;
-    ImageButton btnEdit, btnReturn, btnRefresh;
+    ImageButton btnEdit, btnReturn;
     int id;
     final dbManager dbManager = new dbManager(this, "todolist2.db", null, MainActivity.DBVERSION);
     RecyclerView rcvSemi;
@@ -27,6 +29,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     View includePB;
     RoundCornerProgressBar pb;
     UpdateSemi us;
+    SwipeRefreshLayout swipe;
 
     public DetailActivity() {
     }
@@ -41,16 +44,33 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         tvDate = (TextView) findViewById(R.id.detail_tv_date);
         btnEdit = (ImageButton) findViewById(R.id.detail_btn_edit);
         btnReturn = (ImageButton) findViewById(R.id.detail_btn_return);
-        rcvSemi = (RecyclerView) findViewById(R.id.detail_rcv_semi);
-        btnRefresh = (ImageButton) findViewById(R.id.detail_btn_refresh);
         includePB = findViewById(R.id.detail_pb);
         pb = (RoundCornerProgressBar) includePB.findViewById(R.id.progressBar);
+
+        rcvSemi = (RecyclerView) findViewById(R.id.detail_rcv_semi);
+        LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(this);
+        rcvSemi.setLayoutManager(rcvLayoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, rcvLayoutManager.getOrientation());
+        rcvSemi.addItemDecoration(dividerItemDecoration);
+
+        semiRcvAdapter = new SemiListRcvAdapter(dbManager, this, id);
+        rcvSemi.setAdapter(semiRcvAdapter);
+
+        us = new UpdateSemi(semiRcvAdapter, this, dbManager);
+
+        swipe = (SwipeRefreshLayout) findViewById(R.id.detail_swipe);
+        swipe.setColorSchemeResources(
+                R.color.colorPrimary,
+                android.R.color.holo_red_light,
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_orange_light
+        );
+        swipe.setOnRefreshListener(this);
 
         setData();
 
         btnEdit.setOnClickListener(this);
         btnReturn.setOnClickListener(this);
-        btnRefresh.setOnClickListener(this);
     }
 
     @Override
@@ -65,12 +85,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             case (R.id.detail_btn_return):
                 onBackPressed();
                 break;
-            case(R.id.detail_btn_refresh):
-                setResult(RESULT_OK);
-                finish();
-                startActivity(getIntent());
-                Toast.makeText(this, "Refresh complete.", Toast.LENGTH_SHORT).show();
-                break;
         }
     }
 
@@ -81,7 +95,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         tvCategory.setText(dbManager.DATA_CATEGORY);
         tvDate.setText(dbManager.DATA_DATE);
         pb.setProgress(dbManager.DATA_ACH);
-        setRcvSemi();
+        onRefresh();
     }
 
     public void updateAch() {
@@ -91,13 +105,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 //        }else{
 //            pb.setProgressColor(R.color.custom_progress_todo_progress);
 //        }
-    }
-
-    private void setRcvSemi() {
-        rcvSemi.setLayoutManager(new LinearLayoutManager(this));
-        semiRcvAdapter = new SemiListRcvAdapter(dbManager, this, id);
-        rcvSemi.setAdapter(semiRcvAdapter);
-        us = new UpdateSemi(semiRcvAdapter, this, dbManager);
     }
 
     public void onBackPressed() {
@@ -111,7 +118,15 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             if (resultCode == RESULT_OK) {
                 dbManager.setSemiPosition(id);
                 setData();
+                onRefresh();
             }
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        semiRcvAdapter = new SemiListRcvAdapter(dbManager, this, id);
+        rcvSemi.setAdapter(semiRcvAdapter);
+        swipe.setRefreshing(false);
     }
 }

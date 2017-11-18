@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -30,12 +32,12 @@ import com.pepg.todolist.DataBase.dbManager;
 
 import com.pepg.todolist.R;
 
-public class UpdateActivity extends AppCompatActivity implements View.OnClickListener {
+public class UpdateActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     int id;
     String selected;
     EditText etTitle;
-    ImageButton btnSave, btnReturn, btnCategory, btnDate;
+    ImageButton btnSave, btnReturn;
     TextView tvCategory, tvDate;
     FloatingActionButton fabSemiAdd;
     LinearLayout layoutDate, layoutCategory, layoutTop;
@@ -44,6 +46,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
     RecyclerView rcvSemi;
     SemiListRcvAdapter semiRcvAdapter;
     Activity activity;
+    SwipeRefreshLayout swipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,25 +56,41 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         etTitle = (EditText) findViewById(R.id.update_et_title);
         btnSave = (ImageButton) findViewById(R.id.update_btn_save);
         btnReturn = (ImageButton) findViewById(R.id.update_btn_return);
-        btnCategory = (ImageButton) findViewById(R.id.update_btn_category);
-        btnDate = (ImageButton) findViewById(R.id.update_btn_date);
         tvCategory = (TextView) findViewById(R.id.update_tv_category);
         tvDate = (TextView) findViewById(R.id.update_tv_date);
         layoutCategory = (LinearLayout) findViewById(R.id.update_layout_category);
         layoutDate = (LinearLayout) findViewById(R.id.update_layout_date);
         layoutTop = (LinearLayout) findViewById(R.id.update_layout_top);
         fabSemiAdd = (FloatingActionButton) findViewById(R.id.update_fab_semiadd);
+
         rcvSemi = (RecyclerView) findViewById(R.id.update_rcv_semi);
+        LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(this);
+        rcvSemi.setLayoutManager(rcvLayoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, rcvLayoutManager.getOrientation());
+        rcvSemi.addItemDecoration(dividerItemDecoration);
+
+        semiRcvAdapter = new SemiListRcvAdapter(dbManager, this, id);
+        rcvSemi.setAdapter(semiRcvAdapter);
+
+        us = new UpdateSemi(semiRcvAdapter, this, dbManager);
 
         activity = this;
 
         btnSave.setOnClickListener(this);
         btnReturn.setOnClickListener(this);
-        btnCategory.setOnClickListener(this);
-        btnDate.setOnClickListener(this);
         fabSemiAdd.setOnClickListener(this);
         layoutCategory.setOnClickListener(this);
         layoutDate.setOnClickListener(this);
+
+
+        swipe = (SwipeRefreshLayout) findViewById(R.id.update_swipe);
+        swipe.setColorSchemeResources(
+                R.color.colorPrimary,
+                android.R.color.holo_red_light,
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_orange_light
+        );
+        swipe.setOnRefreshListener(this);
 
         etTitle.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         etTitle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -102,25 +121,16 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
             tvCategory.setText(dbManager.DATA_CATEGORY);
             tvDate.setText(dbManager.DATA_DATE);
         }
-        setRcvSemi();
-    }
-
-    private void setRcvSemi() {
-        rcvSemi.setLayoutManager(new LinearLayoutManager(this));
-        semiRcvAdapter = new SemiListRcvAdapter(dbManager, this, id);
-        rcvSemi.setAdapter(semiRcvAdapter);
-        us = new UpdateSemi(semiRcvAdapter, this, dbManager);
+        onRefresh();
     }
 
     @Override
     public void onClick(View v) {
         clearFocus();
         switch (v.getId()) {
-            case (R.id.update_btn_category):
             case (R.id.update_layout_category):
                 DialogSelectOption("category");
                 break;
-            case (R.id.update_btn_date):
             case (R.id.update_layout_date):
                 DialogSelectOption("date");
                 break;
@@ -168,7 +178,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
                     long now = System.currentTimeMillis();
                     Date date = new Date(now);
                     if (!items[which].toString().equals(getString(R.string.new_date))) {
-                        SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy. MM. dd.");
+                        SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         Calendar cal = Calendar.getInstance();
                         switch (which) {
                             case (0):
@@ -188,7 +198,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
                                 break;
                         }
                         if (which != 4) {
-                            tvDate.setText("~ " + CurDateFormat.format(cal.getTime()));
+                            tvDate.setText(CurDateFormat.format(cal.getTime())+"");
                         }
                     } else {
                         SimpleDateFormat CurYearFormat = new SimpleDateFormat("yyyy");
@@ -240,16 +250,16 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             StringBuffer sb = new StringBuffer();
-            sb.append("~ " + year + ". ");
+            sb.append(year + "-");
             monthOfYear++;
             if (monthOfYear < 10) {
                 sb.append("0");
             }
-            sb.append(monthOfYear + ". ");
+            sb.append(monthOfYear + "-");
             if (dayOfMonth < 10) {
                 sb.append("0");
             }
-            sb.append(dayOfMonth + ".");
+            sb.append(dayOfMonth + "");
             tvDate.setText(sb.toString());
         }
     };
@@ -263,4 +273,13 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
     public void clearFocus() {
         layoutTop.requestFocus();
     }
+
+
+    @Override
+    public void onRefresh() {
+        semiRcvAdapter = new SemiListRcvAdapter(dbManager, this, id);
+        rcvSemi.setAdapter(semiRcvAdapter);
+        swipe.setRefreshing(false);
+    }
+
 }

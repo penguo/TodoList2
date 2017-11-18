@@ -12,12 +12,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
+import com.pepg.todolist.DataBase.DataMerge;
 import com.pepg.todolist.Manager;
 
 import com.pepg.todolist.DataBase.dbManager;
 import com.pepg.todolist.DetailActivity;
 
 import com.pepg.todolist.R;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by pengu on 2017-08-10.
@@ -40,8 +46,7 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivLogo;
-        TextView tvTitle, tvDate, tvCategory;
-        View includePB;
+        TextView tvTitle, tvDate, tvCategory, tvAch, tvDday;
         RoundCornerProgressBar pb;
 
         /**************************************************/
@@ -53,8 +58,9 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
             tvTitle = (TextView) itemView.findViewById(R.id.todo_tv_title);
             tvDate = (TextView) itemView.findViewById(R.id.todo_tv_date);
             tvCategory = (TextView) itemView.findViewById(R.id.todo_tv_category);
-            includePB = itemView.findViewById(R.id.todo_pb);
-            pb = (RoundCornerProgressBar) includePB.findViewById(R.id.progressBar);
+            tvAch = (TextView) itemView.findViewById(R.id.todo_tv_ach);
+            tvDday = (TextView) itemView.findViewById(R.id.todo_tv_dday);
+            pb = (RoundCornerProgressBar) itemView.findViewById(R.id.todo_pb);
         }
     }
 
@@ -71,14 +77,11 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
         dbManager.getValue("_position", position);
 
         holder.tvTitle.setText(dbManager.DATA_TITLE);
-        holder.tvDate.setText(dbManager.DATA_DATE);
+        holder.tvDate.setText("~ " + dbManager.DATA_DATE);
         holder.tvCategory.setText(dbManager.DATA_CATEGORY);
+        holder.tvAch.setText(dbManager.DATA_ACH + "%");
+        holder.tvDday.setText("D" + Manager.calculateDday(dbManager.DATA_DATE) + "");
         holder.pb.setProgress(dbManager.DATA_ACH);
-//        if(dbManager.DATA_ACH == 100){
-//            holder.pb.setProgressColor(R.color.colorRemark);
-//        }else{
-//            holder.pb.setProgressColor(R.color.custom_progress_todo_progress);
-//        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

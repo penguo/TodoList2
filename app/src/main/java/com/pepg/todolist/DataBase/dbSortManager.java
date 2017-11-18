@@ -52,7 +52,7 @@ public class dbSortManager {
     }
 
     public void sortByDate() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd.");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date readDate;
         ArrayList<DataMerge> dataList = new ArrayList<>();
         ArrayList<DataMerge> result = new ArrayList<>();
@@ -69,8 +69,8 @@ public class dbSortManager {
                 length--;
             } else {
                 try {
-                    strings = cursor.getString(1).split(" ");
-                    readDate = format.parse(strings[1] + strings[2] + strings[3]);
+                    strings = cursor.getString(1).split("\u002D");
+                    readDate = format.parse(strings[0] + strings[1] + strings[2]);
                     dataList.add(new DataMerge(i, cursor.getInt(0), readDate));
                     i++;
                 } catch (ParseException e) {
