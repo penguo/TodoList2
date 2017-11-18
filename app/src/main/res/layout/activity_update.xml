@@ -15,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
+        android:elevation="4dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:contentInsetStart="0dp">
@@ -31,18 +32,19 @@
                 app:srcCompat="@drawable/ic_undo" />
 
             <TextView
+                style="@style/ToolbarTitle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Update"
-                android:textSize="32sp" />
+                android:text="Update" />
 
 
             <ImageButton
                 android:id="@+id/update_btn_save"
                 style="@style/icon"
                 app:srcCompat="@drawable/ic_save" />
+
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -172,7 +174,6 @@
                 android:layout_gravity="bottom|end"
                 android:layout_margin="20dp"
                 android:clickable="true"
-                android:scaleType="centerInside"
                 app:backgroundTint="@color/colorPrimary"
                 app:fabSize="normal"
                 app:srcCompat="@drawable/ic_add" />
@@ -182,7 +183,5 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </android.support.design.widget.CoordinatorLayout>
-
-
     </LinearLayout>
 </LinearLayout>

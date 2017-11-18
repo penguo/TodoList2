@@ -12,8 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
+        android:elevation="4dp"
+        android:minHeight="?android:attr/actionBarSize"
+        android:theme="@android:style/Widget.Material.Toolbar"
         app:contentInsetStart="0dp">
 
 
@@ -29,12 +30,12 @@
                 app:srcCompat="@drawable/ic_undo" />
 
             <TextView
+                style="@style/ToolbarTitle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="TodoList"
-                android:textSize="32sp" />
+                android:text="TodoList" />
 
             <ImageButton
                 android:id="@+id/detail_btn_edit"
@@ -45,25 +46,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="95dp"
-        android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
-        android:layout_marginTop="3dp"
+        android:layout_height="72dp"
         android:orientation="horizontal">
-
-        <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
-            android:id="@+id/detail_pb"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="2dp"
-            app:rcBackgroundColor="@color/custom_progress_background"
-            app:rcBackgroundPadding="4dp"
-            app:rcMax="100"
-            app:rcProgress="0"
-            app:rcProgressColor="@color/custom_progress_todo_progress"
-            app:rcRadius="10dp"
-            app:rcSecondaryProgress="0"
-            app:rcSecondaryProgressColor="@color/custom_progress_todo_progress_half" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -104,7 +88,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="CATEGORY VIEW POINT"
-                            android:textSize="15sp" />
+                            android:textSize="13sp" />
                     </LinearLayout>
 
                     <TextView
@@ -114,7 +98,7 @@
                         android:layout_centerInParent="true"
                         android:lineSpacingMultiplier="0.8"
                         android:text="TEXT VIEW POINTTEXT VIEW POINT"
-                        android:textSize="24sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/detail_tv_date"
@@ -123,7 +107,7 @@
                         android:layout_alignParentBottom="true"
                         android:paddingLeft="20dp"
                         android:text="DATE VIEW POINT"
-                        android:textSize="18sp" />
+                        android:textSize="13sp" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -138,55 +122,71 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="40dp">
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="// "
-                android:textColor="@color/colorRemark"
-                android:textSize="18sp"
-                android:textStyle="bold|italic" />
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TODO"
-                android:textColor="@color/colorTodo"
-                android:textSize="18sp"
-                android:textStyle="bold|italic" />
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" :"
-                android:textColor="@color/colorRemark"
-                android:textSize="18sp"
-                android:textStyle="bold|italic" />
+            <include
+                android:id="@+id/detail_pb"
+                layout="@layout/include_progressbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="right"
-                android:orientation="horizontal">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="10dp">
 
-                <ImageButton
-                    android:id="@+id/detail_btn_refresh"
-                    android:layout_width="70dp"
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:text="// "
+                    android:textColor="@color/colorRemark"
+                    android:textSize="18sp"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TODO"
+                    android:textColor="@color/colorTodo"
+                    android:textSize="18sp"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" :"
+                    android:textColor="@color/colorRemark"
+                    android:textSize="18sp"
+                    android:textStyle="bold|italic" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="20dp"
-                    android:background="@color/colorPrimary"
-                    android:scaleType="centerInside"
-                    app:srcCompat="@drawable/ic_refresh" />
+                    android:gravity="right"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/detail_btn_refresh"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="20dp"
+                        android:background="@color/colorPrimary"
+                        android:scaleType="centerInside"
+                        app:srcCompat="@drawable/ic_refresh"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
             </LinearLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/detail_rcv_semi"

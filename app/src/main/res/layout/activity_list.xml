@@ -12,8 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
+        android:elevation="4dp"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
+        android:theme="@android:style/Widget.Material.Toolbar"
         app:contentInsetStart="0dp">
 
         <LinearLayout
@@ -22,37 +23,34 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <android.support.v7.widget.AppCompatImageButton
+            <ImageButton
                 android:id="@+id/listA_btn_category"
                 style="@style/icon"
                 app:srcCompat="@drawable/ic_sort" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/listA_tv_title"
+            <TextView
+                style="@style/ToolbarTitle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="TodoList"
-                android:textSize="32sp" />
+                android:text="TodoList" />
 
-            <android.support.v7.widget.AppCompatImageButton
+            <ImageButton
                 android:id="@+id/listA_btn_setting"
                 style="@style/icon"
                 app:srcCompat="@drawable/ic_setting" />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/listA_toolbar_sort"
+    <FrameLayout
+        android:id="@+id/listA_framelayout_sort"
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:background="?attr/colorPrimaryDark"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        android:visibility="gone"
-        app:contentInsetStart="0dp">
+        android:elevation="3dp"
+        android:theme="@android:style/Widget.Material.Toolbar"
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -63,33 +61,31 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.7"
                 android:gravity="bottom|center"
                 android:text="category: "
+                android:textColor="#ffffff"
                 android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/listA_tv_sortequal"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.7"
                 android:gravity="center"
                 android:text="SORTEQUAL VIEW POINT"
+                android:textColor="#ffffff"
                 android:textSize="21sp" />
 
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </FrameLayout>
+
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/listA_rcv_todo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </android.support.v7.widget.RecyclerView>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/listA_fab"
@@ -98,10 +94,17 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="20dp"
             android:clickable="true"
-            android:scaleType="centerInside"
             app:backgroundTint="@color/colorPrimary"
             app:fabSize="normal"
             app:srcCompat="@drawable/ic_add" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/listA_rcv_todo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="1dp">
+
+        </android.support.v7.widget.RecyclerView>
 
     </android.support.design.widget.CoordinatorLayout>
 

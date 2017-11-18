@@ -24,6 +24,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     final dbManager dbManager = new dbManager(this, "todolist2.db", null, MainActivity.DBVERSION);
     RecyclerView rcvSemi;
     SemiListRcvAdapter semiRcvAdapter;
+    View includePB;
     RoundCornerProgressBar pb;
     UpdateSemi us;
 
@@ -41,8 +42,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         btnEdit = (ImageButton) findViewById(R.id.detail_btn_edit);
         btnReturn = (ImageButton) findViewById(R.id.detail_btn_return);
         rcvSemi = (RecyclerView) findViewById(R.id.detail_rcv_semi);
-        pb = (RoundCornerProgressBar) findViewById(R.id.detail_pb);
         btnRefresh = (ImageButton) findViewById(R.id.detail_btn_refresh);
+        includePB = findViewById(R.id.detail_pb);
+        pb = (RoundCornerProgressBar) includePB.findViewById(R.id.progressBar);
 
         setData();
 

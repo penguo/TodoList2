@@ -46,6 +46,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
     class ViewHolder extends RecyclerView.ViewHolder {
         //        ImageView ivWeight;
         TextView tvTitle, tvDate;
+        View includePB;
         RoundCornerProgressBar pb;
         SmoothCheckBox scb;
         RelativeLayout layoutTop;
@@ -56,7 +57,8 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
 //            ivWeight = (ImageView) itemView.findViewById(R.id.semi_iv_weight);
             tvTitle = (TextView) itemView.findViewById(R.id.semi_tv_title);
             tvDate = (TextView) itemView.findViewById(R.id.semi_tv_date);
-            pb = (RoundCornerProgressBar) itemView.findViewById(R.id.semi_pb);
+            includePB = itemView.findViewById(R.id.semi_pb);
+            pb = (RoundCornerProgressBar) includePB.findViewById(R.id.progressBar);
             scb = (SmoothCheckBox) itemView.findViewById(R.id.semi_scb);
             layoutTop = (RelativeLayout) itemView.findViewById(R.id.semi_layout);
         }

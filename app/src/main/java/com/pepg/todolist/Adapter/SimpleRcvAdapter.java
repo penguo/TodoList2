@@ -41,7 +41,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
     Calendar cal;
     SimpleDateFormat CurDateFormat;
     CharSequence[] itemsCS, itemsDetailCS;
-    int i;
+    int selectedPosition = -1;
 
     public SimpleRcvAdapter(dbManager dbManager, Activity activity, String type) {
         this.dbManager = dbManager;
@@ -87,26 +87,23 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
         if (type.equals("date")) {
             holder.tvDetail.setVisibility(View.VISIBLE);
             holder.tvDetail.setText(itemsDetailCS[position].toString());
-            if (dbManager.DATA_temporaryInteger == position) {
-                holder.layout.setBackgroundResource(R.drawable.xml_border_line_selected);
-            } else {
-                holder.layout.setBackgroundResource(R.drawable.xml_border_line);
-            }
-            if (position == itemsCS.length - 1) {
-                if (dbManager.DATA_temporaryInteger == position) {
+            if (position == itemsCS.length - 1) { //직접생성의 경우
+                if (selectedPosition == itemsCS.length - 1) {
                     holder.tvDetail.setText(dbManager.DATA_DATE);
-                }else{
+                } else {
                     holder.tvDetail.setVisibility(View.GONE);
                 }
             }
-        } else {
+        } else if (type.equals("category")) {
             holder.tvDetail.setVisibility(View.GONE);
-            if (dbManager.DATA_CATEGORY.equals(itemsCS[position].toString())) {
-                holder.layout.setBackgroundResource(R.drawable.xml_border_line_selected);
-            } else {
-                holder.layout.setBackgroundResource(R.drawable.xml_border_line);
-            }
         }
+
+        if (selectedPosition == position) {
+            holder.layout.setBackgroundResource(R.drawable.xml_border_line_selected);
+        } else {
+            holder.layout.setBackgroundResource(R.drawable.xml_border_line);
+        }
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,14 +112,13 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                         if (!itemsCS[position].toString().equals(activity.getString(R.string.new_date))) {
                             dbManager.DATA_DATE = itemsDetailCS[position].toString();
                             ((AddguideActivity) activity).setData(3);
-                            dbManager.DATA_temporaryInteger = position;
+                            selectedPosition = position;
                             notifyDataSetChanged();
                         } else {
                             SimpleDateFormat CurYearFormat = new SimpleDateFormat("yyyy");
                             SimpleDateFormat CurMonthFormat = new SimpleDateFormat("MM");
                             SimpleDateFormat CurDayFormat = new SimpleDateFormat("dd");
                             DatePickerDialog dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(CurYearFormat.format(date).toString()), Integer.parseInt(CurMonthFormat.format(date).toString()) - 1, Integer.parseInt(CurDayFormat.format(date).toString()));
-                            i = position;
                             dpDialog.show();
                         }
                         break;
@@ -136,7 +132,9 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                                     dbManager.DATA_SORTTYPE = "DEFAULT";
                                     dbManager.DATA_SORTTYPEEQUAL = "";
                                 }
+                                selectedPosition = position;
                                 ((ListActivity) activity).refresh();
+                                notifyDataSetChanged();
                                 break;
                             case ("forEdit"): //TODO
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(activity);
@@ -214,6 +212,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
             items.add(0, activity.getString(R.string.all));
         }
         itemsCS = items.toArray(new String[items.size()]);
+        setSelectedPosition();
     }
 
     private DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
@@ -231,7 +230,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
             }
             sb.append(dayOfMonth + ".");
             dbManager.DATA_DATE = sb.toString();
-            dbManager.DATA_temporaryInteger = i;
+            selectedPosition = itemsCS.length - 1;
             notifyDataSetChanged();
             ((AddguideActivity) activity).setData(3);
         }
@@ -270,5 +269,38 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
         dialog = builder.create(); //builder.show()를 create하여 dialog에 저장하는 방식.
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
+    }
+
+    private boolean setSelectedPosition() {
+        int i = 0;
+        switch (type) {
+            case ("date"):
+                for (i = 0; i < itemsDetailCS.length - 1; i++) {
+                    if (itemsDetailCS[i].equals(dbManager.DATA_DATE)) {
+                        selectedPosition = i;
+                        return true;
+                    }
+                }
+                break;
+            case ("category"):
+                if (option.equals("forSort")) {
+                    selectedPosition = 0;
+                    for (i = 1; i < itemsCS.length - 1; i++) {
+                        if (itemsCS[i].equals(dbManager.DATA_SORTTYPEEQUAL)) {
+                            selectedPosition = i;
+                            return true;
+                        }
+                    }
+                } else {
+                    for (i = 0; i < itemsCS.length - 1; i++) {
+                        if (itemsCS[i].equals(dbManager.DATA_CATEGORY)) {
+                            selectedPosition = i;
+                            return true;
+                        }
+                    }
+                }
+                break;
+        }
+        return false;
     }
 }

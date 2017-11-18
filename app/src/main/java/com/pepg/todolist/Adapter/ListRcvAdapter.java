@@ -41,6 +41,7 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivLogo;
         TextView tvTitle, tvDate, tvCategory;
+        View includePB;
         RoundCornerProgressBar pb;
 
         /**************************************************/
@@ -52,7 +53,8 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
             tvTitle = (TextView) itemView.findViewById(R.id.todo_tv_title);
             tvDate = (TextView) itemView.findViewById(R.id.todo_tv_date);
             tvCategory = (TextView) itemView.findViewById(R.id.todo_tv_category);
-            pb = (RoundCornerProgressBar) itemView.findViewById(R.id.todo_pb);
+            includePB = itemView.findViewById(R.id.todo_pb);
+            pb = (RoundCornerProgressBar) includePB.findViewById(R.id.progressBar);
         }
     }
 

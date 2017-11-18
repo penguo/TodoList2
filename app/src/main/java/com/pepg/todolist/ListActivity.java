@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.support.v7.app.AlertDialog;
@@ -29,8 +33,10 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     FloatingActionButton fabAdd;
     RecyclerView rcvDialog;
     AlertDialog.Builder builder;
-    Toolbar toolbar;
+    FrameLayout frameLayoutSort;
     AlertDialog dialog;
+    Animation viewSlideOut, viewSlideIn;
+    boolean isSortViewing;
 
     final dbManager dbManager = new dbManager(this, "todolist2.db", null, MainActivity.DBVERSION);
 
@@ -42,26 +48,42 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         btnCategory = (ImageButton) findViewById(R.id.listA_btn_category);
         btnSetting = (ImageButton) findViewById(R.id.listA_btn_setting);
         fabAdd = (FloatingActionButton) findViewById(R.id.listA_fab);
-        toolbar = (Toolbar) findViewById(R.id.listA_toolbar_sort);
+        frameLayoutSort = (FrameLayout) findViewById(R.id.listA_framelayout_sort);
         tvSortEqual = (TextView) findViewById(R.id.listA_tv_sortequal);
 
+        viewSlideOut = AnimationUtils.loadAnimation(this, R.anim.anim_slide_out_up);
+        viewSlideIn = AnimationUtils.loadAnimation(this, R.anim.anim_slide_in_up);
+
         rcvTodo = (RecyclerView) findViewById(R.id.listA_rcv_todo);
-        rcvTodo.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(this);
+        rcvTodo.setLayoutManager(rcvLayoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, rcvLayoutManager.getOrientation());
+        rcvTodo.addItemDecoration(dividerItemDecoration);
 
         listRcvAdapter = new ListRcvAdapter(dbManager, this);
         rcvTodo.setAdapter(listRcvAdapter);
 //        btnSetting.setOnClickListener(this);
         btnCategory.setOnClickListener(this);
         fabAdd.setOnClickListener(this);
-        toolbar.setOnClickListener(this);
-        setToolbar();
+        frameLayoutSort.setOnClickListener(this);
+        setSortView();
     }
 
-    public void setToolbar(){
-        if(dbManager.DATA_SORTTYPE.equals("DEFAULT")){
-            toolbar.setVisibility(View.GONE);
-        }else{
-            toolbar.setVisibility(View.VISIBLE);
+    public void setSortView() {
+        if (dbManager.DATA_SORTTYPE.equals("DEFAULT")) {
+            if (!isSortViewing) {
+                frameLayoutSort.setVisibility(View.GONE);
+            } else {
+                frameLayoutSort.startAnimation(viewSlideIn);
+                isSortViewing = false;
+                frameLayoutSort.setVisibility(View.GONE);
+            }
+        } else {
+            if (!isSortViewing) {
+                frameLayoutSort.setVisibility(View.VISIBLE);
+                frameLayoutSort.startAnimation(viewSlideOut);
+                isSortViewing = true;
+            }
             tvSortEqual.setText(dbManager.DATA_SORTTYPEEQUAL);
         }
     }
@@ -81,13 +103,15 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(ListActivity.this, AddguideActivity.class);
                 intent.putExtra("_id", 0);
                 startActivityForResult(intent, Manager.RC_LIST_TO_ADDGUIDE);
+//                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
+                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
                 break;
 //            case (R.id.listA_btn_add):
 //                intent = new Intent(ListActivity.this, UpdateActivity.class);
 //                intent.putExtra("_id", 0);
 //                startActivityForResult(intent, Manager.RC_LIST_TO_UPDATE);
 //                break;
-            case(R.id.listA_toolbar_sort):
+            case (R.id.listA_framelayout_sort):
                 DialogOption();
                 break;
         }
@@ -95,7 +119,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        setToolbar();
+        setSortView();
         if (requestCode == Manager.RC_LIST_TO_UPDATE) {
             if (resultCode == RESULT_OK) {
                 dbManager.setPosition();
@@ -114,7 +138,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 listRcvAdapter.notifyDataSetChanged();
             }
         }
-        if(requestCode == Manager.RC_DETAIL){
+        if (requestCode == Manager.RC_DETAIL) {
             if (resultCode == RESULT_OK) {
                 dbManager.setPosition();
                 listRcvAdapter.notifyDataSetChanged();
@@ -139,10 +163,10 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         dialog.show();
     }
 
-    public void refresh(){
+    public void refresh() {
         listRcvAdapter = new ListRcvAdapter(dbManager, this);
         rcvTodo.setAdapter(listRcvAdapter);
-        setToolbar();
+        setSortView();
         dialog.dismiss();
     }
 }

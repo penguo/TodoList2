@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        app:rcBackgroundColor="@color/custom_progress_background"
+        app:rcBackgroundPadding="4dp"
+        app:rcMax="100"
+        app:rcProgress="0"
+        app:rcProgressColor="@color/custom_progress_todo_progress"
+        app:rcRadius="10dp"
+        app:rcSecondaryProgress="0"
+        app:rcSecondaryProgressColor="@color/custom_progress_todo_progress_half" />
+</FrameLayout>

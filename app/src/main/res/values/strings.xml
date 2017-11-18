@@ -1,17 +1,17 @@
 <resources>
     <string name="app_name">TodoList</string>
+
     <string-array name="titles">
-        <item>Step.1</item>
-        <item>Step.2</item>
-        <item>Step.3</item>
-        <item>Step.4</item>
+        <item>제목</item>
+        <item>카테고리</item>
+        <item>최종날짜</item>
+        <item>상세내용</item>
     </string-array>
+
     <string name="new_category">새로운 카테고리</string>
     <string name="new_date">직접 설정</string>
     <string name="date_forever">~ 살아가면서</string>
     <string name="unregistered">미지정</string>
     <string name="all">전체</string>
-
-    <string name="title_activity_settings">Settings</string>
 
 </resources>
