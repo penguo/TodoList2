@@ -9,13 +9,14 @@
     tools:context="com.pepg.todolist.DetailActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/detail_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:minHeight="?android:attr/actionBarSize"
         android:theme="@android:style/Widget.Material.Toolbar"
+        android:transitionName="toolbar"
         app:contentInsetStart="0dp">
 
 
@@ -46,9 +47,13 @@
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
+        android:id="@+id/detail_layout_head"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="72dp"
+        android:orientation="horizontal"
+        android:transitionName="item_todo">
 
         <ImageView
             style="@style/icon"
@@ -58,10 +63,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -94,7 +100,7 @@
             android:layout_height="60dp"
             android:layout_margin="6dp"
             android:gravity="center"
-            android:text="D-999"
+            android:text="D-9999"
             android:textSize="16sp"
             android:textStyle="bold|italic" />
 
@@ -135,6 +141,7 @@
                     android:id="@+id/detail_tv_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:paddingLeft="12dp"
                     android:text="DATE VIEW POINT"
                     android:textSize="16sp"

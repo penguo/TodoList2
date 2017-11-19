@@ -8,8 +8,11 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -25,6 +28,9 @@ import com.pepg.todolist.DataBase.dbManager;
 
 import com.pepg.todolist.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ListActivity extends AppCompatActivity implements View.OnClickListener {
 
     ImageButton btnCategory, btnSetting;
@@ -39,6 +45,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     Animation viewSlideOut, viewSlideIn;
     boolean isSortViewing;
     DividerItemDecoration dividerItemDecoration;
+    Toolbar toolbar;
 
     final dbManager dbManager = new dbManager(this, "todolist2.db", null, MainActivity.DBVERSION);
 
@@ -52,6 +59,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         fabAdd = (FloatingActionButton) findViewById(R.id.listA_fab);
         layoutSort = (LinearLayout) findViewById(R.id.listA_layout_sort);
         tvSortEqual = (TextView) findViewById(R.id.listA_tv_sortequal);
+        toolbar = (Toolbar) findViewById(R.id.listA_toolbar);
 
         viewSlideOut = AnimationUtils.loadAnimation(this, R.anim.anim_slide_out_up);
         viewSlideIn = AnimationUtils.loadAnimation(this, R.anim.anim_slide_in_up);
@@ -173,5 +181,12 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         rcvTodo.setAdapter(listRcvAdapter);
         setSortView();
         dialog.dismiss();
+    }
+
+    public List<Pair<View, String>> getPairs() {
+
+        List<Pair<View, String>> pairs = new ArrayList<>();
+        pairs.add(Pair.create((View) toolbar, "toolbar"));
+        return pairs;
     }
 }

@@ -1,23 +1,32 @@
 package com.pepg.todolist.Adapter;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
+import com.pepg.todolist.ListActivity;
 import com.pepg.todolist.Manager;
 
 import com.pepg.todolist.DataBase.dbManager;
 import com.pepg.todolist.DetailActivity;
 
 import com.pepg.todolist.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by pengu on 2017-08-10.
@@ -66,7 +75,7 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         dbManager.getValue("_position", position);
 
         holder.tvTitle.setText(dbManager.DATA_TITLE);
@@ -91,7 +100,16 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
                 Intent intent = new Intent(activity, DetailActivity.class);
                 dbManager.getValue("_position", position);
                 intent.putExtra("_id", dbManager.DATA_id);
-                activity.startActivityForResult(intent, Manager.RC_LIST_TO_DETAIL);
+
+                /**
+                 * Shared Element Animation
+                 * 스테이터스바, 네비게이션바, 툴바 와 함께 움직이는게 좋다.
+                 */
+                List<Pair<View, String>> pairs = ((ListActivity) activity).getPairs();
+                pairs.add(Pair.create((View) holder.itemView, "item_todo"));
+                Bundle options = ActivityOptions.makeSceneTransitionAnimation(activity,
+                        pairs.toArray(new Pair[pairs.size()])).toBundle();
+                activity.startActivityForResult(intent, Manager.RC_LIST_TO_DETAIL, options);
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {

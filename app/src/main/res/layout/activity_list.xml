@@ -9,13 +9,14 @@
     tools:context="com.pepg.todolist.ListActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/listA_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="@android:style/Widget.Material.Toolbar"
+        android:transitionName="toolbar"
         app:contentInsetStart="0dp">
 
         <LinearLayout

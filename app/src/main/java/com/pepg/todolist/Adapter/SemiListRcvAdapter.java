@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -50,7 +51,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
         View includePB;
         RoundCornerProgressBar pb;
         SmoothCheckBox scb;
-        RelativeLayout layoutTop;
+        LinearLayout layoutTop;
         boolean isSet;
 
         public ViewHolder(View itemView) {
@@ -61,7 +62,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
             includePB = itemView.findViewById(R.id.semi_pb);
             pb = (RoundCornerProgressBar) includePB.findViewById(R.id.progressBar);
             scb = (SmoothCheckBox) itemView.findViewById(R.id.semi_scb);
-            layoutTop = (RelativeLayout) itemView.findViewById(R.id.semi_layout);
+            layoutTop = (LinearLayout) itemView.findViewById(R.id.semi_layout);
         }
     }
 
