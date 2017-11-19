@@ -18,7 +18,7 @@ import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
 import com.pepg.todolist.DataBase.dbManager;
 
-public class DetailActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class DetailActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, View.OnLongClickListener {
 
     TextView tvTitle, tvCategory, tvDate, tvMemo, tvDday, tvAch;
     ImageButton btnEdit, btnReturn;
@@ -95,6 +95,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         layoutAch.setOnClickListener(this);
         layoutAlarm.setOnClickListener(this);
         layoutMemo.setOnClickListener(this);
+        layoutAch.setOnLongClickListener(this);
+        layoutAlarm.setOnLongClickListener(this);
+        layoutMemo.setOnLongClickListener(this);
     }
 
     @Override
@@ -264,5 +267,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 break;
         }
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        return false;
     }
 }
