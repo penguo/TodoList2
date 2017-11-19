@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ import com.pepg.todolist.AddguideActivity;
 import com.pepg.todolist.DataBase.dbManager;
 import com.pepg.todolist.ListActivity;
 
+import com.pepg.todolist.Manager;
 import com.pepg.todolist.R;
 
 /**
@@ -64,18 +66,21 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvDetail;
-        LinearLayout layout;
+        LinearLayout layout, layoutBackground;
+        ImageView ivCheck;
 
         public ViewHolder(View itemView) {
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.simple_tv_title);
             tvDetail = (TextView) itemView.findViewById(R.id.simple_tv_detail);
             layout = (LinearLayout) itemView.findViewById(R.id.simple_layout);
+            layoutBackground = (LinearLayout) itemView.findViewById(R.id.simple_layout_background);
+            ivCheck = (ImageView) itemView.findViewById(R.id.simple_iv_check);
         }
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.simple_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_simple, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         dataSet();
         return viewHolder;
@@ -85,6 +90,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.tvTitle.setText(itemsCS[position].toString());
         if (type.equals("date")) {
+            holder.layout.setMinimumHeight(Manager.convertPixelsToDp(72, activity));
             holder.tvDetail.setVisibility(View.VISIBLE);
             holder.tvDetail.setText(itemsDetailCS[position].toString());
             if (position == itemsCS.length - 1) { //직접생성의 경우
@@ -92,18 +98,20 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                     holder.tvDetail.setText(dbManager.DATA_DATE);
                 } else {
                     holder.tvDetail.setVisibility(View.GONE);
+                    holder.layout.setMinimumHeight(Manager.convertPixelsToDp(48, activity));
                 }
             }
         } else if (type.equals("category")) {
+            holder.layout.setMinimumHeight(Manager.convertPixelsToDp(48, activity));
             holder.tvDetail.setVisibility(View.GONE);
         }
-
         if (selectedPosition == position) {
-            holder.layout.setBackgroundResource(R.drawable.xml_border_line_selected);
+            holder.ivCheck.setVisibility(View.VISIBLE);
+            holder.layoutBackground.setBackgroundResource(R.drawable.xml_item_selected);
         } else {
-            holder.layout.setBackgroundResource(R.drawable.xml_border_line);
+            holder.ivCheck.setVisibility(View.INVISIBLE);
+            holder.layoutBackground.setBackground(null);
         }
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,9 +140,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                                     dbManager.DATA_SORTTYPE = "DEFAULT";
                                     dbManager.DATA_SORTTYPEEQUAL = "";
                                 }
-                                selectedPosition = position;
                                 ((ListActivity) activity).refresh();
-                                notifyDataSetChanged();
                                 break;
                             case ("forEdit"): //TODO
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(activity);
@@ -157,6 +163,8 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                             default:
                                 if (!itemsCS[position].toString().equals(activity.getString(R.string.new_category))) {
                                     dbManager.DATA_CATEGORY = itemsCS[position].toString();
+                                    selectedPosition = position;
+                                    notifyDataSetChanged();
                                     ((AddguideActivity) activity).setData(2);
                                 } else {
                                     DialogAdd();
@@ -198,7 +206,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                             break;
                     }
                     if (i != 4) {
-                        itemsDetail.add(CurDateFormat.format(cal.getTime())+"");
+                        itemsDetail.add(CurDateFormat.format(cal.getTime()) + "");
                     }
                 }
                 itemsDetail.add("");
@@ -246,7 +254,12 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
             public void onClick(DialogInterface dialog, int which) {
                 String selected = title.getText().toString();
                 if (!dbManager.isAlreadyResCategory(selected)) {
-                    dbManager.addSetting("category", selected);
+                    if (selected.equals("")) {
+                        Toast.makeText(activity, "분류 이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                        selected = activity.getString(R.string.unregistered);
+                    } else {
+                        dbManager.addSetting("category", selected);
+                    }
                 } else {
                     Toast.makeText(activity, "이미 존재하는 카테고리입니다. 해당 카테고리로 선택되었습니다.", Toast.LENGTH_SHORT).show();
                 }
@@ -272,7 +285,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
     }
 
     private boolean setSelectedPosition() {
-        int i = 0;
+        int i;
         switch (type) {
             case ("date"):
                 for (i = 0; i < itemsDetailCS.length - 1; i++) {

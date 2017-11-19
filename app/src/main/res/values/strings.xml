@@ -10,8 +10,9 @@
 
     <string name="new_category">새로운 카테고리</string>
     <string name="new_date">직접 설정</string>
-    <string name="date_forever">~ 살아가면서</string>
+    <string name="date_forever">살아가면서</string>
     <string name="unregistered">미지정</string>
     <string name="all">전체</string>
+    <string name="empty_data">(Empty data)</string>
 
 </resources>

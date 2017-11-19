@@ -14,6 +14,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.support.v7.app.AlertDialog;
 
@@ -31,12 +32,13 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView rcvTodo;
     ListRcvAdapter listRcvAdapter;
     FloatingActionButton fabAdd;
+    LinearLayout layoutSort;
     RecyclerView rcvDialog;
     AlertDialog.Builder builder;
-    FrameLayout frameLayoutSort;
     AlertDialog dialog;
     Animation viewSlideOut, viewSlideIn;
     boolean isSortViewing;
+    DividerItemDecoration dividerItemDecoration;
 
     final dbManager dbManager = new dbManager(this, "todolist2.db", null, MainActivity.DBVERSION);
 
@@ -48,7 +50,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         btnCategory = (ImageButton) findViewById(R.id.listA_btn_category);
         btnSetting = (ImageButton) findViewById(R.id.listA_btn_setting);
         fabAdd = (FloatingActionButton) findViewById(R.id.listA_fab);
-        frameLayoutSort = (FrameLayout) findViewById(R.id.listA_framelayout_sort);
+        layoutSort = (LinearLayout) findViewById(R.id.listA_layout_sort);
         tvSortEqual = (TextView) findViewById(R.id.listA_tv_sortequal);
 
         viewSlideOut = AnimationUtils.loadAnimation(this, R.anim.anim_slide_out_up);
@@ -57,7 +59,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         rcvTodo = (RecyclerView) findViewById(R.id.listA_rcv_todo);
         LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(this);
         rcvTodo.setLayoutManager(rcvLayoutManager);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, rcvLayoutManager.getOrientation());
+        dividerItemDecoration = new DividerItemDecoration(this, rcvLayoutManager.getOrientation());
         rcvTodo.addItemDecoration(dividerItemDecoration);
 
         listRcvAdapter = new ListRcvAdapter(dbManager, this);
@@ -65,23 +67,23 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
 //        btnSetting.setOnClickListener(this);
         btnCategory.setOnClickListener(this);
         fabAdd.setOnClickListener(this);
-        frameLayoutSort.setOnClickListener(this);
+        layoutSort.setOnClickListener(this);
         setSortView();
     }
 
     public void setSortView() {
         if (dbManager.DATA_SORTTYPE.equals("DEFAULT")) {
             if (!isSortViewing) {
-                frameLayoutSort.setVisibility(View.GONE);
+                layoutSort.setVisibility(View.GONE);
             } else {
-                frameLayoutSort.startAnimation(viewSlideIn);
+                layoutSort.startAnimation(viewSlideIn);
                 isSortViewing = false;
-                frameLayoutSort.setVisibility(View.GONE);
+                layoutSort.setVisibility(View.GONE);
             }
         } else {
             if (!isSortViewing) {
-                frameLayoutSort.setVisibility(View.VISIBLE);
-                frameLayoutSort.startAnimation(viewSlideOut);
+                layoutSort.setVisibility(View.VISIBLE);
+                layoutSort.startAnimation(viewSlideOut);
                 isSortViewing = true;
             }
             tvSortEqual.setText(dbManager.DATA_SORTTYPEEQUAL);
@@ -111,7 +113,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
 //                intent.putExtra("_id", 0);
 //                startActivityForResult(intent, Manager.RC_LIST_TO_UPDATE);
 //                break;
-            case (R.id.listA_framelayout_sort):
+            case (R.id.listA_layout_sort):
                 DialogOption();
                 break;
         }
@@ -124,6 +126,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
             if (resultCode == RESULT_OK) {
                 dbManager.setPosition();
                 listRcvAdapter.notifyDataSetChanged();
+                dbManager.DATA_SORTTYPE = "DEFAULT";
             }
         }
         if (requestCode == Manager.RC_LIST_TO_DETAIL) {
@@ -136,6 +139,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
             if (resultCode == RESULT_OK) {
                 dbManager.setPosition();
                 listRcvAdapter.notifyDataSetChanged();
+                dbManager.DATA_SORTTYPE = "DEFAULT";
             }
         }
         if (requestCode == Manager.RC_DETAIL) {
@@ -155,6 +159,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         rcvDialog.setLayoutManager(new LinearLayoutManager(this));
         SimpleRcvAdapter simpleRcvAdapter = new SimpleRcvAdapter(dbManager, this, "category", "forSort");
         rcvDialog.setAdapter(simpleRcvAdapter);
+        rcvDialog.addItemDecoration(dividerItemDecoration);
 
         builder.setView(content);
 

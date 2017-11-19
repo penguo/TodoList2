@@ -17,6 +17,7 @@ package com.pepg.todolist.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -55,9 +56,13 @@ public class Step3Fragment extends Fragment {
         dbM = new dbManager(this.getContext(), "todolist2.db", null, MainActivity.DBVERSION);
 
         rcvFs3 = (RecyclerView) layout.findViewById(R.id.fs3_rcv);
-        rcvFs3.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(getContext());
+        rcvFs3.setLayoutManager(rcvLayoutManager);
         simpleRcvAdapter = new SimpleRcvAdapter(dbM, this.getActivity(), "date");
         rcvFs3.setAdapter(simpleRcvAdapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), rcvLayoutManager.getOrientation());
+        rcvFs3.addItemDecoration(dividerItemDecoration);
+
         return layout;
     }
 

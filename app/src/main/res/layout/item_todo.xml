@@ -40,8 +40,8 @@
             android:layout_margin="12dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="50%"
-            android:textSize="21sp"
+            android:text="100%"
+            android:textSize="18sp"
             android:textStyle="bold|italic" />
 
     </android.support.design.widget.CoordinatorLayout>
@@ -51,12 +51,13 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:orientation="horizontal">
 
             <TextView
@@ -72,19 +73,16 @@
             android:id="@+id/todo_tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="TEXT VIEW POINT"
+            android:text="TEXT VIEW POINTTEXT VIEW POINTTEXT VIEW POINTTEXT VIEW POINT"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/todo_tv_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:paddingLeft="20dp"
             android:text="DATE VIEW POINT"
             android:textSize="14sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -102,13 +100,13 @@
 
         <TextView
             android:id="@+id/todo_tv_dday"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="12dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="6dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="D-99"
-            android:textSize="18sp"
+            android:text="D-9999"
+            android:textSize="16sp"
             android:textStyle="bold|italic" />
 
     </android.support.design.widget.CoordinatorLayout>

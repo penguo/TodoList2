@@ -2,18 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/update_layout_top"
+    android:id="@+id/update_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/xml_item"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
     tools:context="com.pepg.todolist.UpdateActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:minHeight="?attr/actionBarSize"
@@ -55,246 +55,309 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center_vertical"
             android:minHeight="72dp"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/update_et_title"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:inputType="text"
-                android:text="INPUT TEXT POINT"
-                android:textSize="20sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <EditText
+                    android:id="@+id/update_et_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="text"
+                    android:text="INPUT TEXT POINT"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
 
         </LinearLayout>
-
-        <View style="@style/Divider" />
 
         <LinearLayout
             android:id="@+id/update_layout_category"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:text="분류:"
-                android:textSize="16sp"
-                android:visibility="visible" />
-
-            <TextView
-                android:id="@+id/update_tv_category"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingLeft="20dp"
-                android:text="CATEGORY VIEW POINT"
-                android:textSize="16sp"
-                android:visibility="visible" />
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
-            <ImageView
-                style="@style/icon"
-                android:layout_gravity="right"
-                android:background="@null"
-                app:srcCompat="@drawable/ic_edit_black" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:text="분류:"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
 
+                <TextView
+                    android:id="@+id/update_tv_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_weight="1"
+                    android:paddingLeft="12dp"
+                    android:text="CATEGORY VIEW POINT"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+
+                <ImageView
+                    style="@style/icon"
+                    android:layout_gravity="right"
+                    android:background="@null"
+                    app:srcCompat="@drawable/ic_edit_black" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
         </LinearLayout>
-
-        <View
-            style="@style/Divider"
-            id="@+id/view3"
-            layout_weight="1" />
 
         <LinearLayout
             android:id="@+id/update_layout_date"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:text="날짜: "
-                android:textSize="16sp"
-                android:visibility="visible" />
-
-            <TextView
-                android:id="@+id/update_tv_date"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_weight="1"
-                android:paddingLeft="20dp"
-                android:text="DATE VIEW POINT"
-                android:textSize="16sp"
-                android:visibility="visible" />
+                android:layout_height="match_parent"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
-            <ImageView
-                style="@style/icon"
-                android:layout_gravity="right"
-                android:background="@null"
-                app:srcCompat="@drawable/ic_edit_black" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:text="날짜:"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/update_tv_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_weight="1"
+                    android:paddingLeft="12dp"
+                    android:text="DATE VIEW POINT"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/update_tv_dday"
+                    android:layout_width="60dp"
+                    android:layout_height="48dp"
+                    android:gravity="center"
+                    android:text="D-999"
+                    android:textSize="14sp"
+                    android:textStyle="bold|italic" />
+
+                <ImageView
+                    style="@style/icon"
+                    android:layout_gravity="right"
+                    android:background="@null"
+                    app:srcCompat="@drawable/ic_edit_black" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
 
         </LinearLayout>
 
-        <View style="@style/Divider" />
-
         <LinearLayout
+            android:id="@+id/update_layout_ach"
             android:layout_width="match_parent"
-            android:layout_height="72dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:text="진행:"
-                android:textSize="16sp"
-                android:visibility="visible" />
-
-            <android.support.design.widget.CoordinatorLayout
+            <LinearLayout
+                android:id="@+id/update_layout_ach_background"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:minHeight="72dp"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
-                <FrameLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:text="진행:"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+
+                <android.support.design.widget.CoordinatorLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="12dp"
-                    android:layout_marginTop="12dp">
+                    android:paddingLeft="6dp">
 
-                    <include
-                        android:id="@+id/detail_pb"
-                        layout="@layout/include_progressbar"
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="12dp"
+                        android:layout_marginTop="12dp">
+
+                        <include
+                            android:id="@+id/update_pb"
+                            layout="@layout/include_progressbar"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </FrameLayout>
 
                     <ImageView
+                        android:id="@+id/update_iv_zoom"
                         style="@style/icon"
                         android:layout_gravity="right"
-                        android:layout_marginRight="24dp"
+                        android:layout_marginBottom="12dp"
+                        android:layout_marginTop="12dp"
                         android:layout_weight="1"
                         android:background="@null"
                         app:srcCompat="@drawable/ic_zoomin_black" />
-                </FrameLayout>
 
-            </android.support.design.widget.CoordinatorLayout>
+                </android.support.design.widget.CoordinatorLayout>
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
 
         </LinearLayout>
-
-        <View style="@style/Divider" />
 
         <LinearLayout
+            android:id="@+id/update_layout_alarm"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:text="알림:"
-                android:textSize="16sp"
-                android:visibility="visible" />
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:paddingLeft="20dp"
-                android:text="ALARM VIEW TEST"
-                android:textSize="16sp"
-                android:visibility="visible" />
+                android:layout_height="match_parent"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:text="알림:"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="12dp"
+                    android:text="ALARM VIEW TEST"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
         </LinearLayout>
-
-        <View style="@style/Divider" />
 
         <LinearLayout
+            android:id="@+id/update_layout_memo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:minHeight="48dp"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:text="메모:"
-                android:textSize="16sp"
-                android:visibility="visible" />
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:paddingLeft="20dp"
-                android:text="MEMO VIEW POINT"
-                android:textSize="16sp"
-                android:visibility="visible" />
+                android:layout_height="match_parent"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="메모:"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+
+                <EditText
+                    android:id="@+id/update_et_memo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="textMultiLine"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <View style="@style/Divider" />
         </LinearLayout>
 
-        <View style="@style/Divider" />
     </LinearLayout>
 
 
     <LinearLayout
+        android:id="@+id/update_layout_semi"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
             <TextView
-                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
                 android:text="// "
                 android:textColor="@color/colorRemark"
                 android:textSize="18sp"
                 android:textStyle="bold|italic" />
 
             <TextView
-                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TODO"
@@ -303,7 +366,6 @@
                 android:textStyle="bold|italic" />
 
             <TextView
-                android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" :"
@@ -313,8 +375,8 @@
 
         </LinearLayout>
 
-        <View
-            style="@style/Divider" />
+        <View style="@style/Divider" />
+
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

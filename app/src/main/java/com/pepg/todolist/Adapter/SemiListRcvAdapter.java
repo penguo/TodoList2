@@ -2,6 +2,7 @@ package com.pepg.todolist.Adapter;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -65,7 +66,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.semi_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_semi, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -80,6 +81,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
         holder.tvDate.setText(dbManager.DATA_semi_DATE);
         holder.pb.setMax(dbManager.DATA_semi_ACHMAX);
         holder.pb.setProgress(dbManager.DATA_semi_ACH);
+        holder.scb.setClickable(false);
         if (dbManager.DATA_semi_ACH == 100) {
             holder.scb.setChecked(true);
         } else {
@@ -87,7 +89,6 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
         }
         holder.isSet = true;
         if (activity.getLocalClassName().equals("DetailActivity")) {
-            holder.scb.setClickable(true);
             holder.scb.setOnCheckedChangeListener(new SmoothCheckBox.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(SmoothCheckBox checkBox, boolean isChecked) {
@@ -103,6 +104,12 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
                         dbManager.getValue("_id", parentId);
                         ((DetailActivity) activity).updateAch();
                     }
+                }
+            });
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    holder.scb.toggleAnimation();
                 }
             });
         } else {
@@ -152,4 +159,5 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, dbManager.getSemiSize(parentId)); // 지워진 만큼 다시 채워넣기.
     }
+
 }

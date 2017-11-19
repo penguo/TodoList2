@@ -9,27 +9,29 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
 import com.pepg.todolist.DataBase.dbManager;
 
-import com.pepg.todolist.R;
-
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
-    TextView tvTitle, tvCategory, tvDate;
+    TextView tvTitle, tvCategory, tvDate, tvMemo, tvDday, tvAch;
     ImageButton btnEdit, btnReturn;
-    int id;
+    int id, selectedView;
+    boolean isSelectedView;
     final dbManager dbManager = new dbManager(this, "todolist2.db", null, MainActivity.DBVERSION);
     RecyclerView rcvSemi;
     SemiListRcvAdapter semiRcvAdapter;
-    View includePB;
+    View includePB, includeSemi;
     RoundCornerProgressBar pb;
     UpdateSemi us;
     SwipeRefreshLayout swipe;
+    LinearLayout layoutDate, layoutAch, layoutAlarm, layoutMemo, layoutSemi, layoutAchBg, layoutAlarmBg, layoutMemoBg;
+    ImageView ivZoomAch, ivZoomAlarm, ivZoomMemo;
 
     public DetailActivity() {
     }
@@ -42,12 +44,31 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         tvTitle = (TextView) findViewById(R.id.detail_tv_title);
         tvCategory = (TextView) findViewById(R.id.detail_tv_category);
         tvDate = (TextView) findViewById(R.id.detail_tv_date);
+        tvMemo = (TextView) findViewById(R.id.detail_tv_memo);
+        tvDday = (TextView) findViewById(R.id.detail_tv_dday);
+        tvAch = (TextView) findViewById(R.id.detail_tv_ach);
         btnEdit = (ImageButton) findViewById(R.id.detail_btn_edit);
         btnReturn = (ImageButton) findViewById(R.id.detail_btn_return);
+        layoutDate = (LinearLayout) findViewById(R.id.detail_layout_date);
+        layoutAch = (LinearLayout) findViewById(R.id.detail_layout_ach);
+        layoutAchBg = (LinearLayout) findViewById(R.id.detail_layout_ach_bg);
+        layoutAlarm = (LinearLayout) findViewById(R.id.detail_layout_alarm);
+        layoutAlarmBg = (LinearLayout) findViewById(R.id.detail_layout_alarm_bg);
+        layoutMemo = (LinearLayout) findViewById(R.id.detail_layout_memo);
+        layoutMemoBg = (LinearLayout) findViewById(R.id.detail_layout_memo_bg);
+
         includePB = findViewById(R.id.detail_pb);
         pb = (RoundCornerProgressBar) includePB.findViewById(R.id.progressBar);
 
-        rcvSemi = (RecyclerView) findViewById(R.id.detail_rcv_semi);
+        includeSemi = findViewById(R.id.detail_semi);
+        layoutSemi = (LinearLayout) includeSemi.findViewById(R.id.semi_layout);
+        rcvSemi = (RecyclerView) includeSemi.findViewById(R.id.semi_rcv);
+        swipe = (SwipeRefreshLayout) includeSemi.findViewById(R.id.semi_swipe);
+
+        ivZoomAch = (ImageView) findViewById(R.id.detail_iv_zoom_ach);
+        ivZoomAlarm = (ImageView) findViewById(R.id.detail_iv_zoom_alarm);
+        ivZoomMemo = (ImageView) findViewById(R.id.detail_iv_zoom_memo);
+
         LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(this);
         rcvSemi.setLayoutManager(rcvLayoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, rcvLayoutManager.getOrientation());
@@ -58,7 +79,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         us = new UpdateSemi(semiRcvAdapter, this, dbManager);
 
-        swipe = (SwipeRefreshLayout) findViewById(R.id.detail_swipe);
         swipe.setColorSchemeResources(
                 R.color.colorPrimary,
                 android.R.color.holo_red_light,
@@ -71,6 +91,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         btnEdit.setOnClickListener(this);
         btnReturn.setOnClickListener(this);
+        layoutAch.setOnClickListener(this);
+        layoutAlarm.setOnClickListener(this);
+        layoutMemo.setOnClickListener(this);
     }
 
     @Override
@@ -85,6 +108,27 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             case (R.id.detail_btn_return):
                 onBackPressed();
                 break;
+            case (R.id.detail_layout_ach):
+                if (!isSelectedView) {
+                    viewItems(1);
+                } else if (selectedView == 1) {
+                    viewItems(1);
+                }
+                break;
+            case (R.id.detail_layout_alarm):
+                if (!isSelectedView) {
+                    viewItems(2);
+                } else if (selectedView == 2) {
+                    viewItems(2);
+                }
+                break;
+            case (R.id.detail_layout_memo):
+                if (!isSelectedView) {
+                    viewItems(3);
+                } else if (selectedView == 3) {
+                    viewItems(3);
+                }
+                break;
         }
     }
 
@@ -94,17 +138,30 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         tvTitle.setText(dbManager.DATA_TITLE);
         tvCategory.setText(dbManager.DATA_CATEGORY);
         tvDate.setText(dbManager.DATA_DATE);
-        pb.setProgress(dbManager.DATA_ACH);
+        tvMemo.setText(dbManager.DATA_MEMO);
+        setDday();
+        updateAch();
+        pb.setSecondaryProgress(Manager.getSuggestAch(dbManager.DATA_CREATEDATE, dbManager.DATA_DATE));
+        viewItems(0);
         onRefresh();
+    }
+
+    private void setDday() {
+        tvDday.setText(Manager.getDday(tvDate.getText().toString()));
+        try {
+            if (dbManager.DATA_DDAY >= 10 || dbManager.DATA_DDAY <= -10) {
+                tvDday.setTextSize(16);
+            } else {
+                tvDday.setTextSize(21);
+            }
+        } catch (Exception e) {
+            tvDday.setTextSize(16);
+        }
     }
 
     public void updateAch() {
         pb.setProgress(dbManager.DATA_ACH);
-//        if(dbManager.DATA_ACH == 100){
-//            pb.setProgressColor(R.color.colorRemark);
-//        }else{
-//            pb.setProgressColor(R.color.custom_progress_todo_progress);
-//        }
+        tvAch.setText(dbManager.DATA_ACH + "%");
     }
 
     public void onBackPressed() {
@@ -128,5 +185,72 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         semiRcvAdapter = new SemiListRcvAdapter(dbManager, this, id);
         rcvSemi.setAdapter(semiRcvAdapter);
         swipe.setRefreshing(false);
+    }
+
+    private void viewItems(int selected) {
+        selectedView = selected;
+        switch (selected) {
+            case (0):
+                layoutDate.setVisibility(View.VISIBLE);
+
+                layoutAch.setVisibility(View.VISIBLE);
+                layoutAchBg.setBackgroundResource(R.drawable.xml_item);
+                ivZoomAch.setImageResource(R.drawable.ic_zoomin_black);
+
+                layoutAlarm.setVisibility(View.VISIBLE);
+                layoutAlarmBg.setBackgroundResource(R.drawable.xml_item);
+                ivZoomAlarm.setImageResource(R.drawable.ic_zoomin_black);
+
+                layoutMemo.setVisibility(View.VISIBLE);
+                layoutMemoBg.setBackgroundResource(R.drawable.xml_item);
+                ivZoomMemo.setImageResource(R.drawable.ic_zoomin_black);
+                isSelectedView = false;
+                break;
+            case (1):
+                if (!isSelectedView) {
+                    includeSemi.setVisibility(View.VISIBLE);
+                    layoutAlarm.setVisibility(View.GONE);
+                    layoutMemo.setVisibility(View.GONE);
+                    layoutAchBg.setBackgroundResource(R.drawable.xml_item_selected);
+                    ivZoomAch.setImageResource(R.drawable.ic_zoomout_black);
+                    isSelectedView = true;
+                } else {
+                    includeSemi.setVisibility(View.GONE);
+                    layoutAlarm.setVisibility(View.VISIBLE);
+                    layoutMemo.setVisibility(View.VISIBLE);
+                    layoutAchBg.setBackgroundResource(R.drawable.xml_item);
+                    ivZoomAch.setImageResource(R.drawable.ic_zoomin_black);
+                    isSelectedView = false;
+                }
+                break;
+            case (2):
+                if (!isSelectedView) {
+//                    includeAlarm.setVisibility(View.VISIBLE);
+                    layoutMemo.setVisibility(View.GONE);
+                    layoutAlarmBg.setBackgroundResource(R.drawable.xml_item_selected);
+                    ivZoomAlarm.setImageResource(R.drawable.ic_zoomout_black);
+                    isSelectedView = true;
+                } else {
+//                    includeAlarm.setVisibility(View.GONE);
+                    layoutMemo.setVisibility(View.VISIBLE);
+                    layoutAlarmBg.setBackgroundResource(R.drawable.xml_item);
+                    ivZoomAlarm.setImageResource(R.drawable.ic_zoomin_black);
+                    isSelectedView = false;
+                }
+                break;
+            case (3):
+                if (!isSelectedView) {
+//                    includeMemo.setVisibility(View.VISIBLE);
+                    layoutMemoBg.setBackgroundResource(R.drawable.xml_item_selected);
+                    ivZoomMemo.setImageResource(R.drawable.ic_zoomout_black);
+                    isSelectedView = true;
+                } else {
+//                    includeMemo.setVisibility(View.GONE);
+                    layoutMemoBg.setBackgroundResource(R.drawable.xml_item);
+                    ivZoomMemo.setImageResource(R.drawable.ic_zoomin_black);
+                    isSelectedView = false;
+                }
+                break;
+        }
     }
 }

@@ -10,7 +10,7 @@ public class DataMerge {
 
     int position, id;
     Date date;
-    int ach;
+    int num;
 
     public DataMerge(int position, int id, Date date) {
         this.position = position;
@@ -18,10 +18,10 @@ public class DataMerge {
         this.date = date;
     }
 
-    public DataMerge(int position, int id, int ach) {
+    public DataMerge(int position, int id, int num) {
         this.position = position;
         this.id = id;
-        this.ach = ach;
+        this.num = num;
     }
 
     public int getPosition() {
@@ -48,11 +48,11 @@ public class DataMerge {
         this.date = date;
     }
 
-    public int getAch() {
-        return ach;
+    public int getNum() {
+        return num;
     }
 
-    public void setAch(int ach) {
-        this.ach = ach;
+    public void setNum(int num) {
+        this.num = num;
     }
 }

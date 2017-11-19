@@ -12,18 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
-import com.pepg.todolist.DataBase.DataMerge;
 import com.pepg.todolist.Manager;
 
 import com.pepg.todolist.DataBase.dbManager;
 import com.pepg.todolist.DetailActivity;
 
 import com.pepg.todolist.R;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by pengu on 2017-08-10.
@@ -65,7 +59,7 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.todo_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_todo, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         dbManager.setPosition();
         return viewHolder;
@@ -73,15 +67,24 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-
         dbManager.getValue("_position", position);
 
         holder.tvTitle.setText(dbManager.DATA_TITLE);
         holder.tvDate.setText("~ " + dbManager.DATA_DATE);
         holder.tvCategory.setText(dbManager.DATA_CATEGORY);
         holder.tvAch.setText(dbManager.DATA_ACH + "%");
-        holder.tvDday.setText("D" + Manager.calculateDday(dbManager.DATA_DATE) + "");
+        holder.tvDday.setText(Manager.getDday(dbManager.DATA_DATE));
+        try {
+            if (dbManager.DATA_DDAY >= 10 || dbManager.DATA_DDAY <= -10) {
+                holder.tvDday.setTextSize(16);
+            } else {
+                holder.tvDday.setTextSize(21);
+            }
+        } catch (Exception e) {
+            holder.tvDday.setTextSize(16);
+        }
         holder.pb.setProgress(dbManager.DATA_ACH);
+        holder.pb.setSecondaryProgress(Manager.getSuggestAch(dbManager.DATA_CREATEDATE, dbManager.DATA_DATE));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -5,6 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.pepg.todolist.Manager;
+import com.pepg.todolist.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +27,8 @@ public class dbManager extends SQLiteOpenHelper {
         this.context = context;
     }
 
-    public static int DATA_id, DATA_position, DATA_ACH;
-    public static String DATA_TITLE, DATA_CATEGORY, DATA_DATE;
+    public static int DATA_id, DATA_position, DATA_ACH, DATA_DDAY;
+    public static String DATA_TITLE, DATA_CATEGORY, DATA_DATE, DATA_CREATEDATE, DATA_MEMO;
     public static int DATA_semi_id, DATA_semi_position, DATA_semi_parentId, DATA_semi_WEIGHT, DATA_semi_ACH, DATA_semi_ACHMAX;
     public static String DATA_semi_TITLE, DATA_semi_DATE;
     public static String DATA_SORTTYPE = "DEFAULT", DATA_SORTTYPEEQUAL = "";
@@ -38,7 +41,9 @@ public class dbManager extends SQLiteOpenHelper {
                 " TITLE TEXT, " +
                 " CATEGORY TEXT," +
                 " DATE TEXT, " +
-                " ACH INTEGER DEFAULT 0);");
+                " ACH INTEGER DEFAULT 0," +
+                " MEMO TEXT, " +
+                " CREATEDATE TEXT );");
         db.execSQL(" CREATE TABLE SEMITODO ( " +
                 " _id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 " _position INTEGER DEFAULT -1, " +
@@ -72,7 +77,11 @@ public class dbManager extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void insert(String title, String category, String date, int ach) {
+    public void insert(String title, String category, String date, int ach, String memo) {
+        if (title.equals("")) {
+            title = context.getString(R.string.empty_data);
+        }
+        String createDate = Manager.todayDate();
         db = getWritableDatabase();
         db.execSQL(" INSERT INTO TODOLIST VALUES ( " +
                 " null, " +
@@ -80,7 +89,9 @@ public class dbManager extends SQLiteOpenHelper {
                 "'" + title + "', " +
                 "'" + category + "', " +
                 "'" + date + "', " +
-                ach + ");");
+                ach + "," +
+                "'" + memo + "'," +
+                "'" + createDate + "');");
         setDummyData_Semi(title);
         db.close();
     }
@@ -113,23 +124,27 @@ public class dbManager extends SQLiteOpenHelper {
     }
 
     public void insertSimply() {
-        insert(DATA_TITLE, DATA_CATEGORY, DATA_DATE, DATA_ACH);
+        insert(DATA_TITLE, DATA_CATEGORY, DATA_DATE, DATA_ACH, DATA_MEMO);
         resetPublicData();
     }
 
-    public void update(int id, String title, String category, String date, int ach) {
+    public void update(int id, String title, String category, String date, int ach, String memo) {
+        if (title.equals("")) {
+            title = context.getString(R.string.empty_data);
+        }
         db = getWritableDatabase();
         db.execSQL(" UPDATE TODOLIST SET " +
                 "TITLE = '" + title + "', " +
                 "CATEGORY = '" + category + "', " +
                 "DATE = '" + date + "', " +
-                "ACH = " + ach + " " +
+                "ACH = " + ach + "," +
+                "MEMO = '" + memo + "'" +
                 "WHERE _id = " + id + " ; ");
         db.close();
     }
 
     public void updateSimply() {
-        update(DATA_id, DATA_TITLE, DATA_CATEGORY, DATA_DATE, DATA_ACH);
+        update(DATA_id, DATA_TITLE, DATA_CATEGORY, DATA_DATE, DATA_ACH, DATA_MEMO);
         resetPublicData();
     }
 
@@ -149,6 +164,8 @@ public class dbManager extends SQLiteOpenHelper {
             DATA_TITLE = cursor.getString(2);
             DATA_CATEGORY = cursor.getString(3);
             DATA_DATE = cursor.getString(4);
+            DATA_MEMO = cursor.getString(6);
+            DATA_CREATEDATE = cursor.getString(7);
         }
         cursor = db.rawQuery("SELECT ACH, ACHMAX FROM SEMITODO WHERE _parentId = " + DATA_id + " ;", null);
         if (cursor.getCount() == 0) // Semi 데이터가 없을 경우 - 직접 설정한 퍼센트로 적용.
@@ -194,6 +211,9 @@ public class dbManager extends SQLiteOpenHelper {
     }
 
     public void semiInsert(int parentId, String title, int weight, String date) {
+        if (title.equals("")) {
+            title = context.getString(R.string.empty_data);
+        }
         db = getWritableDatabase();
         db.execSQL(" INSERT INTO SEMITODO VALUES ( " +
                 "null, " +
@@ -209,6 +229,9 @@ public class dbManager extends SQLiteOpenHelper {
     }
 
     public void semiUpdate(int id, String title, int weight, String date, int ach, int achmax) {
+        if (title.equals("")) {
+            title = context.getString(R.string.empty_data);
+        }
         db = getWritableDatabase();
         db.execSQL(" UPDATE SEMITODO SET " +
                 "TITLE = '" + title + "', " +
@@ -268,6 +291,7 @@ public class dbManager extends SQLiteOpenHelper {
         DATA_TITLE = "";
         DATA_CATEGORY = "";
         DATA_DATE = "";
+        DATA_MEMO = "";
         DATA_semi_TITLE = "";
         DATA_semi_DATE = "";
     }
@@ -279,7 +303,7 @@ public class dbManager extends SQLiteOpenHelper {
                 cursor = db.rawQuery("SELECT _id FROM TODOLIST;", null);
                 break;
             case ("CATEGORY"):
-                cursor = db.rawQuery("SELECT _id FROM TODOLIST WHERE CATEGORY = '"+ DATA_SORTTYPEEQUAL + "';", null);
+                cursor = db.rawQuery("SELECT _id FROM TODOLIST WHERE CATEGORY = '" + DATA_SORTTYPEEQUAL + "';", null);
                 break;
         }
         int result = cursor.getCount();

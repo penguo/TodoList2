@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/xml_item"
     android:orientation="vertical"
     tools:context="com.pepg.todolist.ListActivity">
 
@@ -43,27 +44,28 @@
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
-    <FrameLayout
-        android:id="@+id/listA_framelayout_sort"
+    <LinearLayout
+        android:id="@+id/listA_layout_sort"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="48dp"
         android:background="?attr/colorPrimaryDark"
+        android:clickable="true"
         android:elevation="3dp"
-        android:theme="@android:style/Widget.Material.Toolbar"
-        android:visibility="visible">
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:gravity="center"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="2dp"
                 android:alpha="0.7"
-                android:gravity="bottom|center"
+                android:gravity="center"
                 android:text="category: "
                 android:textColor="#ffffff"
                 android:textSize="14sp" />
@@ -77,9 +79,9 @@
                 android:text="SORTEQUAL VIEW POINT"
                 android:textColor="#ffffff"
                 android:textSize="21sp" />
-
         </LinearLayout>
-    </FrameLayout>
+
+    </LinearLayout>
 
 
     <android.support.design.widget.CoordinatorLayout

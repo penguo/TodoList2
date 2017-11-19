@@ -18,6 +18,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,26 +28,29 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
 import com.pepg.todolist.DataBase.dbManager;
-
-import com.pepg.todolist.R;
 
 public class UpdateActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     int id;
     String selected;
-    EditText etTitle;
+    EditText etTitle, etMemo;
     ImageButton btnSave, btnReturn;
-    TextView tvCategory, tvDate;
+    TextView tvCategory, tvDate, tvDday;
     FloatingActionButton fabSemiAdd;
-    LinearLayout layoutDate, layoutCategory, layoutTop;
     final dbManager dbManager = new dbManager(this, "todolist2.db", null, MainActivity.DBVERSION);
     UpdateSemi us;
     RecyclerView rcvSemi;
     SemiListRcvAdapter semiRcvAdapter;
     Activity activity;
     SwipeRefreshLayout swipe;
+    boolean isViewSemi;
+    LinearLayout layoutCategory, layoutDate, layoutAch, layoutAlarm, layoutMemo, layoutSemi, layoutAchBackground;
+    ImageView ivZoom;
+    View includePB;
+    RoundCornerProgressBar pb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +58,23 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_update);
 
         etTitle = (EditText) findViewById(R.id.update_et_title);
+        etMemo = (EditText) findViewById(R.id.update_et_memo);
         btnSave = (ImageButton) findViewById(R.id.update_btn_save);
         btnReturn = (ImageButton) findViewById(R.id.update_btn_return);
         tvCategory = (TextView) findViewById(R.id.update_tv_category);
         tvDate = (TextView) findViewById(R.id.update_tv_date);
+        tvDday = (TextView) findViewById(R.id.update_tv_dday);
         layoutCategory = (LinearLayout) findViewById(R.id.update_layout_category);
         layoutDate = (LinearLayout) findViewById(R.id.update_layout_date);
-        layoutTop = (LinearLayout) findViewById(R.id.update_layout_top);
+        layoutAch = (LinearLayout) findViewById(R.id.update_layout_ach);
+        layoutAlarm = (LinearLayout) findViewById(R.id.update_layout_alarm);
+        layoutMemo = (LinearLayout) findViewById(R.id.update_layout_memo);
+        layoutSemi = (LinearLayout) findViewById(R.id.update_layout_semi);
+        layoutAchBackground = (LinearLayout) findViewById(R.id.update_layout_ach_background);
+        ivZoom = (ImageView) findViewById(R.id.update_iv_zoom);
         fabSemiAdd = (FloatingActionButton) findViewById(R.id.update_fab_semiadd);
+        includePB = findViewById(R.id.update_pb);
+        pb = includePB.findViewById(R.id.progressBar);
 
         rcvSemi = (RecyclerView) findViewById(R.id.update_rcv_semi);
         LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(this);
@@ -81,7 +94,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         fabSemiAdd.setOnClickListener(this);
         layoutCategory.setOnClickListener(this);
         layoutDate.setOnClickListener(this);
-
+        layoutAch.setOnClickListener(this);
 
         swipe = (SwipeRefreshLayout) findViewById(R.id.update_swipe);
         swipe.setColorSchemeResources(
@@ -114,14 +127,34 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
             etTitle.setText("");
             tvCategory.setText(getString(R.string.unregistered));
             tvDate.setText(getString(R.string.unregistered));
+            tvDday.setText(tvDate.getText().toString());
             etTitle.requestFocus();
+            pb.setProgress(0);
+            pb.setSecondaryProgress(0);
         } else {
             dbManager.getValue("_id", id);
             etTitle.setText(dbManager.DATA_TITLE);
+            etMemo.setText(dbManager.DATA_MEMO);
             tvCategory.setText(dbManager.DATA_CATEGORY);
             tvDate.setText(dbManager.DATA_DATE);
+            setDday();
+            pb.setProgress(dbManager.DATA_ACH);
+            pb.setSecondaryProgress(Manager.getSuggestAch(dbManager.DATA_CREATEDATE, dbManager.DATA_DATE));
         }
         onRefresh();
+    }
+
+    private void setDday() {
+        tvDday.setText(Manager.getDday(tvDate.getText().toString()));
+        try {
+            if (dbManager.DATA_DDAY >= 10 || dbManager.DATA_DDAY <= -10) {
+                tvDday.setTextSize(16);
+            } else {
+                tvDday.setTextSize(21);
+            }
+        } catch (Exception e) {
+            tvDday.setTextSize(16);
+        }
     }
 
     @Override
@@ -136,10 +169,10 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case (R.id.update_btn_save):
                 if (id == 0) {
-                    dbManager.insert(etTitle.getText().toString(), tvCategory.getText().toString(), tvDate.getText().toString(), 0);
+                    dbManager.insert(etTitle.getText().toString(), tvCategory.getText().toString(), tvDate.getText().toString(), 0, etMemo.getText().toString());
                     dbManager.DATA_SORTTYPE = "DEFAULT";
                 } else {
-                    dbManager.update(id, etTitle.getText().toString(), tvCategory.getText().toString(), tvDate.getText().toString(), 0);
+                    dbManager.update(id, etTitle.getText().toString(), tvCategory.getText().toString(), tvDate.getText().toString(), 0, etMemo.getText().toString());
                 }
                 setResult(RESULT_OK);
                 finish();
@@ -150,6 +183,9 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case (R.id.update_btn_return):
                 onBackPressed();
+                break;
+            case (R.id.update_layout_ach):
+                viewSemi();
                 break;
         }
     }
@@ -198,8 +234,9 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
                                 break;
                         }
                         if (which != 4) {
-                            tvDate.setText(CurDateFormat.format(cal.getTime())+"");
+                            tvDate.setText(CurDateFormat.format(cal.getTime()) + "");
                         }
+                        setDday();
                     } else {
                         SimpleDateFormat CurYearFormat = new SimpleDateFormat("yyyy");
                         SimpleDateFormat CurMonthFormat = new SimpleDateFormat("MM");
@@ -224,7 +261,12 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
             public void onClick(DialogInterface dialog, int which) {
                 selected = title.getText().toString();
                 if (!dbManager.isAlreadyResCategory(selected)) {
-                    dbManager.addSetting("category", selected);
+                    if (selected.equals("")) {
+                        Toast.makeText(activity, "분류 이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                        selected = activity.getString(R.string.unregistered);
+                    }else{
+                        dbManager.addSetting("category", selected);
+                    }
                 } else {
                     Toast.makeText(activity, "이미 존재하는 카테고리입니다. 해당 카테고리로 선택되었습니다.", Toast.LENGTH_SHORT).show();
                 }
@@ -261,6 +303,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
             }
             sb.append(dayOfMonth + "");
             tvDate.setText(sb.toString());
+            setDday();
         }
     };
 
@@ -271,9 +314,8 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void clearFocus() {
-        layoutTop.requestFocus();
+        layoutCategory.requestFocus();
     }
-
 
     @Override
     public void onRefresh() {
@@ -282,4 +324,27 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         swipe.setRefreshing(false);
     }
 
+    private void viewSemi() {
+        if (!isViewSemi) {
+            layoutAch.setVisibility(View.VISIBLE);
+            layoutSemi.setVisibility(View.VISIBLE);
+            layoutCategory.setVisibility(View.GONE);
+            layoutDate.setVisibility(View.GONE);
+            layoutAlarm.setVisibility(View.GONE);
+            layoutMemo.setVisibility(View.GONE);
+            ivZoom.setImageResource(R.drawable.ic_zoomout_black);
+            layoutAchBackground.setBackgroundResource(R.drawable.xml_item_selected);
+            isViewSemi = true;
+        } else {
+            layoutAch.setVisibility(View.VISIBLE);
+            layoutSemi.setVisibility(View.GONE);
+            layoutCategory.setVisibility(View.VISIBLE);
+            layoutDate.setVisibility(View.VISIBLE);
+            layoutAlarm.setVisibility(View.VISIBLE);
+            layoutMemo.setVisibility(View.VISIBLE);
+            layoutAchBackground.setBackground(null);
+            ivZoom.setImageResource(R.drawable.ic_zoomin_black);
+            isViewSemi = false;
+        }
+    }
 }

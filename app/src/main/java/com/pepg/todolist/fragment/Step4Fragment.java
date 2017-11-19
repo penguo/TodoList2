@@ -18,6 +18,7 @@ package com.pepg.todolist.fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
+import com.pepg.todolist.AddguideActivity;
 import com.pepg.todolist.DataBase.dbManager;
 import com.pepg.todolist.MainActivity;
 import com.pepg.todolist.UpdateSemi;
@@ -48,17 +50,16 @@ public class Step4Fragment extends Fragment implements View.OnClickListener {
     SemiListRcvAdapter semiRcvAdapter;
     RecyclerView rcvFs4;
 
-    public Step4Fragment(){
+    public Step4Fragment() {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_step4, container, false);
 
         dbM = new dbManager(this.getContext(), "todolist2.db", null, MainActivity.DBVERSION);
@@ -68,9 +69,13 @@ public class Step4Fragment extends Fragment implements View.OnClickListener {
 
         rcvFs4 = (RecyclerView) layout.findViewById(R.id.fs4_rcv);
 
-        rcvFs4.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(getContext());
+        rcvFs4.setLayoutManager(rcvLayoutManager);
         semiRcvAdapter = new SemiListRcvAdapter(dbM, this.getActivity(), 0);
         rcvFs4.setAdapter(semiRcvAdapter);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), rcvLayoutManager.getOrientation());
+        rcvFs4.addItemDecoration(dividerItemDecoration);
 
         us = new UpdateSemi(semiRcvAdapter, this.getActivity(), dbM);
 
@@ -81,14 +86,11 @@ public class Step4Fragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch(view.getId()){
-            case(R.id.fs4_btn_save):
-                dbM.insertSimply();
-                dbM.DATA_SORTTYPE = "DEFAULT";
-                getActivity().setResult(RESULT_OK);
-                getActivity().finish();
+        switch (view.getId()) {
+            case (R.id.fs4_btn_save):
+                ((AddguideActivity) getActivity()).save();
                 break;
-            case(R.id.fs4_fab_semiadd):
+            case (R.id.fs4_fab_semiadd):
                 us.updateSemi(0, this.getContext(), true);
                 semiRcvAdapter.notifyDataSetChanged();
                 break;

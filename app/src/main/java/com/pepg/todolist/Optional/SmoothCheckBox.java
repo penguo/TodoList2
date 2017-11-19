@@ -135,6 +135,18 @@ public class SmoothCheckBox extends View implements Checkable {
         });
     }
 
+    public void toggleAnimation(){
+        toggle();
+
+        mTickDrawing = false;
+        mDrewDistance = 0;
+        if (isChecked()) {
+            startCheckedAnimation();
+        } else {
+            startUnCheckedAnimation();
+        }
+    }
+
     @Override
     protected Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();

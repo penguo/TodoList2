@@ -5,6 +5,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 
 import com.pepg.todolist.fragment.Step1Fragment;
 import com.pepg.todolist.fragment.Step2Fragment;
@@ -17,7 +19,7 @@ import com.pepg.todolist.DataBase.dbManager;
 import com.pepg.todolist.R;
 
 
-public class AddguideActivity extends AppCompatActivity {
+public class AddguideActivity extends AppCompatActivity implements View.OnClickListener {
 
     dbManager dbM = new dbManager(this, "todolist2.db", null, MainActivity.DBVERSION);
 
@@ -25,6 +27,7 @@ public class AddguideActivity extends AppCompatActivity {
     NavigationTabStrip nts;
     Step1Fragment fs1;
     Activity activity;
+    ImageButton btnReturn, btnSave;
 
     public static int ENABLED_ITEM_SIZE;
 
@@ -41,6 +44,8 @@ public class AddguideActivity extends AppCompatActivity {
 
         vp = (ViewPager) findViewById(R.id.aguide_vp);
         nts = (NavigationTabStrip) findViewById(R.id.aguide_nts);
+        btnReturn = (ImageButton) findViewById(R.id.aguide_btn_return);
+        btnSave = (ImageButton) findViewById(R.id.aguide_btn_save);
 
         fs1 = new Step1Fragment();
 
@@ -53,40 +58,55 @@ public class AddguideActivity extends AppCompatActivity {
         vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
             public void onPageSelected(int position) {
-
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                if(state == 0){
-                    if(vp.getCurrentItem()!=0){
+                if (state == 0) {
+                    if (vp.getCurrentItem() != 0) {
                         dbM.DATA_TITLE = fs1.getDataTitle();
                         Manager.controlKeyboard(false, activity);
-                    }else{
+                    } else {
                         Manager.controlKeyboard(true, activity);
                     }
                 }
             }
         });
 
+        btnReturn.setOnClickListener(this);
+        btnSave.setOnClickListener(this);
     }
 
-    private class pagerAdapter extends FragmentStatePagerAdapter
-    {
-        public pagerAdapter(android.support.v4.app.FragmentManager fm)
-        {
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case (R.id.aguide_btn_return):
+                finish();
+                break;
+            case (R.id.aguide_btn_save):
+                save();
+                break;
+        }
+    }
+
+    public void save() {
+        dbM.insertSimply();
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    private class pagerAdapter extends FragmentStatePagerAdapter {
+        public pagerAdapter(android.support.v4.app.FragmentManager fm) {
             super(fm);
         }
+
         @Override
-        public android.support.v4.app.Fragment getItem(int position)
-        {
-            switch(position)
-            {
+        public android.support.v4.app.Fragment getItem(int position) {
+            switch (position) {
                 case 0:
                     return fs1;
                 case 1:
@@ -99,14 +119,14 @@ public class AddguideActivity extends AppCompatActivity {
                     return null;
             }
         }
+
         @Override
-        public int getCount()
-        {
+        public int getCount() {
             return ENABLED_ITEM_SIZE;
         }
     }
 
-    public void setData(int position){
+    public void setData(int position) {
         vp.setCurrentItem(position);
     }
 

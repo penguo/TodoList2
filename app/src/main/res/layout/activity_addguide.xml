@@ -30,84 +30,69 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/detail_btn_return"
+                    android:id="@+id/aguide_btn_return"
                     style="@style/icon"
                     app:srcCompat="@drawable/ic_undo" />
 
                 <TextView
-                    android:id="@+id/textView8"
                     style="@style/ToolbarTitle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="TodoList" />
+                    android:text="Add new Todo" />
 
                 <ImageButton
-                    android:id="@+id/detail_btn_edit"
+                    android:id="@+id/aguide_btn_save"
                     style="@style/icon"
-                    app:srcCompat="@drawable/ic_edit" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:elevation="4dp"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:background="@color/colorPrimary"
-                        android:elevation="4dp">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="4dp"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="18dp"
-                            android:background="@color/colorPrimaryDark2" />
-
-                        <com.gigamole.navigationtabstrip.NavigationTabStrip
-                            android:id="@+id/aguide_nts"
-                            android:layout_width="match_parent"
-                            android:layout_height="42dp"
-                            android:layout_gravity="center"
-                            android:layout_marginEnd="30dp"
-                            android:layout_marginLeft="30dp"
-                            android:layout_marginRight="30dp"
-                            android:layout_marginStart="30dp"
-                            app:nts_active_color="#fff"
-                            app:nts_animation_duration="300"
-                            app:nts_color="#3cdedd"
-                            app:nts_corners_radius="3.5dp"
-                            app:nts_factor="0.8"
-                            app:nts_gravity="bottom"
-                            app:nts_inactive_color="#81ffffff"
-                            app:nts_titles="@array/titles"
-                            app:nts_type="point"
-                            app:nts_weight="7dp" />
-
-                    </FrameLayout>
-
-                </RelativeLayout>
-
+                    app:srcCompat="@drawable/ic_save" />
 
             </LinearLayout>
 
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorPrimaryDark"
+        android:elevation="3dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="18dp"
+            android:background="@color/colorPrimaryDark2" />
+
+        <com.gigamole.navigationtabstrip.NavigationTabStrip
+            android:id="@+id/aguide_nts"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginStart="30dp"
+            app:nts_active_color="#fff"
+            app:nts_animation_duration="300"
+            app:nts_color="#3cdedd"
+            app:nts_corners_radius="3.5dp"
+            app:nts_factor="0.8"
+            app:nts_gravity="bottom"
+            app:nts_inactive_color="#81ffffff"
+            app:nts_titles="@array/titles"
+            app:nts_type="point"
+            app:nts_weight="7dp" />
+
+    </FrameLayout>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/aguide_vp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/ag_btn"
-        android:background="#1f252e39"
+        android:background="@drawable/xml_item"
         android:elevation="1dp"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
