@@ -8,15 +8,11 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.ChangeBounds;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,9 +21,7 @@ import android.support.v7.app.AlertDialog;
 import com.pepg.todolist.Adapter.SimpleRcvAdapter;
 
 import com.pepg.todolist.Adapter.ListRcvAdapter;
-import com.pepg.todolist.DataBase.dbManager;
-
-import com.pepg.todolist.R;
+import com.pepg.todolist.DataBase.DBManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +42,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     DividerItemDecoration dividerItemDecoration;
     Toolbar toolbar;
 
-    final dbManager dbManager = new dbManager(this, "todolist2.db", null, MainActivity.DBVERSION);
+    final DBManager dbManager = new DBManager(this, "todolist2.db", null, MainActivity.DBVERSION);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

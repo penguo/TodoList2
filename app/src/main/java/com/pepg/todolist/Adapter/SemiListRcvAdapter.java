@@ -2,23 +2,21 @@ package com.pepg.todolist.Adapter;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
+import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.DetailItemActivity;
 import com.pepg.todolist.Manager;
 import com.pepg.todolist.Optional.SmoothCheckBox;
 import com.pepg.todolist.UpdateActivity;
 
-import com.pepg.todolist.DataBase.dbManager;
 import com.pepg.todolist.DetailActivity;
 
 import com.pepg.todolist.R;
@@ -34,18 +32,18 @@ import static com.pepg.todolist.Manager.modifyMode;
 public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.ViewHolder> {
     private Activity activity;
 
-    dbManager dbManager;
+    DBManager dbManager;
     int parentId;
     String currentClassName;
 
-    public SemiListRcvAdapter(dbManager dbManager, Activity activity, int parentId) {
+    public SemiListRcvAdapter(DBManager dbManager, Activity activity, int parentId) {
         this.dbManager = dbManager;
         this.activity = activity;
         this.parentId = parentId;
         this.dbManager.setSemiPosition(parentId);
     }
 
-    public SemiListRcvAdapter(dbManager dbManager, Activity activity, int parentId, boolean isModifyMode) {
+    public SemiListRcvAdapter(DBManager dbManager, Activity activity, int parentId, boolean isModifyMode) {
         this.dbManager = dbManager;
         this.activity = activity;
         this.parentId = parentId;

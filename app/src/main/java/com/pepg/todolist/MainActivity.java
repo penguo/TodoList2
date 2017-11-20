@@ -3,17 +3,12 @@ package com.pepg.todolist;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.transition.ChangeBounds;
-import android.transition.Transition;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pepg.todolist.DataBase.dbManager;
-
-import com.pepg.todolist.R;
+import com.pepg.todolist.DataBase.DBManager;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -21,7 +16,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Button btnList, btnSetting, btnDaily;
     TextView tvTitle, tvInfo;
-    final dbManager dbManager = new dbManager(this, "todolist2.db", null, DBVERSION);
+    final DBManager dbManager = new DBManager(this, "todolist2.db", null, DBVERSION);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

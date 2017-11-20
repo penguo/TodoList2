@@ -2,18 +2,13 @@ package com.pepg.todolist;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.inputmethod.InputMethodManager;
 
 import java.lang.reflect.Field;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
-import com.pepg.todolist.DataBase.dbManager;
-import com.pepg.todolist.R;
+import com.pepg.todolist.DataBase.DBManager;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -65,14 +60,14 @@ public class Manager {
             strings = date.split("\u002D");
             readCal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]), Integer.parseInt(strings[2]));
         } catch (Exception e) {
-            dbManager.DATA_DDAY = 9999;
+            DBManager.DATA_DDAY = 9999;
             return 9999;
         }
         todayCal.set(todayCal.get(Calendar.YEAR), todayCal.get(Calendar.MONTH) + 1, todayCal.get(Calendar.DATE));
         todayTime = todayCal.getTimeInMillis() / 86400000;
         ddayTime = readCal.getTimeInMillis() / 86400000;
         resultDday = (int) (ddayTime - todayTime);
-        dbManager.DATA_DDAY = resultDday;
+        DBManager.DATA_DDAY = resultDday;
         return resultDday;
     }
 
@@ -101,8 +96,6 @@ public class Manager {
         float value = (float) (dp / context.getResources().getDisplayMetrics().density);
         return (int) value;
     }
-
-
 
     public static int getSuggestAch(String createDate, String goalDate) {
         todayCal = Calendar.getInstance();

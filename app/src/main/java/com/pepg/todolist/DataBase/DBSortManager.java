@@ -4,28 +4,24 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 
 import com.pepg.todolist.Manager;
-import com.pepg.todolist.R;
 
 /**
  * Created by pengu on 2017-10-23.
  */
 
-public class dbSortManager {
+public class DBSortManager {
 
     SQLiteDatabase dbW, dbR;
     Cursor cursor;
-    dbManager dbManager;
+    DBManager dbManager;
     Context context;
     int i, j;
 
-    public dbSortManager(dbManager dbManager, Context context, SQLiteDatabase dbW, SQLiteDatabase dbR) {
+    public DBSortManager(DBManager dbManager, Context context, SQLiteDatabase dbW, SQLiteDatabase dbR) {
         this.dbManager = dbManager;
         this.context = context;
         this.dbW = dbW;

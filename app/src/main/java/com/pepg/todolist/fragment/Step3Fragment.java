@@ -27,7 +27,7 @@ import android.widget.LinearLayout;
 
 import com.pepg.todolist.Adapter.SimpleRcvAdapter;
 
-import com.pepg.todolist.DataBase.dbManager;
+import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.MainActivity;
 import com.pepg.todolist.R;
 
@@ -37,7 +37,7 @@ import com.pepg.todolist.R;
 
 public class Step3Fragment extends Fragment {
 
-    dbManager dbM;
+    DBManager dbM;
     RecyclerView rcvFs3;
     SimpleRcvAdapter simpleRcvAdapter;
 
@@ -53,7 +53,7 @@ public class Step3Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_step3, container, false);
 
-        dbM = new dbManager(this.getContext(), "todolist2.db", null, MainActivity.DBVERSION);
+        dbM = new DBManager(this.getContext(), "todolist2.db", null, MainActivity.DBVERSION);
 
         rcvFs3 = (RecyclerView) layout.findViewById(R.id.fs3_rcv);
         LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(getContext());

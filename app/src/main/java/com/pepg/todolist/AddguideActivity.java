@@ -8,20 +8,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.fragment.Step1Fragment;
 import com.pepg.todolist.fragment.Step2Fragment;
 import com.pepg.todolist.fragment.Step3Fragment;
 import com.pepg.todolist.fragment.Step4Fragment;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 
-import com.pepg.todolist.DataBase.dbManager;
-
-import com.pepg.todolist.R;
-
 
 public class AddguideActivity extends AppCompatActivity implements View.OnClickListener {
 
-    dbManager dbM = new dbManager(this, "todolist2.db", null, MainActivity.DBVERSION);
+    DBManager dbM = new DBManager(this, "todolist2.db", null, MainActivity.DBVERSION);
 
     ViewPager vp;
     NavigationTabStrip nts;

@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.pepg.todolist.AddguideActivity;
-import com.pepg.todolist.DataBase.dbManager;
+import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.ListActivity;
 
 import com.pepg.todolist.Manager;
@@ -36,7 +36,7 @@ import com.pepg.todolist.R;
 public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.ViewHolder> {
     private Activity activity;
 
-    dbManager dbManager;
+    DBManager dbManager;
     List<String> items, itemsDetail;
     String type, option;
     Date date;
@@ -45,14 +45,14 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
     CharSequence[] itemsCS, itemsDetailCS;
     int selectedPosition = -1;
 
-    public SimpleRcvAdapter(dbManager dbManager, Activity activity, String type) {
+    public SimpleRcvAdapter(DBManager dbManager, Activity activity, String type) {
         this.dbManager = dbManager;
         this.activity = activity;
         this.type = type;
         this.option = "";
     }
 
-    public SimpleRcvAdapter(dbManager dbManager, Activity activity, String type, String option) {
+    public SimpleRcvAdapter(DBManager dbManager, Activity activity, String type, String option) {
         this.dbManager = dbManager;
         this.activity = activity;
         this.type = type;

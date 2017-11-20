@@ -14,9 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
-import com.pepg.todolist.DataBase.dbManager;
-
-import com.pepg.todolist.R;
+import com.pepg.todolist.DataBase.DBManager;
 
 /**
  * Created by pengu on 2017-09-19.
@@ -25,16 +23,16 @@ import com.pepg.todolist.R;
 public class UpdateSemi implements View.OnClickListener {
 
     SemiListRcvAdapter semiRcvAdapter;
-    dbManager dbManager;
+    DBManager dbManager;
     Context context;
     String weightNum;
     ImageView weight;
     Activity activity;
     int parentId;
 
-    public UpdateSemi(SemiListRcvAdapter semiRcvAdapter, Activity activity, dbManager dbManager) {
+    public UpdateSemi(SemiListRcvAdapter semiRcvAdapter, Activity activity, DBManager DBManager) {
         this.semiRcvAdapter = semiRcvAdapter;
-        this.dbManager = dbManager;
+        this.dbManager = DBManager;
         this.activity = activity;
     }
 

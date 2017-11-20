@@ -12,10 +12,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
-import com.pepg.todolist.DataBase.dbManager;
+import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.fragment.DetailAlarmFragment;
 import com.pepg.todolist.fragment.DetailSemiFragment;
 
@@ -103,16 +102,16 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setData(int item) {
-        if (!dbManager.DATA_TITLE.equals(activity.getString(R.string.empty_data))) {
-            tvTitle.setText(dbManager.DATA_TITLE);
-            tvCategory.setText(dbManager.DATA_CATEGORY);
+        if (!DBManager.DATA_TITLE.equals(activity.getString(R.string.empty_data))) {
+            tvTitle.setText(DBManager.DATA_TITLE);
+            tvCategory.setText(DBManager.DATA_CATEGORY);
         } else {
-            tvTitle.setText(dbManager.DATA_CATEGORY);
+            tvTitle.setText(DBManager.DATA_CATEGORY);
             tvCategory.setVisibility(View.GONE);
         }
-        tvDate.setText(dbManager.DATA_DATE);
+        tvDate.setText(DBManager.DATA_DATE);
         btnReturn.setImageResource(R.drawable.ic_zoomout);
-        pb.setSecondaryProgress(Manager.getSuggestAch(dbManager.DATA_CREATEDATE, dbManager.DATA_DATE));
+        pb.setSecondaryProgress(Manager.getSuggestAch(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE));
         switch (item) {
             case (1):
                 updateAch();
@@ -148,7 +147,7 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
     private void setDday() {
         tvDday.setText(Manager.getDday(tvDate.getText().toString()));
         try {
-            if (dbManager.DATA_DDAY >= 10 || dbManager.DATA_DDAY <= -10) {
+            if (DBManager.DATA_DDAY >= 10 || DBManager.DATA_DDAY <= -10) {
                 tvDday.setTextSize(16);
             } else {
                 tvDday.setTextSize(21);
@@ -159,10 +158,10 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void updateAch() {
-        pb.setProgress(dbManager.DATA_ACH);
-        tvAch.setText((dbManager.DATA_ACH_FINISH / 100) + " / " + (dbManager.DATA_ACH_MAX / 100));
-        pbHead.setProgress(dbManager.DATA_ACH);
-        tvHeadAch.setText(dbManager.DATA_ACH + "%");
+        pb.setProgress(DBManager.DATA_ACH);
+        tvAch.setText((DBManager.DATA_ACH_FINISH / 100) + " / " + (DBManager.DATA_ACH_MAX / 100));
+        pbHead.setProgress(DBManager.DATA_ACH);
+        tvHeadAch.setText(DBManager.DATA_ACH + "%");
     }
 
     @Override

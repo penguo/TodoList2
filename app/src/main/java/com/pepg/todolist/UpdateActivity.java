@@ -30,7 +30,7 @@ import java.util.List;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
-import com.pepg.todolist.DataBase.dbManager;
+import com.pepg.todolist.DataBase.DBManager;
 
 public class UpdateActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
@@ -40,7 +40,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
     ImageButton btnSave, btnReturn;
     TextView tvCategory, tvDate, tvDday;
     FloatingActionButton fabSemiAdd;
-    final dbManager dbManager = new dbManager(this, "todolist2.db", null, MainActivity.DBVERSION);
+    final DBManager dbManager = new DBManager(this, "todolist2.db", null, MainActivity.DBVERSION);
     UpdateSemi us;
     RecyclerView rcvSemi;
     SemiListRcvAdapter semiRcvAdapter;

@@ -1,7 +1,6 @@
 package com.pepg.todolist.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -9,19 +8,17 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
 import com.pepg.todolist.MainActivity;
 import com.pepg.todolist.Manager;
 import com.pepg.todolist.R;
 import com.pepg.todolist.UpdateSemi;
-import com.pepg.todolist.DataBase.dbManager;
+import com.pepg.todolist.DataBase.DBManager;
 
 /**
  * Created by pengu on 2017-11-20.
@@ -37,7 +34,7 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
     UpdateSemi us;
     Activity activity;
     int id;
-    dbManager dbManager;
+    DBManager dbManager;
     FloatingActionButton fab;
 
     public DetailSemiFragment() {
@@ -54,7 +51,7 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
         activity = this.getActivity();
         id = dbManager.DATA_id;
 
-        dbManager = new dbManager(activity, "todolist2.db", null, MainActivity.DBVERSION);
+        dbManager = new DBManager(activity, "todolist2.db", null, MainActivity.DBVERSION);
 
         includeSemi = layout.findViewById(R.id.fd_semi);
         layoutSemi = (LinearLayout) includeSemi.findViewById(R.id.semi_layout);

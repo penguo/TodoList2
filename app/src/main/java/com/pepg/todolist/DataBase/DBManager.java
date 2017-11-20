@@ -15,14 +15,14 @@ import java.util.List;
  * Created by pengu on 2017-08-10.
  */
 
-public class dbManager extends SQLiteOpenHelper {
+public class DBManager extends SQLiteOpenHelper {
 
     SQLiteDatabase db, dbr;
     Cursor cursor;
-    dbSortManager dbSortManager;
+    DBSortManager dbSortManager;
     Context context;
 
-    public dbManager(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public DBManager(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         this.context = context;
     }
@@ -196,7 +196,7 @@ public class dbManager extends SQLiteOpenHelper {
         db = getWritableDatabase();
         dbr = getReadableDatabase();
         db.execSQL("UPDATE TODOLIST SET _position = -1;");
-        dbSortManager = new dbSortManager(this, context, db, dbr);
+        dbSortManager = new DBSortManager(this, context, db, dbr);
         switch (DATA_SORTTYPE) {
             case ("DEFAULT"):
                 dbSortManager.sort();
@@ -212,7 +212,7 @@ public class dbManager extends SQLiteOpenHelper {
         db = getWritableDatabase();
         dbr = getReadableDatabase();
         db.execSQL("UPDATE SEMITODO SET _position = -1;");
-        dbSortManager = new dbSortManager(this, context, db, dbr);
+        dbSortManager = new DBSortManager(this, context, db, dbr);
         dbSortManager.sortSemiByAch(parentId);
     }
 

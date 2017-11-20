@@ -29,14 +29,11 @@ import android.widget.LinearLayout;
 
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
 import com.pepg.todolist.AddguideActivity;
-import com.pepg.todolist.DataBase.dbManager;
+import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.MainActivity;
-import com.pepg.todolist.Manager;
 import com.pepg.todolist.UpdateSemi;
 
 import com.pepg.todolist.R;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * author @Fobid
@@ -45,7 +42,7 @@ import static android.app.Activity.RESULT_OK;
 public class Step4Fragment extends Fragment implements View.OnClickListener {
 
     Button btnSave;
-    dbManager dbM;
+    DBManager dbM;
     FloatingActionButton fab;
     UpdateSemi us;
     SemiListRcvAdapter semiRcvAdapter;
@@ -63,7 +60,7 @@ public class Step4Fragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_step4, container, false);
 
-        dbM = new dbManager(this.getContext(), "todolist2.db", null, MainActivity.DBVERSION);
+        dbM = new DBManager(this.getContext(), "todolist2.db", null, MainActivity.DBVERSION);
 
         btnSave = (Button) layout.findViewById(R.id.fs4_btn_save);
         fab = (FloatingActionButton) layout.findViewById(R.id.fs4_fab_semiadd);

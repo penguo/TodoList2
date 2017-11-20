@@ -12,14 +12,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pepg.todolist.AddguideActivity;
-import com.pepg.todolist.DataBase.dbManager;
+import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.MainActivity;
 import com.pepg.todolist.R;
 
 public class Step1Fragment extends Fragment{
 
     EditText etTitle;
-    dbManager dbM;
+    DBManager dbM;
 
     public Step1Fragment() {
     }
@@ -33,7 +33,7 @@ public class Step1Fragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_step1, container, false);
 
-        dbM = new dbManager(this.getContext(), "todolist2.db", null, MainActivity.DBVERSION);
+        dbM = new DBManager(this.getContext(), "todolist2.db", null, MainActivity.DBVERSION);
         etTitle = (EditText) layout.findViewById(R.id.fs1_et);
         etTitle.setText(dbM.DATA_TITLE);
         etTitle.setImeOptions(EditorInfo.IME_ACTION_NEXT);

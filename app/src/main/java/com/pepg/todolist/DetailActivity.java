@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
-import com.pepg.todolist.DataBase.dbManager;
+import com.pepg.todolist.DataBase.DBManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     TextView tvTitle, tvCategory, tvDate, tvMemo, tvDday, tvAch, tvHeadAch;
     ImageButton btnEdit, btnReturn;
     int id;
-    final dbManager dbManager = new dbManager(this, "todolist2.db", null, MainActivity.DBVERSION);
+    final DBManager dbManager = new DBManager(this, "todolist2.db", null, MainActivity.DBVERSION);
     View includePB;
     RoundCornerProgressBar pb, pbHead;
     LinearLayout layoutHead, layoutBody, layoutDate, layoutAch, layoutAlarm, layoutMemo, layoutAchBg, layoutAlarmBg, layoutMemoBg;
