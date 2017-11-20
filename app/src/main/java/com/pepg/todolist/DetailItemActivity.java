@@ -26,11 +26,11 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
     View includeHead, includePB;
     Activity activity;
     ImageButton btnReturn, btnEdit;
-    TextView tvTitle, tvCategory, tvDate, tvMemo, tvDday, tvAch, tvAchHead, tvAlarmHead;
+    TextView tvTitle, tvCategory, tvDate, tvMemo, tvDday, tvAch, tvAchHead, tvAlarmHead, tvHeadAch;
     LinearLayout layoutHead, layoutDate, layoutAch, layoutAlarm, layoutMemo, layoutAchBg, layoutAlarmBg, layoutMemoBg;
-    ImageView ivZoomAch, ivZoomAlarm, ivZoomMemo;
+    ImageView ivZoomAch, ivZoomAlarm;
     Toolbar toolbar;
-    RoundCornerProgressBar pb;
+    RoundCornerProgressBar pb, pbHead;
 
     final dbManager dbM = new dbManager(this, "todolist2.db", null, MainActivity.DBVERSION);
 
@@ -61,15 +61,16 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
         layoutAlarmBg = (LinearLayout) includeHead.findViewById(R.id.detail_layout_alarm_bg);
         layoutMemo = (LinearLayout) includeHead.findViewById(R.id.detail_layout_memo);
         layoutMemoBg = (LinearLayout) includeHead.findViewById(R.id.detail_layout_memo_bg);
-        includePB = includeHead.findViewById(R.id.detail_pb);
-        pb = (RoundCornerProgressBar) includePB.findViewById(R.id.progressBar);
 
         ivZoomAch = (ImageView) findViewById(R.id.detail_iv_zoom_ach);
         ivZoomAlarm = (ImageView) findViewById(R.id.detail_iv_zoom_alarm);
-        ivZoomMemo = (ImageView) findViewById(R.id.detail_iv_zoom_memo);
 
         includePB = includeHead.findViewById(R.id.detail_pb);
         pb = (RoundCornerProgressBar) includePB.findViewById(R.id.progressBar);
+
+        tvHeadAch = (TextView) findViewById(R.id.detail_head_tv_ach);
+        pbHead = (RoundCornerProgressBar) findViewById(R.id.detail_head_pb);
+
 
         vp = (ViewPager) findViewById(R.id.detail_item_vp);
 
@@ -101,6 +102,7 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
     private void setData(int item) {
         tvTitle.setText(dbManager.DATA_TITLE);
         tvCategory.setText(dbManager.DATA_CATEGORY);
+        tvDate.setText(dbManager.DATA_DATE);
         pb.setSecondaryProgress(Manager.getSuggestAch(dbManager.DATA_CREATEDATE, dbManager.DATA_DATE));
         switch (item) {
             case (1):
@@ -114,22 +116,39 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
                 layoutAch.setElevation(2);
                 break;
             case (2):
+                updateAch();
                 tvMemo.setText(dbManager.DATA_MEMO);
                 layoutDate.setVisibility(View.GONE);
                 layoutAch.setVisibility(View.GONE);
                 layoutMemo.setVisibility(View.GONE);
                 layoutAlarmBg.setBackgroundResource(R.color.colorPrimaryDark2);
-                ivZoomMemo.setImageResource(R.drawable.ic_zoomout_black);
+                ivZoomAlarm.setImageResource(R.drawable.ic_zoomout_black);
                 tvAlarmHead.setTextColor(getResources().getColor(R.color.white07));
                 layoutAlarm.setElevation(2);
                 break;
         }
+        setDday();
         vp.setCurrentItem(item - 1);
+    }
+
+    private void setDday() {
+        tvDday.setText(Manager.getDday(tvDate.getText().toString()));
+        try {
+            if (dbManager.DATA_DDAY >= 10 || dbManager.DATA_DDAY <= -10) {
+                tvDday.setTextSize(16);
+            } else {
+                tvDday.setTextSize(21);
+            }
+        } catch (Exception e) {
+            tvDday.setTextSize(16);
+        }
     }
 
     public void updateAch() {
         pb.setProgress(dbManager.DATA_ACH);
-        tvAch.setText(  dbManager.DATA_ACH + "%");
+        tvAch.setText((dbManager.DATA_ACH_FINISH / 100) + " / " + (dbManager.DATA_ACH_MAX / 100));
+        pbHead.setProgress(dbManager.DATA_ACH);
+        tvHeadAch.setText(dbManager.DATA_ACH + "%");
     }
 
     @Override
@@ -137,7 +156,7 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
         switch (view.getId()) {
             case (R.id.detail_btn_return):
                 setResult(RESULT_CLOSE);
-                supportFinishAfterTransition();
+                finish();
                 break;
             case (R.id.detail_btn_edit):
                 Toast.makeText(activity, "wait", Toast.LENGTH_SHORT).show();

@@ -58,11 +58,42 @@
         android:orientation="horizontal"
         android:transitionName="layout_head">
 
-        <ImageView
-            style="@style/icon"
-            android:layout_margin="12dp"
-            android:clickable="false"
-            app:srcCompat="@mipmap/ic_launcher" />
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+
+            <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+                android:id="@+id/detail_head_pb"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:rcBackgroundColor="@color/custom_progress_background"
+                app:rcBackgroundPadding="4dp"
+                app:rcMax="100"
+                app:rcProgress="0"
+                app:rcProgressColor="@color/custom_progress_todo_progress"
+                app:rcRadius="4dp"
+                app:rcSecondaryProgress="0"
+                app:rcSecondaryProgressColor="@color/custom_progress_todo_progress_half"
+                tools:layout_editor_absoluteX="12dp">
+
+            </com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar>
+
+            <TextView
+                android:id="@+id/detail_head_tv_ach"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="12dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="100%"
+                android:textSize="18sp"
+                android:textStyle="bold|italic" />
+
+        </android.support.design.widget.CoordinatorLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -220,10 +251,9 @@
 
                     <TextView
                         android:id="@+id/detail_tv_ach"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_margin="12dp"
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="50%"

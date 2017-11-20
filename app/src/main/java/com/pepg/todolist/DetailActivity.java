@@ -24,12 +24,12 @@ import static com.pepg.todolist.Manager.RESULT_CLOSE;
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
-    TextView tvTitle, tvCategory, tvDate, tvMemo, tvDday, tvAch;
+    TextView tvTitle, tvCategory, tvDate, tvMemo, tvDday, tvAch, tvHeadAch;
     ImageButton btnEdit, btnReturn;
     int id;
     final dbManager dbManager = new dbManager(this, "todolist2.db", null, MainActivity.DBVERSION);
     View includePB;
-    RoundCornerProgressBar pb;
+    RoundCornerProgressBar pb, pbHead;
     LinearLayout layoutHead, layoutDate, layoutAch, layoutAlarm, layoutMemo, layoutAchBg, layoutAlarmBg, layoutMemoBg;
     ImageView ivZoomAch, ivZoomAlarm, ivZoomMemo;
     Toolbar toolbar;
@@ -64,6 +64,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         layoutMemoBg = (LinearLayout) findViewById(R.id.detail_layout_memo_bg);
         includePB = findViewById(R.id.detail_pb);
         pb = (RoundCornerProgressBar) includePB.findViewById(R.id.progressBar);
+
+        tvHeadAch = (TextView) findViewById(R.id.detail_head_tv_ach);
+        pbHead = (RoundCornerProgressBar) findViewById(R.id.detail_head_pb);
 
         ivZoomAch = (ImageView) findViewById(R.id.detail_iv_zoom_ach);
         ivZoomAlarm = (ImageView) findViewById(R.id.detail_iv_zoom_alarm);
@@ -132,7 +135,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
     public void updateAch() {
         pb.setProgress(dbManager.DATA_ACH);
-        tvAch.setText(dbManager.DATA_ACH + "%");
+        tvAch.setText((dbManager.DATA_ACH_FINISH / 100) + " / " + (dbManager.DATA_ACH_MAX / 100));
+        pbHead.setProgress(dbManager.DATA_ACH);
+        tvHeadAch.setText(dbManager.DATA_ACH + "%");
     }
 
     public void onBackPressed() {
@@ -161,7 +166,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         }
         if (requestCode == Manager.RC_DETAIL_TO_DETAILITEM) {
             if (resultCode == RESULT_OK) {
-            }else if(resultCode == RESULT_CLOSE ){
+                dbManager.setSemiPosition(id);
+                setData();
+            } else if (resultCode == RESULT_CLOSE) {
                 onBackPressed();
             }
         }

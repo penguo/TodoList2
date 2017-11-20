@@ -27,7 +27,7 @@ public class dbManager extends SQLiteOpenHelper {
         this.context = context;
     }
 
-    public static int DATA_id, DATA_position, DATA_ACH, DATA_DDAY;
+    public static int DATA_id, DATA_position, DATA_ACH, DATA_DDAY, DATA_ACH_FINISH, DATA_ACH_MAX;
     public static String DATA_TITLE, DATA_CATEGORY, DATA_DATE, DATA_CREATEDATE, DATA_MEMO;
     public static int DATA_semi_id, DATA_semi_position, DATA_semi_parentId, DATA_semi_WEIGHT, DATA_semi_ACH, DATA_semi_ACHMAX;
     public static String DATA_semi_TITLE, DATA_semi_DATE;
@@ -171,8 +171,12 @@ public class dbManager extends SQLiteOpenHelper {
         if (cursor.getCount() == 0) // Semi 데이터가 없을 경우 - 직접 설정한 퍼센트로 적용.
         {
             try {
+                DATA_ACH_FINISH = 0;
+                DATA_ACH_MAX = 0;
                 DATA_ACH = cursor.getInt(5);
             } catch (Exception e) {
+                DATA_ACH_FINISH = 0;
+                DATA_ACH_MAX = 0;
                 DATA_ACH = 0;
             }
         } else { // Semi 데이터가 하나 이상 있을 경우 - Semi의 완수도에 따라 적용.
@@ -181,6 +185,8 @@ public class dbManager extends SQLiteOpenHelper {
                 totalAch += cursor.getInt(0);
                 totalAchMax += cursor.getInt(1);
             }
+            DATA_ACH_FINISH = totalAch;
+            DATA_ACH_MAX = totalAchMax;
             DATA_ACH = (totalAch * 100) / totalAchMax;
         }
         cursor.close();

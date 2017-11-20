@@ -3,7 +3,10 @@ package com.pepg.todolist;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.transition.ChangeBounds;
+import android.transition.Transition;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,29 +40,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnList.setOnClickListener(this);
         btnSetting.setOnClickListener(this);
         btnDaily.setOnClickListener(this);
+
     }
 
     @Override
     public void onClick(View v) {
         Intent intent;
-        switch(v.getId()){
-            case(R.id.mainA_btn_list):
+        switch (v.getId()) {
+            case (R.id.mainA_btn_list):
                 dbManager.DATA_SORTTYPE = "DEFAULT";
                 intent = new Intent(MainActivity.this, ListActivity.class);
                 startActivity(intent);
+                finish();
                 break;
-            case(R.id.mainA_btn_setting):
+            case (R.id.mainA_btn_setting):
                 dbManager.reset();
                 break;
-            case(R.id.mainA_btn_daily):
+            case (R.id.mainA_btn_daily):
                 daily();
                 break;
-            case(R.id.mainA_tv_title):
+            case (R.id.mainA_tv_title):
                 break;
         }
     }
 
-    public void daily(){
+    public void daily() {
         Toast.makeText(this, "준비 중 입니다.", Toast.LENGTH_SHORT).show();
     }
 }

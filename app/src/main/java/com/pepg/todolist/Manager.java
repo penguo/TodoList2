@@ -113,7 +113,7 @@ public class Manager {
         ddayTime = readCal.getTimeInMillis() / 86400000;
         totalDay = (int) (ddayTime - todayTime);
         resultDday = calculateDday(goalDate);
-        return 100 - (100 * (resultDday / totalDay));
+        return 100 * (1 - (resultDday / totalDay));
     }
 
 }
