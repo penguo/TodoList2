@@ -75,9 +75,14 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         dbManager.getValue("_position", position);
 
-        holder.tvTitle.setText(dbManager.DATA_TITLE);
+        if (!dbManager.DATA_TITLE.equals(activity.getString(R.string.empty_data))) {
+            holder.tvTitle.setText(dbManager.DATA_TITLE);
+            holder.tvCategory.setText(dbManager.DATA_CATEGORY);
+        } else {
+            holder.tvTitle.setText(dbManager.DATA_CATEGORY);
+            holder.tvCategory.setVisibility(View.GONE);
+        }
         holder.tvDate.setText("~ " + dbManager.DATA_DATE);
-        holder.tvCategory.setText(dbManager.DATA_CATEGORY);
         holder.tvAch.setText(dbManager.DATA_ACH + "%");
         holder.tvDday.setText(Manager.getDday(dbManager.DATA_DATE));
         try {

@@ -149,7 +149,7 @@
         android:id="@+id/detail_layout_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="1dp"
+        android:clipToPadding="false"
         android:orientation="vertical">
 
         <LinearLayout
@@ -199,8 +199,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:transitionName="layout_ach"
-            android:translationZ="1dp">
+            android:transitionName="layout_ach">
 
             <LinearLayout
                 android:id="@+id/detail_layout_ach_bg"
@@ -421,7 +420,6 @@
             </LinearLayout>
 
             <View style="@style/Divider" />
-
         </LinearLayout>
 
     </LinearLayout>

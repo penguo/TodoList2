@@ -110,8 +110,13 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private void setData() {
         id = getIntent().getIntExtra("_id", -1);
         dbManager.getValue("_id", id);
-        tvTitle.setText(dbManager.DATA_TITLE);
-        tvCategory.setText(dbManager.DATA_CATEGORY);
+        if (!dbManager.DATA_TITLE.equals(activity.getString(R.string.empty_data))) {
+            tvTitle.setText(dbManager.DATA_TITLE);
+            tvCategory.setText(dbManager.DATA_CATEGORY);
+        } else {
+            tvTitle.setText(dbManager.DATA_CATEGORY);
+            tvCategory.setVisibility(View.GONE);
+        }
         tvDate.setText(dbManager.DATA_DATE);
         tvMemo.setText(dbManager.DATA_MEMO);
         setDday();

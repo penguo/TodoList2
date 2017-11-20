@@ -140,7 +140,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                                     dbManager.DATA_SORTTYPE = "DEFAULT";
                                     dbManager.DATA_SORTTYPEEQUAL = "";
                                 }
-                                ((ListActivity) activity).refresh();
+                                ((ListActivity) activity).dialogDismiss();
                                 break;
                             case ("forEdit"): //TODO
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(activity);

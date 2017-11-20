@@ -26,7 +26,6 @@ public class Manager {
     public final static int RC_LIST_TO_DETAIL = 1001;
     public final static int RC_DETAIL_TO_UPDATE = 1002;
     public final static int RC_LIST_TO_ADDGUIDE = 1003;
-    public final static int RC_DETAIL = 1004;
     public final static int RC_DETAIL_TO_DETAILITEM = 1005;
     public static boolean modifyMode;
 
@@ -97,6 +96,13 @@ public class Manager {
         int value = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, context.getResources().getDisplayMetrics());
         return value;
     }
+
+    public static int convertDpToPixels(int dp, Context context) {
+        float value = (float) (dp / context.getResources().getDisplayMetrics().density);
+        return (int) value;
+    }
+
+
 
     public static int getSuggestAch(String createDate, String goalDate) {
         todayCal = Calendar.getInstance();

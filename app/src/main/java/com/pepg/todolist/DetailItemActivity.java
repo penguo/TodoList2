@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,7 +22,7 @@ import com.pepg.todolist.fragment.DetailSemiFragment;
 public class DetailItemActivity extends AppCompatActivity implements View.OnClickListener {
 
     ViewPager vp;
-    View includeHead, includePB, borderAch, borderAlarm;
+    View includeHead, includePB, borderAch, borderAlarm, viewBottom;
     Activity activity;
     ImageButton btnReturn, btnEdit;
     TextView tvTitle, tvCategory, tvDate, tvMemo, tvDday, tvAch, tvAchHead, tvAlarmHead, tvHeadAch;
@@ -30,6 +31,7 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
     Toolbar toolbar;
     RoundCornerProgressBar pb, pbHead;
     DetailSemiFragment detailSemiFragment;
+    FrameLayout frameLayoutHead;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +63,15 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
         layoutBody = (LinearLayout) includeHead.findViewById(R.id.detail_layout_body);
         borderAch = includeHead.findViewById(R.id.detail_border_ach);
         borderAlarm = includeHead.findViewById(R.id.detail_border_alarm);
-        ivZoomAch = (ImageView) findViewById(R.id.detail_iv_zoom_ach);
-        ivZoomAlarm = (ImageView) findViewById(R.id.detail_iv_zoom_alarm);
+        ivZoomAch = (ImageView) includeHead.findViewById(R.id.detail_iv_zoom_ach);
+        ivZoomAlarm = (ImageView) includeHead.findViewById(R.id.detail_iv_zoom_alarm);
         includePB = includeHead.findViewById(R.id.detail_pb);
         pb = (RoundCornerProgressBar) includePB.findViewById(R.id.progressBar);
-        tvHeadAch = (TextView) findViewById(R.id.detail_head_tv_ach);
-        pbHead = (RoundCornerProgressBar) findViewById(R.id.detail_head_pb);
+        tvHeadAch = (TextView) includeHead.findViewById(R.id.detail_head_tv_ach);
+        pbHead = (RoundCornerProgressBar) includeHead.findViewById(R.id.detail_head_pb);
+
+        viewBottom = findViewById(R.id.detail_view_bottom);
+        frameLayoutHead = (FrameLayout)findViewById(R.id.detail_framelayout_head);
 
         detailSemiFragment = new DetailSemiFragment();
         Manager.modifyMode = false;
@@ -98,8 +103,13 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setData(int item) {
-        tvTitle.setText(dbManager.DATA_TITLE);
-        tvCategory.setText(dbManager.DATA_CATEGORY);
+        if (!dbManager.DATA_TITLE.equals(activity.getString(R.string.empty_data))) {
+            tvTitle.setText(dbManager.DATA_TITLE);
+            tvCategory.setText(dbManager.DATA_CATEGORY);
+        } else {
+            tvTitle.setText(dbManager.DATA_CATEGORY);
+            tvCategory.setVisibility(View.GONE);
+        }
         tvDate.setText(dbManager.DATA_DATE);
         btnReturn.setImageResource(R.drawable.ic_zoomout);
         pb.setSecondaryProgress(Manager.getSuggestAch(dbManager.DATA_CREATEDATE, dbManager.DATA_DATE));
@@ -113,7 +123,6 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
                 ivZoomAch.setImageResource(R.drawable.ic_zoomout_black);
                 borderAch.setVisibility(View.GONE);
                 tvAchHead.setTextColor(getResources().getColor(R.color.white07));
-                layoutBody.setElevation(layoutHead.getElevation());
                 break;
             case (2):
                 updateAch();
@@ -124,10 +133,15 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
                 ivZoomAlarm.setImageResource(R.drawable.ic_zoomout_black);
                 borderAlarm.setVisibility(View.GONE);
                 tvAlarmHead.setTextColor(getResources().getColor(R.color.white07));
-                layoutBody.setElevation(layoutHead.getElevation());
                 break;
         }
+//        viewBottom.setVisibility(View.VISIBLE);
+        layoutBody.setElevation(layoutHead.getElevation());
+        viewBottom.setElevation(layoutBody.getElevation());
+        frameLayoutHead.setElevation(layoutBody.getElevation());
+        viewBottom.setBackgroundResource(R.drawable.xml_item);
         setDday();
+        tvTitle.setText(""+ layoutBody.getElevation() + " : "+ layoutHead.getElevation() + " : " + viewBottom.getElevation());
         vp.setCurrentItem(item - 1);
     }
 

@@ -1,93 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/semi_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/xml_item"
-    android:elevation="1dp"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/semi_layout"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_height="40dp"
+        android:clipToPadding="true"
         android:visibility="visible">
 
-        <android.support.design.widget.CoordinatorLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:visibility="gone">
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="8dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="// "
+                android:textColor="@color/colorRemark"
+                android:textSize="18sp"
+                android:textStyle="bold|italic" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:text="// "
-                    android:textColor="@color/colorRemark"
-                    android:textSize="18sp"
-                    android:textStyle="bold|italic" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TODO"
+                android:textColor="@color/colorTodo"
+                android:textSize="18sp"
+                android:textStyle="bold|italic" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="TODO"
-                    android:textColor="@color/colorTodo"
-                    android:textSize="18sp"
-                    android:textStyle="bold|italic" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" :"
+                android:textColor="@color/colorRemark"
+                android:textSize="18sp"
+                android:textStyle="bold|italic" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" :"
-                    android:textColor="@color/colorRemark"
-                    android:textSize="18sp"
-                    android:textStyle="bold|italic" />
+        </LinearLayout>
 
-            </LinearLayout>
+        <View
+            style="@style/Divider"
+            android:layout_gravity="bottom" />
 
-            <View
-                style="@style/Divider"
-                android:layout_gravity="bottom" />
+    </android.support.design.widget.CoordinatorLayout>
 
-        </android.support.design.widget.CoordinatorLayout>
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <android.support.design.widget.CoordinatorLayout
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/semi_fab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="20dp"
+            android:clickable="true"
+            app:backgroundTint="@color/colorPrimary"
+            app:fabSize="normal"
+            app:srcCompat="@drawable/ic_add" />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/semi_swipe"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/semi_fab"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_margin="20dp"
-                android:clickable="true"
-                app:backgroundTint="@color/colorPrimary"
-                app:fabSize="normal"
-                app:srcCompat="@drawable/ic_add" />
-
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/semi_swipe"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/semi_rcv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/semi_rcv"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:elevation="1dp">
+            </android.support.v7.widget.RecyclerView>
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
-                </android.support.v7.widget.RecyclerView>
-            </android.support.v4.widget.SwipeRefreshLayout>
-        </android.support.design.widget.CoordinatorLayout>
-
-    </LinearLayout>
 </LinearLayout>

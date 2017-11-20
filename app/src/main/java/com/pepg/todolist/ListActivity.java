@@ -133,28 +133,19 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         setSortView();
         if (requestCode == Manager.RC_LIST_TO_UPDATE) {
             if (resultCode == RESULT_OK) {
-                dbManager.setPosition();
-                listRcvAdapter.notifyDataSetChanged();
                 dbManager.DATA_SORTTYPE = "DEFAULT";
+                refresh();
             }
         }
         if (requestCode == Manager.RC_LIST_TO_DETAIL) {
             if (resultCode == RESULT_OK) {
-                dbManager.setPosition();
-                listRcvAdapter.notifyDataSetChanged();
+                refresh();
             }
         }
         if (requestCode == Manager.RC_LIST_TO_ADDGUIDE) {
             if (resultCode == RESULT_OK) {
-                dbManager.setPosition();
-                listRcvAdapter.notifyDataSetChanged();
                 dbManager.DATA_SORTTYPE = "DEFAULT";
-            }
-        }
-        if (requestCode == Manager.RC_DETAIL) {
-            if (resultCode == RESULT_OK) {
-                dbManager.setPosition();
-                listRcvAdapter.notifyDataSetChanged();
+                refresh();
             }
         }
     }
@@ -181,7 +172,11 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         listRcvAdapter = new ListRcvAdapter(dbManager, this);
         rcvTodo.setAdapter(listRcvAdapter);
         setSortView();
-        dialog.dismiss();
+    }
+
+    public void dialogDismiss() {
+        refresh();
+        dialogDismiss();
     }
 
     public List<Pair<View, String>> getPairs() {
