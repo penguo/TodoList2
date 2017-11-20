@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="TEXT VIEW POINT"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
         </LinearLayout>
 
@@ -159,7 +159,9 @@
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:transitionName="layout_ach"
+            android:translationZ="1dp">
 
             <LinearLayout
                 android:id="@+id/detail_layout_ach_bg"
@@ -234,7 +236,9 @@
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:transitionName="layout_alarm"
+            android:translationZ="1dp">
 
             <LinearLayout
                 android:id="@+id/detail_layout_alarm_bg"
@@ -319,7 +323,9 @@
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:transitionName="layout_memo"
+            android:translationZ="1dp">
 
             <LinearLayout
                 android:id="@+id/detail_layout_memo_bg"
@@ -380,6 +386,6 @@
         layout="@layout/include_semi"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
 </LinearLayout>

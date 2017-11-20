@@ -1,12 +1,16 @@
 package com.pepg.todolist;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.graphics.drawable.Animatable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -17,6 +21,9 @@ import android.widget.TextView;
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
 import com.pepg.todolist.DataBase.dbManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, View.OnLongClickListener {
 
@@ -33,6 +40,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     SwipeRefreshLayout swipe;
     LinearLayout layoutDate, layoutAch, layoutAlarm, layoutMemo, layoutSemi, layoutAchBg, layoutAlarmBg, layoutMemoBg;
     ImageView ivZoomAch, ivZoomAlarm, ivZoomMemo;
+    Toolbar toolbar;
 
     public DetailActivity() {
     }
@@ -50,6 +58,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         tvAch = (TextView) findViewById(R.id.detail_tv_ach);
         btnEdit = (ImageButton) findViewById(R.id.detail_btn_edit);
         btnReturn = (ImageButton) findViewById(R.id.detail_btn_return);
+        toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         layoutDate = (LinearLayout) findViewById(R.id.detail_layout_date);
         layoutAch = (LinearLayout) findViewById(R.id.detail_layout_ach);
         layoutAchBg = (LinearLayout) findViewById(R.id.detail_layout_ach_bg);
@@ -229,6 +238,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     layoutAchBg.setBackgroundResource(R.drawable.xml_item_selected);
                     ivZoomAch.setImageResource(R.drawable.ic_zoomout_black);
                     isSelectedView = true;
+                    overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
                 } else {
                     includeSemi.setVisibility(View.GONE);
                     layoutAlarm.setVisibility(View.VISIBLE);
@@ -267,10 +277,24 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 break;
         }
+        clickAnimation();
     }
 
     @Override
     public boolean onLongClick(View view) {
         return false;
+    }
+
+    private void clickAnimation() {
+        List<Pair<View, String>> pairs = new ArrayList<>();
+        pairs.add(Pair.create((View) toolbar, "toolbar"));
+        pairs.add(Pair.create((View) layoutAch, "layout_ach"));
+        pairs.add(Pair.create((View) layoutAlarm, "layout_alarm"));
+        pairs.add(Pair.create((View) layoutMemo, "layout_memo"));
+
+        Intent intent = new Intent(this, DetailActivity.class);
+        Bundle options = ActivityOptions.makeSceneTransitionAnimation(this,
+                pairs.toArray(new Pair[pairs.size()])).toBundle();
+        startActivity(intent, options);
     }
 }

@@ -84,9 +84,9 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
             if (!isSortViewing) {
                 layoutSort.setVisibility(View.GONE);
             } else {
+                layoutSort.setVisibility(View.GONE);
                 layoutSort.startAnimation(viewSlideIn);
                 isSortViewing = false;
-                layoutSort.setVisibility(View.GONE);
             }
         } else {
             if (!isSortViewing) {
@@ -113,8 +113,8 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(ListActivity.this, AddguideActivity.class);
                 intent.putExtra("_id", 0);
                 startActivityForResult(intent, Manager.RC_LIST_TO_ADDGUIDE);
-//                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
                 overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+//                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
                 break;
 //            case (R.id.listA_btn_add):
 //                intent = new Intent(ListActivity.this, UpdateActivity.class);
