@@ -5,14 +5,12 @@ import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,7 +23,6 @@ import com.pepg.todolist.DetailActivity;
 
 import com.pepg.todolist.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -106,7 +103,7 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
                  * 스테이터스바, 네비게이션바, 툴바 와 함께 움직이는게 좋다.
                  */
                 List<Pair<View, String>> pairs = ((ListActivity) activity).getPairs();
-                pairs.add(Pair.create((View) holder.itemView, "item_todo"));
+                pairs.add(Pair.create((View) holder.itemView, "layout_head"));
                 Bundle options = ActivityOptions.makeSceneTransitionAnimation(activity,
                         pairs.toArray(new Pair[pairs.size()])).toBundle();
                 activity.startActivityForResult(intent, Manager.RC_LIST_TO_DETAIL, options);

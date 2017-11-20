@@ -17,6 +17,7 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="@android:style/Widget.Material.Toolbar"
         android:transitionName="toolbar"
+        android:translationZ="0dp"
         app:contentInsetStart="0dp">
 
         <LinearLayout

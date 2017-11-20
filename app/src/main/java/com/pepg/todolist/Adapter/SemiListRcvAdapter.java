@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
+import com.pepg.todolist.DetailItemActivity;
 import com.pepg.todolist.Optional.SmoothCheckBox;
 import com.pepg.todolist.UpdateActivity;
 
@@ -32,6 +33,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
 
     dbManager dbManager;
     int parentId;
+    String currentClassName;
 
     public SemiListRcvAdapter(dbManager dbManager, Activity activity, int parentId) {
         this.dbManager = dbManager;
@@ -69,6 +71,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_semi, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
+        currentClassName = activity.getLocalClassName();
         return viewHolder;
     }
 
@@ -89,7 +92,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
             holder.scb.setChecked(false);
         }
         holder.isSet = true;
-        if (activity.getLocalClassName().equals("DetailActivity")) {
+        if (currentClassName.equals("DetailActivity") || currentClassName.equals("DetailItemActivity")) {
             holder.scb.setOnCheckedChangeListener(new SmoothCheckBox.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(SmoothCheckBox checkBox, boolean isChecked) {
@@ -103,7 +106,11 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
                         dbManager.semiUpdateSimply();
                         holder.pb.setProgress(dbManager.DATA_semi_ACH);
                         dbManager.getValue("_id", parentId);
-                        ((DetailActivity) activity).updateAch();
+                        if(currentClassName.equals("DetailActivity")){
+                            ((DetailActivity) activity).updateAch();
+                        }else if(currentClassName.equals("DetailItemActivity")) {
+                            ((DetailItemActivity) activity).updateAch();
+                        }
                     }
                 }
             });

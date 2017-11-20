@@ -17,6 +17,7 @@
         android:minHeight="?android:attr/actionBarSize"
         android:theme="@android:style/Widget.Material.Toolbar"
         android:transitionName="toolbar"
+        android:translationZ="0dp"
         app:contentInsetStart="0dp">
 
 
@@ -29,7 +30,7 @@
             <ImageButton
                 android:id="@+id/detail_btn_return"
                 style="@style/icon"
-                app:srcCompat="@drawable/ic_undo" />
+                app:srcCompat="@drawable/ic_arrow_back" />
 
             <TextView
                 style="@style/ToolbarTitle"
@@ -50,10 +51,12 @@
         android:id="@+id/detail_layout_head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:elevation="3dp"
         android:gravity="center_vertical"
         android:minHeight="72dp"
         android:orientation="horizontal"
-        android:transitionName="item_todo">
+        android:transitionName="layout_head">
 
         <ImageView
             style="@style/icon"
@@ -79,7 +82,9 @@
                     android:id="@+id/detail_tv_category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:alpha="0.7"
                     android:text="CATEGORY VIEW POINT"
+                    android:textColor="#ffffff"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -89,7 +94,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:alpha="0.7"
                 android:text="TEXT VIEW POINT"
+                android:textColor="#ffffff"
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -99,18 +106,18 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="6dp"
+            android:alpha="0.7"
             android:gravity="center"
             android:text="D-9999"
+            android:textColor="#ffffff"
             android:textSize="16sp"
             android:textStyle="bold|italic" />
 
     </LinearLayout>
 
-    <View style="@style/Divider" />
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <LinearLayout
@@ -175,6 +182,7 @@
                 android:paddingRight="16dp">
 
                 <TextView
+                    android:id="@+id/detail_tv_ach_head"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="진행:"
@@ -252,6 +260,7 @@
                 android:paddingRight="16dp">
 
                 <TextView
+                    android:id="@+id/detail_tv_alarm_head"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="알림:"
@@ -369,6 +378,7 @@
                         android:layout_marginTop="12dp"
                         android:layout_weight="1"
                         android:background="@null"
+                        android:visibility="gone"
                         app:srcCompat="@drawable/ic_zoomin_black" />
 
                 </android.support.design.widget.CoordinatorLayout>
@@ -380,12 +390,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <include
-        android:id="@+id/detail_semi"
-        layout="@layout/include_semi"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible" />
 
 </LinearLayout>

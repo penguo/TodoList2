@@ -9,7 +9,7 @@
     android:clickable="true"
     android:minHeight="72dp"
     android:orientation="horizontal"
-    android:transitionName="item_todo"
+    android:transitionName="layout_head"
     android:translationZ="1dp">
 
     <LinearLayout
