@@ -41,6 +41,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnSetting.setOnClickListener(this);
         btnDaily.setOnClickListener(this);
 
+        initSetting();
+
+    }
+
+    public void initSetting(){
+        Manager.modifyMode = false;
     }
 
     @Override

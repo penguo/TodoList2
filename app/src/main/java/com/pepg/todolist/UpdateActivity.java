@@ -82,7 +82,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, rcvLayoutManager.getOrientation());
         rcvSemi.addItemDecoration(dividerItemDecoration);
 
-        semiRcvAdapter = new SemiListRcvAdapter(dbManager, this, id);
+        semiRcvAdapter = new SemiListRcvAdapter(dbManager, this, id, true);
         rcvSemi.setAdapter(semiRcvAdapter);
 
         us = new UpdateSemi(semiRcvAdapter, this, dbManager);
@@ -319,7 +319,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onRefresh() {
-        semiRcvAdapter = new SemiListRcvAdapter(dbManager, this, id);
+        semiRcvAdapter = new SemiListRcvAdapter(dbManager, this, id, true);
         rcvSemi.setAdapter(semiRcvAdapter);
         swipe.setRefreshing(false);
     }

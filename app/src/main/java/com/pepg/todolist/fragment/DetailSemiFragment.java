@@ -3,6 +3,7 @@ package com.pepg.todolist.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
@@ -13,9 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
 import com.pepg.todolist.MainActivity;
+import com.pepg.todolist.Manager;
 import com.pepg.todolist.R;
 import com.pepg.todolist.UpdateSemi;
 import com.pepg.todolist.DataBase.dbManager;
@@ -35,6 +38,10 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
     Activity activity;
     int id;
     dbManager dbManager;
+    FloatingActionButton fab;
+
+    public DetailSemiFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,7 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
         layoutSemi = (LinearLayout) includeSemi.findViewById(R.id.semi_layout);
         rcvSemi = (RecyclerView) includeSemi.findViewById(R.id.semi_rcv);
         swipe = (SwipeRefreshLayout) includeSemi.findViewById(R.id.semi_swipe);
+        fab = (FloatingActionButton) includeSemi.findViewById(R.id.semi_fab);
 
         LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(getContext());
         rcvSemi.setLayoutManager(rcvLayoutManager);
@@ -70,6 +78,15 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
                 android.R.color.holo_orange_light
         );
         swipe.setOnRefreshListener(this);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                us.updateSemi(id, activity, true);
+                semiRcvAdapter.notifyDataSetChanged();
+            }
+        });
+
+        onRefresh();
 
         return layout;
     }
@@ -79,5 +96,14 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
         semiRcvAdapter = new SemiListRcvAdapter(dbManager, activity, id);
         rcvSemi.setAdapter(semiRcvAdapter);
         swipe.setRefreshing(false);
+        setFab();
+    }
+
+    public void setFab() {
+        if (!Manager.modifyMode) {
+            fab.setVisibility(View.GONE);
+        } else {
+            fab.setVisibility(View.VISIBLE);
+        }
     }
 }

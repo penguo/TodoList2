@@ -31,6 +31,7 @@ import com.pepg.todolist.Adapter.SemiListRcvAdapter;
 import com.pepg.todolist.AddguideActivity;
 import com.pepg.todolist.DataBase.dbManager;
 import com.pepg.todolist.MainActivity;
+import com.pepg.todolist.Manager;
 import com.pepg.todolist.UpdateSemi;
 
 import com.pepg.todolist.R;
@@ -71,7 +72,8 @@ public class Step4Fragment extends Fragment implements View.OnClickListener {
 
         LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(getContext());
         rcvFs4.setLayoutManager(rcvLayoutManager);
-        semiRcvAdapter = new SemiListRcvAdapter(dbM, this.getActivity(), 0);
+
+        semiRcvAdapter = new SemiListRcvAdapter(dbM, this.getActivity(), 0, true);
         rcvFs4.setAdapter(semiRcvAdapter);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), rcvLayoutManager.getOrientation());

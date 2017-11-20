@@ -91,7 +91,6 @@
         android:id="@+id/aguide_vp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/ag_btn"
         android:background="@drawable/xml_item"
         android:elevation="1dp"
         tools:layout_editor_absoluteX="8dp"

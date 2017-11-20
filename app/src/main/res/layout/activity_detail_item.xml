@@ -11,19 +11,15 @@
     <include
         android:id="@+id/detail_head"
         layout="@layout/activity_detail"
-        layout_width="match_parent"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/detail_item_vp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/detail_item_btn"
         android:background="@drawable/xml_item"
-        android:elevation="1dp"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
-    </android.support.v4.view.ViewPager>
+        tools:layout_editor_absoluteY="8dp"></android.support.v4.view.ViewPager>
 
 </LinearLayout>

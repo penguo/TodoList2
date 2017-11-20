@@ -17,7 +17,6 @@
         android:minHeight="?android:attr/actionBarSize"
         android:theme="@android:style/Widget.Material.Toolbar"
         android:transitionName="toolbar"
-        android:translationZ="0dp"
         app:contentInsetStart="0dp">
 
 
@@ -147,8 +146,10 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/detail_layout_body"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="1dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -264,7 +265,9 @@
 
             </LinearLayout>
 
-            <View style="@style/Divider" />
+            <View
+                android:id="@+id/detail_border_ach"
+                style="@style/Divider" />
 
         </LinearLayout>
 
@@ -352,7 +355,9 @@
 
             </LinearLayout>
 
-            <View style="@style/Divider" />
+            <View
+                android:id="@+id/detail_border_alarm"
+                style="@style/Divider" />
 
         </LinearLayout>
 

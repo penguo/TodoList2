@@ -10,7 +10,7 @@
 
         <!-- enable window content transitions -->
         <item name="android:windowContentTransitions">true</item>
-        <item name="android:duration">300</item>
+        <item name="android:duration">250</item>
         <item name="android:windowEnterTransition">@transition/window_fade</item>
         <item name="android:windowExitTransition">@transition/window_fade</item>
 

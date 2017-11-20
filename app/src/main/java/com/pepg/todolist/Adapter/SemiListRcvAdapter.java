@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.DetailItemActivity;
+import com.pepg.todolist.Manager;
 import com.pepg.todolist.Optional.SmoothCheckBox;
 import com.pepg.todolist.UpdateActivity;
 
@@ -23,6 +24,8 @@ import com.pepg.todolist.DetailActivity;
 import com.pepg.todolist.R;
 
 import com.pepg.todolist.UpdateSemi;
+
+import static com.pepg.todolist.Manager.modifyMode;
 
 /**
  * Created by pengu on 2017-08-10.
@@ -40,6 +43,14 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
         this.activity = activity;
         this.parentId = parentId;
         this.dbManager.setSemiPosition(parentId);
+    }
+
+    public SemiListRcvAdapter(dbManager dbManager, Activity activity, int parentId, boolean isModifyMode) {
+        this.dbManager = dbManager;
+        this.activity = activity;
+        this.parentId = parentId;
+        this.dbManager.setSemiPosition(parentId);
+        Manager.modifyMode = isModifyMode;
     }
 
     @Override
@@ -92,7 +103,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
             holder.scb.setChecked(false);
         }
         holder.isSet = true;
-        if (currentClassName.equals("DetailActivity") || currentClassName.equals("DetailItemActivity")) {
+        if (!modifyMode) {
             holder.scb.setOnCheckedChangeListener(new SmoothCheckBox.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(SmoothCheckBox checkBox, boolean isChecked) {

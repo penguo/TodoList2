@@ -20,8 +20,6 @@ import com.pepg.todolist.DataBase.dbManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.pepg.todolist.Manager.RESULT_CLOSE;
-
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
     TextView tvTitle, tvCategory, tvDate, tvMemo, tvDday, tvAch, tvHeadAch;
@@ -30,7 +28,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     final dbManager dbManager = new dbManager(this, "todolist2.db", null, MainActivity.DBVERSION);
     View includePB;
     RoundCornerProgressBar pb, pbHead;
-    LinearLayout layoutHead, layoutDate, layoutAch, layoutAlarm, layoutMemo, layoutAchBg, layoutAlarmBg, layoutMemoBg;
+    LinearLayout layoutHead, layoutBody, layoutDate, layoutAch, layoutAlarm, layoutMemo, layoutAchBg, layoutAlarmBg, layoutMemoBg;
     ImageView ivZoomAch, ivZoomAlarm, ivZoomMemo;
     Toolbar toolbar;
     Activity activity;
@@ -62,6 +60,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         layoutAlarmBg = (LinearLayout) findViewById(R.id.detail_layout_alarm_bg);
         layoutMemo = (LinearLayout) findViewById(R.id.detail_layout_memo);
         layoutMemoBg = (LinearLayout) findViewById(R.id.detail_layout_memo_bg);
+        layoutBody = (LinearLayout) findViewById(R.id.detail_layout_body);
         includePB = findViewById(R.id.detail_pb);
         pb = (RoundCornerProgressBar) includePB.findViewById(R.id.progressBar);
 
@@ -168,8 +167,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             if (resultCode == RESULT_OK) {
                 dbManager.setSemiPosition(id);
                 setData();
-            } else if (resultCode == RESULT_CLOSE) {
-                onBackPressed();
             }
         }
     }
