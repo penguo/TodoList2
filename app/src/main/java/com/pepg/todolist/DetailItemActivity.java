@@ -15,22 +15,23 @@ import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.DataBase.DBManager;
-import com.pepg.todolist.fragment.DetailAlarmFragment;
-import com.pepg.todolist.fragment.DetailSemiFragment;
+import com.pepg.todolist.Fragment.DetailAlarmFragment;
+import com.pepg.todolist.Fragment.DetailSemiFragment;
 
 public class DetailItemActivity extends AppCompatActivity implements View.OnClickListener {
 
     ViewPager vp;
-    View includeHead, includePB, borderAch, borderAlarm, viewBottom;
+    View includeHead, includePB, borderAch, borderAlarm;
     Activity activity;
     ImageButton btnReturn, btnEdit;
-    TextView tvTitle, tvCategory, tvDate, tvMemo, tvDday, tvAch, tvAchHead, tvAlarmHead, tvHeadAch;
+    TextView tvTitle, tvCategory, tvDate, tvMemo, tvDday, tvAch, tvAchHead, tvAlarmHead, tvHeadAch, tvToolbarTitle;
     LinearLayout layoutHead, layoutDate, layoutAch, layoutAlarm, layoutMemo, layoutAchBg, layoutAlarmBg, layoutMemoBg, layoutBody;
     ImageView ivZoomAch, ivZoomAlarm;
     Toolbar toolbar;
     RoundCornerProgressBar pb, pbHead;
     DetailSemiFragment detailSemiFragment;
     FrameLayout frameLayoutHead;
+    int itemNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
         tvAch = (TextView) includeHead.findViewById(R.id.detail_tv_ach);
         tvAchHead = (TextView) includeHead.findViewById(R.id.detail_tv_ach_head);
         tvAlarmHead = (TextView) includeHead.findViewById(R.id.detail_tv_alarm_head);
+        tvToolbarTitle = (TextView)includeHead.findViewById(R.id.detail_tv_toolbar_title);
         layoutDate = (LinearLayout) includeHead.findViewById(R.id.detail_layout_date);
         layoutAch = (LinearLayout) includeHead.findViewById(R.id.detail_layout_ach);
         layoutAchBg = (LinearLayout) includeHead.findViewById(R.id.detail_layout_ach_bg);
@@ -69,8 +71,7 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
         tvHeadAch = (TextView) includeHead.findViewById(R.id.detail_head_tv_ach);
         pbHead = (RoundCornerProgressBar) includeHead.findViewById(R.id.detail_head_pb);
 
-        viewBottom = findViewById(R.id.detail_view_bottom);
-        frameLayoutHead = (FrameLayout)findViewById(R.id.detail_framelayout_head);
+        frameLayoutHead = (FrameLayout) findViewById(R.id.detail_framelayout_head);
 
         detailSemiFragment = new DetailSemiFragment();
         Manager.modifyMode = false;
@@ -78,7 +79,7 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
         vp = (ViewPager) findViewById(R.id.detail_item_vp);
         vp.setAdapter(new DetailItemActivity.pagerAdapter(getSupportFragmentManager()));
 
-        int itemNum = getIntent().getIntExtra("item", -1);
+        itemNum = getIntent().getIntExtra("item", -1);
         setData(itemNum);
 
         vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -102,6 +103,7 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setData(int item) {
+        vp.setCurrentItem(0);
         if (!DBManager.DATA_TITLE.equals(activity.getString(R.string.empty_data))) {
             tvTitle.setText(DBManager.DATA_TITLE);
             tvCategory.setText(DBManager.DATA_CATEGORY);
@@ -114,7 +116,6 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
         pb.setSecondaryProgress(Manager.getSuggestAch(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE));
         switch (item) {
             case (1):
-                updateAch();
                 layoutDate.setVisibility(View.GONE);
                 layoutAlarm.setVisibility(View.GONE);
                 layoutMemo.setVisibility(View.GONE);
@@ -124,7 +125,6 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
                 tvAchHead.setTextColor(getResources().getColor(R.color.white07));
                 break;
             case (2):
-                updateAch();
                 layoutDate.setVisibility(View.GONE);
                 layoutAch.setVisibility(View.GONE);
                 layoutMemo.setVisibility(View.GONE);
@@ -134,14 +134,10 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
                 tvAlarmHead.setTextColor(getResources().getColor(R.color.white07));
                 break;
         }
-//        viewBottom.setVisibility(View.VISIBLE);
+        updateAch();
         layoutBody.setElevation(layoutHead.getElevation());
-        viewBottom.setElevation(layoutBody.getElevation());
         frameLayoutHead.setElevation(layoutBody.getElevation());
-        viewBottom.setBackgroundResource(R.drawable.xml_item);
         setDday();
-        tvTitle.setText(""+ layoutBody.getElevation() + " : "+ layoutHead.getElevation() + " : " + viewBottom.getElevation());
-        vp.setCurrentItem(item - 1);
     }
 
     private void setDday() {
@@ -184,12 +180,18 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
         if (!Manager.modifyMode) {
             Manager.modifyMode = true;
             btnEdit.setImageResource(R.drawable.ic_save);
-            detailSemiFragment.onRefresh();
+            tvToolbarTitle.setText("Update");
         } else {
             Manager.modifyMode = false;
             btnEdit.setImageResource(R.drawable.ic_edit);
-            detailSemiFragment.onRefresh();
+            tvToolbarTitle.setText("Detail");
         }
+        detailSemiFragment.onRefresh();
+        detailSemiFragment.setFab();
+    }
+
+    public void refreshSemiRcv(){
+        detailSemiFragment.onRefresh();
     }
 
     private class pagerAdapter extends FragmentStatePagerAdapter {
@@ -199,10 +201,10 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         public android.support.v4.app.Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return detailSemiFragment;
+            switch (itemNum) {
                 case 1:
+                    return detailSemiFragment;
+                case 2:
                     return new DetailAlarmFragment();
                 default:
                     return null;
@@ -211,7 +213,7 @@ public class DetailItemActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         public int getCount() {
-            return 2;
+            return 1;
         }
     }
 

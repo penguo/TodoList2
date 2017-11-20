@@ -24,15 +24,6 @@
             android:layout_height="wrap_content" />
     </FrameLayout>
 
-    <View
-        android:id="@+id/detail_view_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="-2dp"
-        android:background="@null"
-        android:paddingBottom="3dp"
-        android:visibility="gone" />
-
     <android.support.v4.view.ViewPager
         android:id="@+id/detail_item_vp"
         android:layout_width="match_parent"

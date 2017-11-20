@@ -75,7 +75,16 @@ public class UpdateSemi implements View.OnClickListener {
                 } else {
                     dbManager.semiUpdate(id, title.getText().toString(), Integer.parseInt(weightNum), " ~ 까지");
                 }
-                semiRcvAdapter.notifyDataSetChanged();
+                switch (activity.getLocalClassName()) {
+                    case ("UpdateActivity"):
+                        ((UpdateActivity) activity).onRefresh();
+                        break;
+                    case ("DetailItemActivity"):
+                        ((DetailItemActivity) activity).refreshSemiRcv();
+                        break;
+                    default:
+                        semiRcvAdapter.notifyDataSetChanged();
+                }
                 dialog.dismiss();
             }
         });

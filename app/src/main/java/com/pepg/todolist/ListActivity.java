@@ -162,9 +162,14 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         dialog.show();
     }
 
-    public void refresh() {
+    public void reSet() {
         listRcvAdapter = new ListRcvAdapter(dbManager, this);
         rcvTodo.setAdapter(listRcvAdapter);
+        setSortView();
+    }
+
+    public void refresh(){
+        listRcvAdapter.notifyDataSetChanged();
         setSortView();
     }
 

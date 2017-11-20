@@ -9,10 +9,10 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.pepg.todolist.DataBase.DBManager;
-import com.pepg.todolist.fragment.Step1Fragment;
-import com.pepg.todolist.fragment.Step2Fragment;
-import com.pepg.todolist.fragment.Step3Fragment;
-import com.pepg.todolist.fragment.Step4Fragment;
+import com.pepg.todolist.Fragment.Step1Fragment;
+import com.pepg.todolist.Fragment.Step2Fragment;
+import com.pepg.todolist.Fragment.Step3Fragment;
+import com.pepg.todolist.Fragment.Step4Fragment;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 
 

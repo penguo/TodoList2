@@ -1,4 +1,4 @@
-package com.pepg.todolist.fragment;
+package com.pepg.todolist.Fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -75,11 +75,11 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
                 android.R.color.holo_orange_light
         );
         swipe.setOnRefreshListener(this);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 us.updateSemi(id, activity, true);
-                semiRcvAdapter.notifyDataSetChanged();
             }
         });
 
@@ -93,7 +93,6 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
         semiRcvAdapter = new SemiListRcvAdapter(dbManager, activity, id);
         rcvSemi.setAdapter(semiRcvAdapter);
         swipe.setRefreshing(false);
-        setFab();
     }
 
     public void setFab() {

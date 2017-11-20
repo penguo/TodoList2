@@ -1,4 +1,4 @@
-package com.pepg.todolist.fragment;
+package com.pepg.todolist.Fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

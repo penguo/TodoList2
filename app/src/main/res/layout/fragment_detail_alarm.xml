@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="com.pepg.todolist.fragment.DetailAlarmFragment">
+    tools:context="com.pepg.todolist.Fragment.DetailAlarmFragment">
 
     <LinearLayout
         android:id="@+id/detail_layout_alarm_bg"
