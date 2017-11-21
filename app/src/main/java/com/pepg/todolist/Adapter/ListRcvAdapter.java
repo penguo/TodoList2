@@ -15,11 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
+import com.pepg.todolist.DetailActivity;
 import com.pepg.todolist.ListActivity;
 import com.pepg.todolist.Manager;
 
 import com.pepg.todolist.DataBase.DBManager;
-import com.pepg.todolist.DetailActivity;
 
 import com.pepg.todolist.R;
 

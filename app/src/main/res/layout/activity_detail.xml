@@ -3,426 +3,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/xml_item"
     android:orientation="vertical"
     tools:context="com.pepg.todolist.DetailActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/detail_toolbar"
+    <FrameLayout
+        android:id="@+id/detail_framelayout_head"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:minHeight="?android:attr/actionBarSize"
-        android:theme="@android:style/Widget.Material.Toolbar"
-        android:transitionName="toolbar"
-        app:contentInsetStart="0dp">
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/detail_btn_return"
-                style="@style/icon"
-                app:srcCompat="@drawable/ic_arrow_back" />
-
-            <TextView
-                android:id="@+id/detail_tv_toolbar_title"
-                style="@style/ToolbarTitle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Detail" />
-
-            <ImageButton
-                android:id="@+id/detail_btn_edit"
-                style="@style/icon"
-                app:srcCompat="@drawable/ic_edit" />
-        </LinearLayout>
-    </android.support.v7.widget.Toolbar>
-
-    <LinearLayout
-        android:id="@+id/detail_layout_head"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/colorPrimaryDark"
         android:elevation="3dp"
-        android:gravity="center_vertical"
-        android:minHeight="72dp"
-        android:orientation="horizontal"
-        android:transitionName="layout_head">
+        android:paddingBottom="2dp">
 
-        <android.support.design.widget.CoordinatorLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical">
-
-            <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
-                android:id="@+id/detail_head_pb"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_margin="12dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:rcBackgroundColor="@color/custom_progress_background"
-                app:rcBackgroundPadding="4dp"
-                app:rcMax="100"
-                app:rcProgress="0"
-                app:rcProgressColor="@color/custom_progress_todo_progress"
-                app:rcRadius="4dp"
-                app:rcSecondaryProgress="0"
-                app:rcSecondaryProgressColor="@color/custom_progress_todo_progress_half"
-                tools:layout_editor_absoluteX="12dp">
-
-            </com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar>
-
-            <TextView
-                android:id="@+id/detail_head_tv_ach"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_margin="12dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="100%"
-                android:textSize="18sp"
-                android:textStyle="bold|italic" />
-
-        </android.support.design.widget.CoordinatorLayout>
-
-
-        <LinearLayout
+        <include
+            android:id="@+id/detail_head"
+            layout="@layout/include_head"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp">
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/detail_tv_category"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.7"
-                    android:text="CATEGORY VIEW POINT"
-                    android:textColor="#ffffff"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/detail_tv_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:alpha="0.7"
-                android:text="TEXT VIEW POINT"
-                android:textColor="#ffffff"
-                android:textSize="18sp" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/detail_tv_dday"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="6dp"
-            android:alpha="0.7"
-            android:gravity="center"
-            android:text="D-9999"
-            android:textColor="#ffffff"
-            android:textSize="16sp"
-            android:textStyle="bold|italic" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/detail_layout_body"
+    <FrameLayout
+        android:id="@+id/detail_framelayout_body"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/detail_layout_date"
+        <include
+            android:id="@+id/detail_body"
+            layout="@layout/fragment_detail_body"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/xml_item"
-                android:gravity="center_vertical"
-                android:minHeight="48dp"
-                android:orientation="horizontal"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/detail_item_vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="1dp"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="날짜:"
-                    android:textSize="16sp"
-                    android:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/detail_tv_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingLeft="12dp"
-                    android:text="DATE VIEW POINT"
-                    android:textSize="16sp"
-                    android:visibility="visible" />
-
-            </LinearLayout>
-
-            <View style="@style/Divider" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/detail_layout_ach"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:transitionName="layout_ach">
-
-            <LinearLayout
-                android:id="@+id/detail_layout_ach_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/xml_item"
-                android:gravity="center_vertical"
-                android:minHeight="72dp"
-                android:orientation="horizontal"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
-
-                <TextView
-                    android:id="@+id/detail_tv_ach_head"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="진행:"
-                    android:textSize="16sp"
-                    android:visibility="visible" />
-
-                <android.support.design.widget.CoordinatorLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="6dp">
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="12dp"
-                        android:layout_marginTop="12dp">
-
-                        <include
-                            android:id="@+id/detail_pb"
-                            layout="@layout/include_progressbar"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
-
-                    </FrameLayout>
-
-                    <ImageView
-                        android:id="@+id/detail_iv_zoom_ach"
-                        style="@style/icon"
-                        android:layout_gravity="right"
-                        android:layout_marginBottom="12dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        app:srcCompat="@drawable/ic_zoomin_black" />
-
-                    <TextView
-                        android:id="@+id/detail_tv_ach"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="50%"
-                        android:textSize="18sp"
-                        android:textStyle="bold|italic" />
-
-                </android.support.design.widget.CoordinatorLayout>
-
-            </LinearLayout>
-
-            <View
-                android:id="@+id/detail_border_ach"
-                style="@style/Divider" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/detail_layout_alarm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:transitionName="layout_alarm"
-            android:translationZ="1dp">
-
-            <LinearLayout
-                android:id="@+id/detail_layout_alarm_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/xml_item"
-                android:gravity="center_vertical"
-                android:minHeight="72dp"
-                android:orientation="horizontal"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
-
-                <TextView
-                    android:id="@+id/detail_tv_alarm_head"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="알림:"
-                    android:textSize="16sp"
-                    android:visibility="visible" />
-
-                <android.support.design.widget.CoordinatorLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="6dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/detail_iv_alarm1"
-                            style="@style/icon"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginBottom="12dp"
-                            android:layout_marginRight="4dp"
-                            android:layout_marginTop="12dp"
-                            android:background="@null"
-                            app:srcCompat="@drawable/ic_alarm_dark" />
-
-                        <ImageView
-                            android:id="@+id/detail_iv_alarm2"
-                            style="@style/icon"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginBottom="12dp"
-                            android:layout_marginRight="4dp"
-                            android:layout_marginTop="12dp"
-                            android:background="@null"
-                            app:srcCompat="@drawable/ic_alarm_dark" />
-
-                        <ImageView
-                            android:id="@+id/detail_iv_alarm3"
-                            style="@style/icon"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginBottom="12dp"
-                            android:layout_marginRight="4dp"
-                            android:layout_marginTop="12dp"
-                            android:background="@null"
-                            app:srcCompat="@drawable/ic_alarm_dark" />
-                    </LinearLayout>
-
-                    <ImageView
-                        android:id="@+id/detail_iv_zoom_alarm"
-                        style="@style/icon"
-                        android:layout_gravity="right"
-                        android:layout_marginBottom="12dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        app:srcCompat="@drawable/ic_zoomin_black" />
-
-                </android.support.design.widget.CoordinatorLayout>
-
-            </LinearLayout>
-
-            <View
-                android:id="@+id/detail_border_alarm"
-                style="@style/Divider" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/detail_layout_memo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:transitionName="layout_memo"
-            android:translationZ="1dp">
-
-            <LinearLayout
-                android:id="@+id/detail_layout_memo_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/xml_item"
-                android:gravity="center_vertical"
-                android:minHeight="72dp"
-                android:orientation="horizontal"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="메모:"
-                    android:textSize="16sp"
-                    android:visibility="visible" />
-
-                <android.support.design.widget.CoordinatorLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="6dp">
-
-                    <TextView
-                        android:id="@+id/detail_tv_memo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_gravity="center_vertical"
-                        android:paddingLeft="12dp"
-                        android:text="MEMO VIEW POINT"
-                        android:textSize="16sp"
-                        android:visibility="visible" />
-
-                    <ImageView
-                        android:id="@+id/detail_iv_zoom_memo"
-                        style="@style/icon"
-                        android:layout_gravity="right"
-                        android:layout_marginBottom="12dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:visibility="gone"
-                        app:srcCompat="@drawable/ic_zoomin_black" />
-
-                </android.support.design.widget.CoordinatorLayout>
-
-            </LinearLayout>
-
-            <View style="@style/Divider" />
-        </LinearLayout>
-
-    </LinearLayout>
+    </android.support.v4.view.ViewPager>
 
 </LinearLayout>

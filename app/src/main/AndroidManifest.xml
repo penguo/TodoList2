@@ -17,7 +17,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".ListActivity" />
-        <activity android:name=".DetailActivity" />
         <activity
             android:name=".UpdateActivity"
             android:windowSoftInputMode="adjustPan" />
@@ -35,7 +34,7 @@
                 android:resource="@xml/widget_provider_basic" />
         </receiver>
 
-        <activity android:name=".DetailItemActivity"></activity>
+        <activity android:name=".DetailActivity"></activity>
     </application>
 
 </manifest>

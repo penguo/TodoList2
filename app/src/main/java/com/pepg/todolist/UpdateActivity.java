@@ -138,10 +138,15 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
             tvCategory.setText(dbManager.DATA_CATEGORY);
             tvDate.setText(dbManager.DATA_DATE);
             setDday();
+            }
+        onRefresh();
+    }
+
+    public void updateAch(){
+        if(id != 0){
             pb.setProgress(dbManager.DATA_ACH);
             pb.setSecondaryProgress(Manager.getSuggestAch(dbManager.DATA_CREATEDATE, dbManager.DATA_DATE));
         }
-        onRefresh();
     }
 
     private void setDday() {
@@ -319,9 +324,12 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onRefresh() {
-        semiRcvAdapter = new SemiListRcvAdapter(dbManager, this, id, true);
-        rcvSemi.setAdapter(semiRcvAdapter);
+        if(id != 0){
+            dbManager.getValue("_id", DBManager.DATA_id);
+        }
+        semiRcvAdapter.refresh();
         swipe.setRefreshing(false);
+        updateAch();
     }
 
     private void viewSemi() {

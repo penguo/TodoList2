@@ -63,6 +63,7 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="20dp"
             android:clickable="true"
+            android:visibility="gone"
             app:backgroundTint="@color/colorPrimary"
             app:fabSize="normal"
             app:srcCompat="@drawable/ic_add" />

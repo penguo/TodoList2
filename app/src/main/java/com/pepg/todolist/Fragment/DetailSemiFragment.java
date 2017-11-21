@@ -40,6 +40,15 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
     public DetailSemiFragment() {
     }
 
+    public static DetailSemiFragment newInstance() {
+        DetailSemiFragment fragment = new DetailSemiFragment();
+        Bundle args = new Bundle();
+//        args.putString("1", param1);
+//        args.putString("2", param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,8 +99,7 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
 
     @Override
     public void onRefresh() {
-        semiRcvAdapter = new SemiListRcvAdapter(dbManager, activity, id);
-        rcvSemi.setAdapter(semiRcvAdapter);
+        semiRcvAdapter.refresh();
         swipe.setRefreshing(false);
     }
 

@@ -12,12 +12,10 @@ import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.DataBase.DBManager;
-import com.pepg.todolist.DetailItemActivity;
+import com.pepg.todolist.DetailActivity;
 import com.pepg.todolist.Manager;
 import com.pepg.todolist.Optional.SmoothCheckBox;
 import com.pepg.todolist.UpdateActivity;
-
-import com.pepg.todolist.DetailActivity;
 
 import com.pepg.todolist.R;
 
@@ -40,14 +38,12 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
         this.dbManager = dbManager;
         this.activity = activity;
         this.parentId = parentId;
-        this.dbManager.setSemiPosition(parentId);
     }
 
     public SemiListRcvAdapter(DBManager dbManager, Activity activity, int parentId, boolean isModifyMode) {
         this.dbManager = dbManager;
         this.activity = activity;
         this.parentId = parentId;
-        this.dbManager.setSemiPosition(parentId);
         Manager.modifyMode = isModifyMode;
     }
 
@@ -79,6 +75,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_semi, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         currentClassName = activity.getLocalClassName();
+        dbManager.setSemiPosition(parentId);
         return viewHolder;
     }
 
@@ -115,8 +112,6 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
                         dbManager.getValue("_id", parentId);
                         if(currentClassName.equals("DetailActivity")){
                             ((DetailActivity) activity).updateAch();
-                        }else if(currentClassName.equals("DetailItemActivity")) {
-                            ((DetailItemActivity) activity).updateAch();
                         }
                     }
                 }
@@ -132,7 +127,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (activity.getLocalClassName().equals("UpdateActivity")) {
+                    if (currentClassName.equals("UpdateActivity")) {
                         ((UpdateActivity) activity).clearFocus();
                     }
                     UpdateSemi us = new UpdateSemi(SemiListRcvAdapter.this, activity, dbManager);
@@ -171,8 +166,23 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
         dbManager.getSemiValue("_position", position);
         dbManager.semiDelete(dbManager.DATA_semi_id);
         dbManager.setSemiPosition(parentId);
+        if(parentId!=0){ // parentId=0 : 더미데이터 -> 더미데이터가 아닐 때
+            dbManager.getValue("_id", parentId);
+            switch(currentClassName){
+                case("DetailActivity"):
+                    ((DetailActivity)activity).updateAch();
+                    break;
+                case("UpdateActivity"):
+                    ((UpdateActivity)activity).updateAch();
+                    break;
+            }
+        }
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, dbManager.getSemiSize(parentId)); // 지워진 만큼 다시 채워넣기.
     }
 
+    public void refresh(){
+        dbManager.setSemiPosition(parentId);
+        notifyDataSetChanged();
+    }
 }
