@@ -2,6 +2,8 @@ package com.pepg.todolist;
 
 import android.app.Activity;
 import android.content.Context;
+import android.transition.ChangeBounds;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.inputmethod.InputMethodManager;
 
@@ -18,11 +20,15 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class Manager {
     public final static int RC_LIST_TO_UPDATE = 1000;
-    public final static int RC_LIST_TO_DETAIL = 1001;
+    public final static int RC_LIST_TO_INFO = 1001;
     public final static int RC_DETAIL_TO_UPDATE = 1002;
     public final static int RC_LIST_TO_ADDGUIDE = 1003;
     public final static int RC_DETAIL_TO_DETAILITEM = 1005;
     public static boolean modifyMode;
+    public static int viewState;
+
+    // setting option
+    public static boolean isAnimationActive;
 
     public static String[] strings;
     public static Calendar todayCal, readCal;
@@ -112,7 +118,12 @@ public class Manager {
         ddayTime = readCal.getTimeInMillis() / 86400000;
         totalDay = (int) (ddayTime - todayTime);
         resultDday = calculateDday(goalDate);
-        return 100 * (1 - (resultDday / totalDay));
+        return (100 - ((100 * resultDday) / (1*totalDay)));
     }
 
+    public static ChangeBounds getChangeBounds(){
+        ChangeBounds changeBoundsTransition = new ChangeBounds();
+        changeBoundsTransition.setDuration(250);
+        return changeBoundsTransition;
+    }
 }

@@ -2,6 +2,7 @@ package com.pepg.todolist;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -10,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -26,7 +29,7 @@ import com.pepg.todolist.DataBase.DBManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListActivity extends AppCompatActivity implements View.OnClickListener {
+public class ListActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     ImageButton btnCategory, btnSetting;
     TextView tvSortEqual;
@@ -41,6 +44,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     boolean isSortViewing;
     DividerItemDecoration dividerItemDecoration;
     Toolbar toolbar;
+    SwipeRefreshLayout swipe;
 
     final DBManager dbManager = new DBManager(this, "todolist2.db", null, MainActivity.DBVERSION);
 
@@ -56,6 +60,14 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         tvSortEqual = (TextView) findViewById(R.id.listA_tv_sortequal);
         toolbar = (Toolbar) findViewById(R.id.listA_toolbar);
 
+        swipe = (SwipeRefreshLayout) findViewById(R.id.listA_swipe);
+        swipe.setColorSchemeResources(
+                R.color.colorPrimary,
+                android.R.color.holo_red_light,
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_orange_light
+        );
+        swipe.setOnRefreshListener(this);
         viewSlideOut = AnimationUtils.loadAnimation(this, R.anim.anim_slide_out_up);
         viewSlideIn = AnimationUtils.loadAnimation(this, R.anim.anim_slide_in_up);
 
@@ -72,6 +84,13 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         fabAdd.setOnClickListener(this);
         layoutSort.setOnClickListener(this);
         setSortView();
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu){
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.list, menu);
+        return true;
     }
 
     public void setSortView() {
@@ -124,10 +143,8 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 refresh();
             }
         }
-        if (requestCode == Manager.RC_LIST_TO_DETAIL) {
-            if (resultCode == RESULT_OK) {
-                refresh();
-            }
+        if (requestCode == Manager.RC_LIST_TO_INFO) {
+            refresh();
         }
         if (requestCode == Manager.RC_LIST_TO_ADDGUIDE) {
             if (resultCode == RESULT_OK) {
@@ -155,20 +172,15 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         dialog.show();
     }
 
-    public void reSet() {
-        listRcvAdapter = new ListRcvAdapter(dbManager, this);
-        rcvTodo.setAdapter(listRcvAdapter);
-        setSortView();
-    }
-
     public void refresh(){
         listRcvAdapter.notifyDataSetChanged();
-        setSortView();
     }
 
     public void dialogDismiss() {
-        refresh();
-        dialogDismiss();
+        listRcvAdapter = new ListRcvAdapter(dbManager, this);
+        rcvTodo.setAdapter(listRcvAdapter);
+        setSortView();
+        dialog.dismiss();
     }
 
     public List<Pair<View, String>> getPairs() {
@@ -176,4 +188,11 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         pairs.add(Pair.create((View) toolbar, "toolbar"));
         return pairs;
     }
+
+    @Override
+    public void onRefresh() {
+        listRcvAdapter.notifyDataSetChanged();
+        swipe.setRefreshing(false);
+    }
+
 }

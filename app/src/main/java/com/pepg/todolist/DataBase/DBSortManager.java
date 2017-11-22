@@ -110,18 +110,4 @@ public class DBSortManager {
         }
         cursor.close();
     }
-
-    public void sortTest() {
-        // TODO : Sort를 써보려했지만 실패...
-//        for (j = 0; j < length; j++) {
-//            key = dataList.get(j);
-//            i = j - 1;
-//            while (i >= 0 && dataList.get(i).getDate().getTime() > key.getDate().getTime()) {
-//                dataList.get(i + 1).setMerge(dataList.get(i));
-//                i--;
-//            }
-//            dataList.get(i + 1).setMerge(key);
-//            Log.e("dbSM", j + ": " + dataList.get(j).getPosition() + ":" + dataList.get(j).getDate());
-//        }
-    }
 }

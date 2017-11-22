@@ -5,6 +5,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/detail_tv_gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="love"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/detail_layout_body"
         android:layout_width="match_parent"
@@ -119,7 +126,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="50%"
+                        android:text="99 / 99"
                         android:textSize="18sp"
                         android:textStyle="bold|italic" />
 

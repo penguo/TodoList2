@@ -102,14 +102,19 @@
             app:fabSize="normal"
             app:srcCompat="@drawable/ic_add" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/listA_rcv_todo"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/listA_swipe"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:elevation="1dp">
+            android:layout_height="match_parent">
 
-        </android.support.v7.widget.RecyclerView>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/listA_rcv_todo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:elevation="1dp">
 
+            </android.support.v7.widget.RecyclerView>
+        </android.support.v4.widget.SwipeRefreshLayout>
     </android.support.design.widget.CoordinatorLayout>
 
 </LinearLayout>

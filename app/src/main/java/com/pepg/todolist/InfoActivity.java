@@ -6,8 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.ChangeBounds;
 import android.transition.Slide;
+import android.transition.TransitionInflater;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -15,6 +17,8 @@ import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.Fragment.DetailBodyFragment;
 import com.pepg.todolist.Fragment.DetailSemiFragment;
+
+import static com.pepg.todolist.Manager.viewState;
 
 public class InfoActivity extends AppCompatActivity {
 
@@ -27,12 +31,19 @@ public class InfoActivity extends AppCompatActivity {
     FragmentManager fragmentManager;
     DetailBodyFragment detailBodyFragment = new DetailBodyFragment();
     DetailSemiFragment detailSemiFragment = new DetailSemiFragment();
-    Bundle bundle;
+    FrameLayout frameLayoutToolbar, frameLayoutHead, frameLayoutFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
+
+
+        frameLayoutToolbar = (FrameLayout) findViewById(R.id.info_framelayout_toolbar);
+        frameLayoutHead = (FrameLayout) findViewById(R.id.info_framelayout_head);
+        frameLayoutFragment = (FrameLayout) findViewById(R.id.info_framelayout_fragment);
+
 
         incToolbar = findViewById(R.id.info_include_toolbar);
         btnReturn = incToolbar.findViewById(R.id.detail_btn_return);
@@ -50,7 +61,6 @@ public class InfoActivity extends AppCompatActivity {
 
 
         setData();
-        selectItem(0);
     }
 
     public void setData() {
@@ -63,40 +73,59 @@ public class InfoActivity extends AppCompatActivity {
             tvTitle.setText(DBManager.DATA_CATEGORY);
             tvCategory.setVisibility(View.GONE);
         }
+        setDday();
+        viewBody();
     }
 
-    public void selectItem(int item) {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        switch (item) {
-            case (0):
-                bundle = new Bundle();
-                detailBodyFragment.setArguments(bundle);
+    private void setDday() {
+        tvDday.setText(Manager.getDday(DBManager.DATA_DATE));
+        try {
+            if (DBManager.DATA_DDAY >= 10 || DBManager.DATA_DDAY <= -10) {
+                tvDday.setTextSize(16);
+            } else {
+                tvDday.setTextSize(21);
+            }
+        } catch (Exception e) {
+            tvDday.setTextSize(16);
+        }
+    }
 
-                fragmentTransaction.replace(R.id.info_framelayout_fragment, detailBodyFragment);
-                fragmentTransaction.commit();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateAch();
+    }
+
+    public void updateAch() {
+        dbManager.getValue("_id", DBManager.DATA_id);
+        pbHead.setProgress(DBManager.DATA_ACH);
+        pbHead.setSecondaryProgress(Manager.getSuggestAch(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE));
+        tvHeadAch.setText(DBManager.DATA_ACH + "%");
+        switch (Manager.viewState) {
+            case (2):
+                DetailSemiFragment dsf = (DetailSemiFragment) getFragmentManager().findFragmentById(R.id.info_framelayout_fragment);
+                dsf.updateAch();
                 break;
-            case (1): // DATE
-                break;
-            case (2): // ACH-SEMI
-//                bundle = new Bundle();
-//                detailSemiFragment.setArguments(bundle);
-//
-//                Slide slideTransition = new Slide(Gravity.RIGHT);
-//                slideTransition.setDuration(250);
-//
-//                ChangeBounds changeBoundsTransition = new ChangeBounds();
-//                changeBoundsTransition.setDuration(250);
-//
-//                detailSemiFragment.setEnterTransition(slideTransition);
-//                detailSemiFragment.setSharedElementEnterTransition(changeBoundsTransition);
-//
-//                fragmentTransaction.addSharedElement(detailBodyFragment.getSharedElement(item), "layout_ach");
-//                fragmentTransaction.add(R.id.info_framelayout_fragment, detailSemiFragment);
-//                fragmentTransaction.addToBackStack("TEST");
-//                fragmentTransaction.commit();
-                break;
-            case (3): // ALARM
+            default:
+                DetailBodyFragment dbf = (DetailBodyFragment) getFragmentManager().findFragmentById(R.id.info_framelayout_fragment);
+                dbf.updateAch();
                 break;
         }
+    }
+
+    public void viewBody() {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.info_framelayout_fragment, detailBodyFragment);
+        fragmentTransaction.commit();
+        fragmentManager.executePendingTransactions();
+    }
+
+    public float getElevation() {
+        return frameLayoutHead.getElevation();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

@@ -1,18 +1,18 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="windowNoTitle">true</item>
-
+        <!--<item name="windowNoTitle">true</item>-->
 
         <!-- enable window content transitions -->
         <item name="android:windowContentTransitions">true</item>
         <item name="android:duration">250</item>
         <item name="android:windowEnterTransition">@transition/window_fade</item>
         <item name="android:windowExitTransition">@transition/window_fade</item>
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
 
         <!-- specify enter and exit transitions -->
         <!--<item name="android:windowEnterTransition">@transition/explode</item>-->
@@ -22,7 +22,10 @@
             <!--@transition/change_image_transform</item>-->
         <!--<item name="android:windowSharedElementExitTransition">-->
             <!--@transition/change_image_transform</item>-->
+    </style>
 
+    <style name="MyActionBar" parent="Widget.AppCompat.ActionBar">
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 
     <style name="icon">

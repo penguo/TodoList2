@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:elevation="1dp"
     android:orientation="vertical">
 
 
@@ -13,21 +12,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
-        android:orientation="vertical">
+        android:elevation="3dp"
+        android:orientation="vertical"
+        android:transitionName="layout_ach">
 
         <LinearLayout
             android:id="@+id/fdsemi_layout_head_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorPrimaryDark"
-            android:elevation="3dp"
+            android:clipToPadding="false"
             android:gravity="center_vertical"
             android:minHeight="72dp"
             android:orientation="horizontal"
-            android:paddingBottom="2dp"
+            android:paddingBottom="1dp"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:transitionName="layout_body">
+            android:paddingRight="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -72,7 +72,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="50%"
+                    android:text="99 / 99"
                     android:textSize="18sp"
                     android:textStyle="bold|italic" />
 
@@ -81,11 +81,16 @@
         </LinearLayout>
     </LinearLayout>
 
-    <include
-        android:id="@+id/fdsemi_include"
-        layout="@layout/include_semi"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible" />
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/fdsemi_include"
+            layout="@layout/include_semi"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible" />
+    </FrameLayout>
 
 </LinearLayout>

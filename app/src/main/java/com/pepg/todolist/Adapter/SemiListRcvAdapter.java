@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.DetailActivity;
+import com.pepg.todolist.Fragment.DetailBodyFragment;
+import com.pepg.todolist.InfoActivity;
 import com.pepg.todolist.Manager;
 import com.pepg.todolist.Optional.SmoothCheckBox;
 import com.pepg.todolist.UpdateActivity;
@@ -85,12 +87,12 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
 
 //        holder.ivWeight.setImageResource(Manager.getDrawableResId("letter" + dbManager.DATA_semi_WEIGHT));
         holder.isSet = false;
-        holder.tvTitle.setText(dbManager.DATA_semi_TITLE);
-        holder.tvDate.setText(dbManager.DATA_semi_DATE);
-        holder.pb.setMax(dbManager.DATA_semi_ACHMAX);
-        holder.pb.setProgress(dbManager.DATA_semi_ACH);
+        holder.tvTitle.setText(DBManager.DATA_semi_TITLE);
+        holder.tvDate.setText(DBManager.DATA_semi_DATE);
+        holder.pb.setMax(DBManager.DATA_semi_ACHMAX);
+        holder.pb.setProgress(DBManager.DATA_semi_ACH);
         holder.scb.setClickable(false);
-        if (dbManager.DATA_semi_ACH == 100) {
+        if (DBManager.DATA_semi_ACH == 100) {
             holder.scb.setChecked(true);
         } else {
             holder.scb.setChecked(false);
@@ -103,15 +105,15 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
                     if (holder.isSet) {
                         dbManager.getSemiValue("_position", position);
                         if (holder.scb.isChecked()) {
-                            dbManager.DATA_semi_ACH = 100;
+                            DBManager.DATA_semi_ACH = 100;
                         } else {
-                            dbManager.DATA_semi_ACH = 0;
+                            DBManager.DATA_semi_ACH = 0;
                         }
                         dbManager.semiUpdateSimply();
-                        holder.pb.setProgress(dbManager.DATA_semi_ACH);
+                        holder.pb.setProgress(DBManager.DATA_semi_ACH);
                         dbManager.getValue("_id", parentId);
-                        if(currentClassName.equals("DetailActivity")){
-                            ((DetailActivity) activity).updateAch();
+                        if(currentClassName.equals("InfoActivity")){
+                            ((InfoActivity) activity).updateAch();
                         }
                     }
                 }
@@ -132,7 +134,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
                     }
                     UpdateSemi us = new UpdateSemi(SemiListRcvAdapter.this, activity, dbManager);
                     dbManager.getSemiValue("_position", position);
-                    us.updateSemi(dbManager.DATA_semi_id, activity, false);
+                    us.updateSemi(DBManager.DATA_semi_id, activity, false);
                     notifyDataSetChanged();
                 }
             });
@@ -164,7 +166,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
 
     private void removeItemView(int position) {
         dbManager.getSemiValue("_position", position);
-        dbManager.semiDelete(dbManager.DATA_semi_id);
+        dbManager.semiDelete(DBManager.DATA_semi_id);
         dbManager.setSemiPosition(parentId);
         if(parentId!=0){ // parentId=0 : 더미데이터 -> 더미데이터가 아닐 때
             dbManager.getValue("_id", parentId);

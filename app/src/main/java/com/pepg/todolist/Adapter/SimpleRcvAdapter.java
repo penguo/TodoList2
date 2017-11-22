@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,7 +96,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
             holder.tvDetail.setText(itemsDetailCS[position].toString());
             if (position == itemsCS.length - 1) { //직접생성의 경우
                 if (selectedPosition == itemsCS.length - 1) {
-                    holder.tvDetail.setText(dbManager.DATA_DATE);
+                    holder.tvDetail.setText(DBManager.DATA_DATE);
                 } else {
                     holder.tvDetail.setVisibility(View.GONE);
                     holder.layout.setMinimumHeight(Manager.convertPixelsToDp(48, activity));
@@ -118,7 +119,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                 switch (type) {
                     case ("date"):
                         if (!itemsCS[position].toString().equals(activity.getString(R.string.new_date))) {
-                            dbManager.DATA_DATE = itemsDetailCS[position].toString();
+                            DBManager.DATA_DATE = itemsDetailCS[position].toString();
                             ((AddguideActivity) activity).setData(3);
                             selectedPosition = position;
                             notifyDataSetChanged();
@@ -134,11 +135,11 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                         switch (option) {
                             case ("forSort"):
                                 if (!itemsCS[position].toString().equals(activity.getString(R.string.all))) {
-                                    dbManager.DATA_SORTTYPE = "CATEGORY";
-                                    dbManager.DATA_SORTTYPEEQUAL = itemsCS[position].toString();
+                                    DBManager.DATA_SORTTYPE = "CATEGORY";
+                                    DBManager.DATA_SORTTYPEEQUAL = itemsCS[position].toString();
                                 } else {
-                                    dbManager.DATA_SORTTYPE = "DEFAULT";
-                                    dbManager.DATA_SORTTYPEEQUAL = "";
+                                    DBManager.DATA_SORTTYPE = "DEFAULT";
+                                    DBManager.DATA_SORTTYPEEQUAL = "";
                                 }
                                 ((ListActivity) activity).dialogDismiss();
                                 break;
@@ -162,7 +163,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                                 break;
                             default:
                                 if (!itemsCS[position].toString().equals(activity.getString(R.string.new_category))) {
-                                    dbManager.DATA_CATEGORY = itemsCS[position].toString();
+                                    DBManager.DATA_CATEGORY = itemsCS[position].toString();
                                     selectedPosition = position;
                                     notifyDataSetChanged();
                                     ((AddguideActivity) activity).setData(2);
@@ -237,7 +238,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                 sb.append("0");
             }
             sb.append(dayOfMonth + "");
-            dbManager.DATA_DATE = sb.toString();
+            DBManager.DATA_DATE = sb.toString();
             selectedPosition = itemsCS.length - 1;
             notifyDataSetChanged();
             ((AddguideActivity) activity).setData(3);
@@ -263,7 +264,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                 } else {
                     Toast.makeText(activity, "이미 존재하는 카테고리입니다. 해당 카테고리로 선택되었습니다.", Toast.LENGTH_SHORT).show();
                 }
-                dbManager.DATA_CATEGORY = selected;
+                DBManager.DATA_CATEGORY = selected;
                 ((AddguideActivity) activity).setData(2);
                 dataSet();
                 notifyDataSetChanged();
@@ -289,7 +290,7 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
         switch (type) {
             case ("date"):
                 for (i = 0; i < itemsDetailCS.length - 1; i++) {
-                    if (itemsDetailCS[i].equals(dbManager.DATA_DATE)) {
+                    if (itemsDetailCS[i].equals(DBManager.DATA_DATE)) {
                         selectedPosition = i;
                         return true;
                     }
@@ -299,14 +300,14 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                 if (option.equals("forSort")) {
                     selectedPosition = 0;
                     for (i = 1; i < itemsCS.length - 1; i++) {
-                        if (itemsCS[i].equals(dbManager.DATA_SORTTYPEEQUAL)) {
+                        if (itemsCS[i].equals(DBManager.DATA_SORTTYPEEQUAL)) {
                             selectedPosition = i;
                             return true;
                         }
                     }
                 } else {
                     for (i = 0; i < itemsCS.length - 1; i++) {
-                        if (itemsCS[i].equals(dbManager.DATA_CATEGORY)) {
+                        if (itemsCS[i].equals(DBManager.DATA_CATEGORY)) {
                             selectedPosition = i;
                             return true;
                         }

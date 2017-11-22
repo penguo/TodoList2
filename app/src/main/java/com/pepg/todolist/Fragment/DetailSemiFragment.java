@@ -1,6 +1,8 @@
 package com.pepg.todolist.Fragment;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
+import com.pepg.todolist.InfoActivity;
 import com.pepg.todolist.MainActivity;
 import com.pepg.todolist.Manager;
 import com.pepg.todolist.R;
@@ -46,15 +49,6 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
     public DetailSemiFragment() {
     }
 
-    public static DetailSemiFragment newInstance() {
-        DetailSemiFragment fragment = new DetailSemiFragment();
-        Bundle args = new Bundle();
-//        args.putString("1", param1);
-//        args.putString("2", param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,21 +56,7 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_detail_semi, container, false);
-
-        return layout;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        activity = this.getActivity();
-        id = dbManager.DATA_id;
-
-        setSharedElementEnterTransition(TransitionInflater.from(activity).inflateTransition(android.R.transition.move));
-
-        dbManager = new DBManager(activity, "todolist2.db", null, MainActivity.DBVERSION);
-
+        View view = (View) inflater.inflate(R.layout.fragment_detail_semi, container, false);
         includeSemi = view.findViewById(R.id.fdsemi_include);
         layoutSemi = (LinearLayout) includeSemi.findViewById(R.id.semi_layout);
         rcvSemi = (RecyclerView) includeSemi.findViewById(R.id.semi_rcv);
@@ -88,6 +68,17 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
 
         includePB = view.findViewById(R.id.fdsemi_pb);
         pb = includePB.findViewById(R.id.progressBar);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        activity = this.getActivity();
+        id = dbManager.DATA_id;
+        Manager.viewState = 2;
+
+        dbManager = new DBManager(activity, "todolist2.db", null, MainActivity.DBVERSION);
 
         LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(activity);
         rcvSemi.setLayoutManager(rcvLayoutManager);
@@ -114,6 +105,17 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
         });
 
         onRefresh();
+        setData();
+    }
+
+    public void setData() {
+        pb.setSecondaryProgress(Manager.getSuggestAch(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE));
+        updateAch();
+    }
+
+    public void updateAch() {
+        pb.setProgress(DBManager.DATA_ACH);
+        tvAch.setText((DBManager.DATA_ACH_FINISH / 100) + " / " + (DBManager.DATA_ACH_MAX / 100));
     }
 
     @Override

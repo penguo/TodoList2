@@ -31,8 +31,6 @@ public class DetailDateFragment extends Fragment {
 
         dbManager = new DBManager(activity, "todolist2.db", null, MainActivity.DBVERSION);
 
-
-
         return layout;
     }
 

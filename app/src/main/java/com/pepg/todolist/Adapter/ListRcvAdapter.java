@@ -77,17 +77,18 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
         dbManager.getValue("_position", position);
 
         if (!dbManager.DATA_TITLE.equals(activity.getString(R.string.empty_data))) {
-            holder.tvTitle.setText(dbManager.DATA_TITLE);
-            holder.tvCategory.setText(dbManager.DATA_CATEGORY);
+            holder.tvTitle.setText(DBManager.DATA_TITLE);
+            holder.tvCategory.setText(DBManager.DATA_CATEGORY);
+            holder.tvCategory.setVisibility(View.VISIBLE);
         } else {
-            holder.tvTitle.setText(dbManager.DATA_CATEGORY);
+            holder.tvTitle.setText(DBManager.DATA_CATEGORY);
             holder.tvCategory.setVisibility(View.GONE);
         }
-        holder.tvDate.setText("~ " + dbManager.DATA_DATE);
-        holder.tvAch.setText(dbManager.DATA_ACH + "%");
-        holder.tvDday.setText(Manager.getDday(dbManager.DATA_DATE));
+        holder.tvDate.setText("~ " + DBManager.DATA_DATE);
+        holder.tvAch.setText(DBManager.DATA_ACH + "%");
+        holder.tvDday.setText(Manager.getDday(DBManager.DATA_DATE));
         try {
-            if (dbManager.DATA_DDAY >= 10 || dbManager.DATA_DDAY <= -10) {
+            if (DBManager.DATA_DDAY >= 10 || DBManager.DATA_DDAY <= -10) {
                 holder.tvDday.setTextSize(16);
             } else {
                 holder.tvDday.setTextSize(21);
@@ -95,24 +96,20 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
         } catch (Exception e) {
             holder.tvDday.setTextSize(16);
         }
-        holder.pb.setProgress(dbManager.DATA_ACH);
-        holder.pb.setSecondaryProgress(Manager.getSuggestAch(dbManager.DATA_CREATEDATE, dbManager.DATA_DATE));
+        holder.pb.setProgress(DBManager.DATA_ACH);
+        holder.pb.setSecondaryProgress(Manager.getSuggestAch(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity, InfoActivity.class);
                 dbManager.getValue("_position", position);
-                intent.putExtra("_id", dbManager.DATA_id);
+                intent.putExtra("_id", DBManager.DATA_id);
 
-                /**
-                 * Shared Element Animation
-                 * 스테이터스바, 네비게이션바, 툴바 와 함께 움직이는게 좋다.
-                 */
                 List<Pair<View, String>> pairs = ((ListActivity) activity).getPairs();
                 pairs.add(Pair.create((View) holder.itemView, "layout_head"));
                 Bundle options = ActivityOptions.makeSceneTransitionAnimation(activity,
                         pairs.toArray(new Pair[pairs.size()])).toBundle();
-                activity.startActivityForResult(intent, Manager.RC_LIST_TO_DETAIL, options);
+                activity.startActivityForResult(intent, Manager.RC_LIST_TO_INFO, options);
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -141,7 +138,7 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
 
     private void removeItemView(int position) {
         dbManager.getValue("_position", position);
-        dbManager.delete(dbManager.DATA_id);
+        dbManager.delete(DBManager.DATA_id);
         notifyItemRemoved(position);
         dbManager.setPosition();
         notifyItemRangeChanged(position, dbManager.getSize()); // 지워진 만큼 다시 채워넣기.
