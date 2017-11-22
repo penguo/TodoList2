@@ -108,14 +108,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(ListActivity.this, AddguideActivity.class);
                 intent.putExtra("_id", 0);
                 startActivityForResult(intent, Manager.RC_LIST_TO_ADDGUIDE);
-                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
-//                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
                 break;
-//            case (R.id.listA_btn_add):
-//                intent = new Intent(ListActivity.this, UpdateActivity.class);
-//                intent.putExtra("_id", 0);
-//                startActivityForResult(intent, Manager.RC_LIST_TO_UPDATE);
-//                break;
             case (R.id.listA_layout_sort):
                 DialogOption();
                 break;
@@ -179,7 +172,6 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public List<Pair<View, String>> getPairs() {
-
         List<Pair<View, String>> pairs = new ArrayList<>();
         pairs.add(Pair.create((View) toolbar, "toolbar"));
         return pairs;

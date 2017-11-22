@@ -1,4 +1,4 @@
-package pepg.com.todolist;
+package com.pepg.todolist;
 
 import org.junit.Test;
 

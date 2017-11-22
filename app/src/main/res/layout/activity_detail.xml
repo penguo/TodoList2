@@ -23,18 +23,6 @@
             android:layout_height="wrap_content" />
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/detail_framelayout_body"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <include
-            android:id="@+id/detail_body"
-            layout="@layout/fragment_detail_body"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
-
     <android.support.v4.view.ViewPager
         android:id="@+id/detail_item_vp"
         android:layout_width="match_parent"

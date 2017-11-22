@@ -10,14 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:transitionName="layout_body">
 
         <LinearLayout
             android:id="@+id/detail_layout_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:transitionName="layout_date">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -137,8 +140,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:transitionName="layout_alarm"
-            android:translationZ="1dp">
+            android:transitionName="layout_alarm">
 
             <LinearLayout
                 android:id="@+id/detail_layout_alarm_bg"
@@ -227,8 +229,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:transitionName="layout_memo"
-            android:translationZ="1dp">
+            android:transitionName="layout_memo">
 
             <LinearLayout
                 android:id="@+id/detail_layout_memo_bg"

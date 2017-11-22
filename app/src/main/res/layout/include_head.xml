@@ -5,45 +5,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/detail_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:minHeight="?android:attr/actionBarSize"
-        android:theme="@android:style/Widget.Material.Toolbar"
-        android:transitionName="toolbar"
-        app:contentInsetStart="0dp">
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/detail_btn_return"
-                style="@style/icon"
-                app:srcCompat="@drawable/ic_arrow_back" />
-
-            <TextView
-                android:id="@+id/detail_tv_toolbar_title"
-                style="@style/ToolbarTitle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Detail" />
-
-            <ImageButton
-                android:id="@+id/detail_btn_edit"
-                style="@style/icon"
-                app:srcCompat="@drawable/ic_edit" />
-        </LinearLayout>
-    </android.support.v7.widget.Toolbar>
-
     <LinearLayout
         android:id="@+id/detail_layout_head"
         android:layout_width="match_parent"
@@ -61,7 +22,7 @@
             android:layout_gravity="center_vertical">
 
             <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
-                android:id="@+id/detail_head_pb"
+                android:id="@+id/detail_pb_head"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_margin="12dp"
@@ -78,7 +39,7 @@
             </com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar>
 
             <TextView
-                android:id="@+id/detail_head_tv_ach"
+                android:id="@+id/detail_tv_head_ach"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_margin="12dp"

@@ -1,50 +1,36 @@
 package com.pepg.todolist;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
-import android.app.Fragment;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Rect;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Pair;
-import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.DataBase.DBManager;
-import com.pepg.todolist.Fragment.DetailAlarmFragment;
-import com.pepg.todolist.Fragment.DetailMenuFragment;
 import com.pepg.todolist.Fragment.DetailSemiFragment;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.pepg.todolist.Fragment.Step1Fragment;
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
 
     ViewPager vp;
-    View includeHead, includeBody, includePB, borderAch, borderAlarm;
+    View includeHead;
     Activity activity;
     ImageButton btnReturn, btnEdit;
-    TextView tvTitle, tvCategory, tvDate, tvMemo, tvDday, tvAch, tvAchHead, tvAlarmHead, tvHeadAch, tvToolbarTitle;
-    LinearLayout layoutHead, layoutDate, layoutAch, layoutAlarm, layoutMemo, layoutAchBg, layoutAlarmBg, layoutMemoBg, layoutBody;
-    ImageView ivZoomAch, ivZoomAlarm, ivZoomMemo;
+    TextView tvTitle, tvCategory, tvDate, tvDday, tvAch, tvHeadAch, tvToolbarTitle;
+    LinearLayout layoutHead;
     Toolbar toolbar;
     RoundCornerProgressBar pb, pbHead;
     DetailSemiFragment detailSemiFragment;
-    FrameLayout frameLayoutHead, frameLayoutBody;
+    FrameLayout frameLayoutHead;
     int itemNum, id;
     final DBManager dbManager = new DBManager(this, "todolist2.db", null, MainActivity.DBVERSION);
     boolean isItemSelected;
@@ -56,7 +42,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         activity = this;
         includeHead = findViewById(R.id.detail_head);
-        includeBody = findViewById(R.id.detail_body);
 
         tvTitle = (TextView) includeHead.findViewById(R.id.detail_tv_title);
         tvCategory = (TextView) includeHead.findViewById(R.id.detail_tv_category);
@@ -67,33 +52,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         tvDday = (TextView) includeHead.findViewById(R.id.detail_tv_dday);
         tvToolbarTitle = (TextView) includeHead.findViewById(R.id.detail_tv_toolbar_title);
 
-        tvDate = (TextView) includeBody.findViewById(R.id.detail_tv_date);
-        tvMemo = (TextView) includeBody.findViewById(R.id.detail_tv_memo);
-        tvAch = (TextView) includeBody.findViewById(R.id.detail_tv_ach);
-        tvAchHead = (TextView) includeBody.findViewById(R.id.detail_tv_ach_head);
-        tvAlarmHead = (TextView) includeBody.findViewById(R.id.detail_tv_alarm_head);
-        layoutDate = (LinearLayout) includeBody.findViewById(R.id.detail_layout_date);
-        layoutAch = (LinearLayout) includeBody.findViewById(R.id.detail_layout_ach);
-        layoutAchBg = (LinearLayout) includeBody.findViewById(R.id.detail_layout_ach_bg);
-        layoutAlarm = (LinearLayout) includeBody.findViewById(R.id.detail_layout_alarm);
-        layoutAlarmBg = (LinearLayout) includeBody.findViewById(R.id.detail_layout_alarm_bg);
-        layoutMemo = (LinearLayout) includeBody.findViewById(R.id.detail_layout_memo);
-        layoutMemoBg = (LinearLayout) includeBody.findViewById(R.id.detail_layout_memo_bg);
-        borderAch = includeBody.findViewById(R.id.detail_border_ach);
-        borderAlarm = includeBody.findViewById(R.id.detail_border_alarm);
-        ivZoomAch = (ImageView) includeBody.findViewById(R.id.detail_iv_zoom_ach);
-        ivZoomAlarm = (ImageView) includeBody.findViewById(R.id.detail_iv_zoom_alarm);
-        ivZoomMemo = (ImageView) includeBody.findViewById(R.id.detail_iv_zoom_memo);
-
-        layoutBody = (LinearLayout) includeBody.findViewById(R.id.detail_layout_body);
-
-        includePB = includeBody.findViewById(R.id.detail_pb);
-        pb = (RoundCornerProgressBar) includePB.findViewById(R.id.progressBar);
-        tvHeadAch = (TextView) includeHead.findViewById(R.id.detail_head_tv_ach);
-        pbHead = (RoundCornerProgressBar) includeHead.findViewById(R.id.detail_head_pb);
+        tvHeadAch = (TextView) includeHead.findViewById(R.id.detail_tv_head_ach);
+        pbHead = (RoundCornerProgressBar) includeHead.findViewById(R.id.detail_pb_head);
 
         frameLayoutHead = (FrameLayout) findViewById(R.id.detail_framelayout_head);
-        frameLayoutBody = (FrameLayout) findViewById(R.id.detail_framelayout_body);
 
         DetailSemiFragment detailSemiFragment = new DetailSemiFragment();
         Manager.modifyMode = false;
@@ -101,80 +63,77 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         vp = (ViewPager) findViewById(R.id.detail_item_vp);
         vp.setAdapter(new DetailActivity.pagerAdapter(getSupportFragmentManager()));
 
-        setData(-1);
+//        setData(-1);
 
         btnEdit.setOnClickListener(this);
         btnReturn.setOnClickListener(this);
-        layoutAch.setOnClickListener(this);
-        layoutAlarm.setOnClickListener(this);
-        layoutMemo.setOnClickListener(this);
     }
 
-    private void setData(int item) {
-        if (item == -1) {
-            id = getIntent().getIntExtra("_id", -1);
-            dbManager.getValue("_id", id);
-            isItemSelected = false;
-        } else {
-            btnReturn.setImageResource(R.drawable.ic_zoomout);
-            layoutBody.setElevation(layoutHead.getElevation());
-            frameLayoutHead.setElevation(layoutBody.getElevation());
-            isItemSelected = true;
-        }
-        if (!DBManager.DATA_TITLE.equals(activity.getString(R.string.empty_data))) {
-            tvTitle.setText(DBManager.DATA_TITLE);
-            tvCategory.setText(DBManager.DATA_CATEGORY);
-        } else {
-            tvTitle.setText(DBManager.DATA_CATEGORY);
-            tvCategory.setVisibility(View.GONE);
-        }
-        tvDate.setText(DBManager.DATA_DATE);
-        tvMemo.setText(dbManager.DATA_MEMO);
-        switch (item) {
-            case (-1): //초기화
-                layoutDate.setVisibility(View.VISIBLE);
-
-                layoutAch.setVisibility(View.VISIBLE);
-                layoutAchBg.setBackgroundResource(R.drawable.xml_item);
-                ivZoomAch.setImageResource(R.drawable.ic_zoomin_black);
-                borderAch.setVisibility(View.VISIBLE);
-                tvAchHead.setTextColor(tvAch.getTextColors());
-
-                layoutAlarm.setVisibility(View.VISIBLE);
-                layoutAlarmBg.setBackgroundResource(R.drawable.xml_item);
-                ivZoomAlarm.setImageResource(R.drawable.ic_zoomin_black);
-                borderAlarm.setVisibility(View.VISIBLE);
-                tvAlarmHead.setTextColor(tvAch.getTextColors());
-
-                layoutMemo.setVisibility(View.VISIBLE);
-
-                frameLayoutHead.setBackgroundResource(R.color.colorPrimaryDark);
-                break;
-            case (0):
-                break;
-            case (1):
-                layoutDate.setVisibility(View.GONE);
-                layoutAlarm.setVisibility(View.GONE);
-                layoutMemo.setVisibility(View.GONE);
-                layoutAchBg.setBackgroundResource(R.color.colorPrimaryDark);
-                ivZoomAch.setImageResource(R.drawable.ic_zoomout_black);
-                borderAch.setVisibility(View.GONE);
-                tvAchHead.setTextColor(getResources().getColor(R.color.white07));
-                break;
-            case (2):
-                layoutDate.setVisibility(View.GONE);
-                layoutAch.setVisibility(View.GONE);
-                layoutMemo.setVisibility(View.GONE);
-                layoutAlarmBg.setBackgroundResource(R.color.colorPrimaryDark);
-                ivZoomAlarm.setImageResource(R.drawable.ic_zoomout_black);
-                borderAlarm.setVisibility(View.GONE);
-                tvAlarmHead.setTextColor(getResources().getColor(R.color.white07));
-                break;
-        }
-        vp.setCurrentItem(0);
-        updateAch();
-        setDday();
-    }
+//    private void setData(int item) {
+//        if (item == -1) {
+//            id = getIntent().getIntExtra("_id", -1);
+//            dbManager.getValue("_id", id);
+//            isItemSelected = false;
+//        } else {
+//            btnReturn.setImageResource(R.drawable.ic_zoomout);
+//            layoutBody.setElevation(layoutHead.getElevation());
+//            frameLayoutHead.setElevation(layoutBody.getElevation());
+//            isItemSelected = true;
+//        }
+//        if (!DBManager.DATA_TITLE.equals(activity.getString(R.string.empty_data))) {
+//            tvTitle.setText(DBManager.DATA_TITLE);
+//            tvCategory.setText(DBManager.DATA_CATEGORY);
+//        } else {
+//            tvTitle.setText(DBManager.DATA_CATEGORY);
+//            tvCategory.setVisibility(View.GONE);
+//        }
+//        tvDate.setText(DBManager.DATA_DATE);
+//        tvMemo.setText(dbManager.DATA_MEMO);
+//        switch (item) {
+//            case (-1): //초기화
+//                layoutDate.setVisibility(View.VISIBLE);
+//
+//                layoutAch.setVisibility(View.VISIBLE);
+//                layoutAchBg.setBackgroundResource(R.drawable.xml_item);
+//                ivZoomAch.setImageResource(R.drawable.ic_zoomin_black);
+//                borderAch.setVisibility(View.VISIBLE);
+//                tvAchHead.setTextColor(tvAch.getTextColors());
+//
+//                layoutAlarm.setVisibility(View.VISIBLE);
+//                layoutAlarmBg.setBackgroundResource(R.drawable.xml_item);
+//                ivZoomAlarm.setImageResource(R.drawable.ic_zoomin_black);
+//                borderAlarm.setVisibility(View.VISIBLE);
+//                tvAlarmHead.setTextColor(tvAch.getTextColors());
+//
+//                layoutMemo.setVisibility(View.VISIBLE);
+//
+//                frameLayoutHead.setBackgroundResource(R.color.colorPrimaryDark);
+//                break;
+//            case (0):
+//                break;
+//            case (1):
+//                layoutDate.setVisibility(View.GONE);
+//                layoutAlarm.setVisibility(View.GONE);
+//                layoutMemo.setVisibility(View.GONE);
+//                layoutAchBg.setBackgroundResource(R.color.colorPrimaryDark);
+//                ivZoomAch.setImageResource(R.drawable.ic_zoomout_black);
+//                borderAch.setVisibility(View.GONE);
+//                tvAchHead.setTextColor(getResources().getColor(R.color.white07));
+//                break;
+//            case (2):
+//                layoutDate.setVisibility(View.GONE);
+//                layoutAch.setVisibility(View.GONE);
+//                layoutMemo.setVisibility(View.GONE);
+//                layoutAlarmBg.setBackgroundResource(R.color.colorPrimaryDark);
+//                ivZoomAlarm.setImageResource(R.drawable.ic_zoomout_black);
+//                borderAlarm.setVisibility(View.GONE);
+//                tvAlarmHead.setTextColor(getResources().getColor(R.color.white07));
+//                break;
+//        }
+//        vp.setCurrentItem(0);
+//        updateAch();
+//        setDday();
+//    }
 
     private void setDday() {
         tvDday.setText(Manager.getDday(tvDate.getText().toString()));
@@ -254,13 +213,14 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         @Override
         public android.support.v4.app.Fragment getItem(int position) {
             switch (itemNum) {
-                case 1:
-                    return detailSemiFragment;
-                case 2:
-                    return new DetailAlarmFragment();
-                default:
-                    return new DetailMenuFragment();
+//                case 1:
+//                    return detailSemiFragment;
+//                case 2:
+//                    return new DetailAlarmFragment();
+//                default:
+//                    return new DetailBodyFragment();
             }
+            return new Step1Fragment();
         }
 
         @Override
@@ -293,13 +253,13 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         if (requestCode == Manager.RC_DETAIL_TO_UPDATE) {
             if (resultCode == RESULT_OK) {
                 dbManager.setSemiPosition(id);
-                setData(-1);
+//                setData(-1);
             }
         }
         if (requestCode == Manager.RC_DETAIL_TO_DETAILITEM) {
             if (resultCode == RESULT_OK) {
                 dbManager.setSemiPosition(id);
-                setData(-1);
+//                setData(-1);
             }
         }
     }
@@ -323,31 +283,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 //                pairs.toArray(new Pair[pairs.size()])).toBundle();
 //        activity.startActivityForResult(intent, Manager.RC_DETAIL_TO_DETAILITEM, options);
 
-        setData(itemNum);
+//        setData(itemNum);
 
-        Rect r = new Rect();
-        layoutAch.getGlobalVisibleRect(r);
-        float toY = r.top;
-        layoutAch.getGlobalVisibleRect(r);
-        float fromY = r.bottom;
-
-//        int[] location = new int[2];
-//        layoutAch.getLocationOnScreen(location);
-//        float fromY = (float) location[1];
-//        location = new int[2];
-//        frameLayoutHead.getLocationOnScreen(location);
-//        float toY = (float) location[1];
-
-        TranslateAnimation ani = new TranslateAnimation(
-                Animation.RELATIVE_TO_SELF, 0,
-                Animation.RELATIVE_TO_SELF, 0,
-                Animation.RELATIVE_TO_SELF, fromY,
-                Animation.RELATIVE_TO_SELF, toY);
-        ani.setFillAfter(true); // 애니메이션 후 이동한좌표에
-        ani.setDuration(5000); //지속시간
-
-//        layoutAch.startAnimation(ani);
-
-//        tvTitle.setText(fromY + "," + toY);
     }
 }

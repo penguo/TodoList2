@@ -1,4 +1,4 @@
-package pepg.com.todolist;
+package com.pepg.todolist;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("pepg.com.todolist", appContext.getPackageName());
+        assertEquals("com.pepg.todolist", appContext.getPackageName());
     }
 }

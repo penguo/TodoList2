@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.DetailActivity;
+import com.pepg.todolist.InfoActivity;
 import com.pepg.todolist.ListActivity;
 import com.pepg.todolist.Manager;
 
@@ -99,7 +100,7 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity, DetailActivity.class);
+                Intent intent = new Intent(activity, InfoActivity.class);
                 dbManager.getValue("_position", position);
                 intent.putExtra("_id", dbManager.DATA_id);
 

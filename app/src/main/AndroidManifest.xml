@@ -34,7 +34,8 @@
                 android:resource="@xml/widget_provider_basic" />
         </receiver>
 
-        <activity android:name=".DetailActivity"></activity>
+        <activity android:name=".DetailActivity" />
+        <activity android:name=".InfoActivity"></activity>
     </application>
 
 </manifest>
