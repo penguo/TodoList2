@@ -7,13 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.DataBase.DBManager;
-import com.pepg.todolist.DetailActivity;
-import com.pepg.todolist.Fragment.DetailBodyFragment;
 import com.pepg.todolist.InfoActivity;
 import com.pepg.todolist.Manager;
 import com.pepg.todolist.Optional.SmoothCheckBox;
@@ -23,7 +22,7 @@ import com.pepg.todolist.R;
 
 import com.pepg.todolist.UpdateSemi;
 
-import static com.pepg.todolist.Manager.modifyMode;
+import static com.pepg.todolist.Manager.editMode;
 
 /**
  * Created by pengu on 2017-08-10.
@@ -42,11 +41,11 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
         this.parentId = parentId;
     }
 
-    public SemiListRcvAdapter(DBManager dbManager, Activity activity, int parentId, boolean isModifyMode) {
+    public SemiListRcvAdapter(DBManager dbManager, Activity activity, int parentId, boolean isEditMode) {
         this.dbManager = dbManager;
         this.activity = activity;
         this.parentId = parentId;
-        Manager.modifyMode = isModifyMode;
+        Manager.editMode = isEditMode;
     }
 
     @Override
@@ -61,6 +60,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
         SmoothCheckBox scb;
         LinearLayout layoutTop;
         boolean isSet;
+        FrameLayout layoutEditMode;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -70,6 +70,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
             pb = (RoundCornerProgressBar) includePB.findViewById(R.id.progressBar);
             scb = (SmoothCheckBox) itemView.findViewById(R.id.semi_scb);
             layoutTop = (LinearLayout) itemView.findViewById(R.id.semi_layout);
+            layoutEditMode = (FrameLayout)itemView.findViewById(R.id.semi_editmode);
         }
     }
 
@@ -98,7 +99,8 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
             holder.scb.setChecked(false);
         }
         holder.isSet = true;
-        if (!modifyMode) {
+        if (!editMode) {
+            holder.layoutEditMode.setVisibility(View.GONE);
             holder.scb.setOnCheckedChangeListener(new SmoothCheckBox.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(SmoothCheckBox checkBox, boolean isChecked) {
@@ -125,6 +127,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
                 }
             });
         } else {
+            holder.layoutEditMode.setVisibility(View.VISIBLE);
             holder.scb.setClickable(false);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -171,8 +174,8 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
         if(parentId!=0){ // parentId=0 : 더미데이터 -> 더미데이터가 아닐 때
             dbManager.getValue("_id", parentId);
             switch(currentClassName){
-                case("DetailActivity"):
-                    ((DetailActivity)activity).updateAch();
+                case("InfoActivity"):
+                    ((InfoActivity)activity).updateAch();
                     break;
                 case("UpdateActivity"):
                     ((UpdateActivity)activity).updateAch();

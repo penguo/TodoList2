@@ -79,8 +79,8 @@ public class UpdateSemi implements View.OnClickListener {
                     case ("UpdateActivity"):
                         ((UpdateActivity) activity).onRefresh();
                         break;
-                    case ("DetailActivity"):
-                        ((DetailActivity) activity).refreshSemiRcv();
+                    case ("InfoActivity"):
+                        ((InfoActivity) activity).refreshRcv();
                         break;
                     default:
                         semiRcvAdapter.notifyDataSetChanged();

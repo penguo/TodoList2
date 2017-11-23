@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
-import com.pepg.todolist.DetailActivity;
 import com.pepg.todolist.InfoActivity;
 import com.pepg.todolist.ListActivity;
 import com.pepg.todolist.Manager;

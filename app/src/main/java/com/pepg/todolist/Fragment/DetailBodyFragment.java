@@ -16,6 +16,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,7 +40,9 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
     ImageView ivZoomAch, ivZoomAlarm, ivZoomMemo;
     TextView tvDate, tvAch, tvMemo, tvAchHead, tvAlarmHead, tvGone;
     DetailSemiFragment detailSemiFragment;
+    DetailAlarmFragment detailAlarmFragment;
     FragmentManager fragmentManager;
+    EditText etMemo;
     final Handler handler = new Handler();
 
     @Override
@@ -75,6 +78,8 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         layoutMemo = (LinearLayout) view.findViewById(R.id.detail_layout_memo);
         layoutMemoBg = (LinearLayout) view.findViewById(R.id.detail_layout_memo_bg);
 
+        etMemo = (EditText) view.findViewById(R.id.detail_et_memo);
+
         tvGone = (TextView) view.findViewById(R.id.detail_tv_gone);
         return view;
     }
@@ -101,16 +106,30 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         Manager.viewState = 0;
         tvDate.setText(DBManager.DATA_DATE);
         tvMemo.setText(DBManager.DATA_MEMO);
+        etMemo.setText(DBManager.DATA_MEMO);
         fragmentManager = getFragmentManager();
         detailSemiFragment = new DetailSemiFragment();
+        detailAlarmFragment = new DetailAlarmFragment();
         if (Manager.isAnimationActive) {
             setAnimation();
         }
         updateAch();
     }
 
+    public void editMode(){
+        if (!Manager.editMode) {
+            etMemo.setVisibility(View.GONE);
+            DBManager.DATA_MEMO = etMemo.getText().toString();
+            tvMemo.setVisibility(View.VISIBLE);
+            dbManager.updateSimply();
+        } else {
+            etMemo.setVisibility(View.VISIBLE);
+            tvMemo.setVisibility(View.GONE);
+        }
+        setData();
+    }
+
     public void updateAch() {
-        Log.e("LOG", "OK" + DBManager.DATA_ACH);
         tvAch.setText((DBManager.DATA_ACH_FINISH / 100) + " / " + (DBManager.DATA_ACH_MAX / 100));
         pbBody.setProgress(DBManager.DATA_ACH);
         pbBody.setSecondaryProgress(Manager.getSuggestAch(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE));
@@ -142,6 +161,15 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                 }, 300);
                 break;
             case (3):
+                layoutAlarmBg.setBackgroundResource(R.color.colorPrimaryDark);
+                tvAlarmHead.setTextColor(getResources().getColor(R.color.white07));
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        layoutAlarmBg.setBackgroundResource(R.drawable.xml_item);
+                        tvAlarmHead.setTextColor(currentTextColor);
+                    }
+                }, 300);
                 break;
         }
     }
@@ -150,17 +178,21 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         detailSemiFragment.setSharedElementEnterTransition(Manager.getChangeBounds());
         detailSemiFragment.setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
         detailSemiFragment.setAllowEnterTransitionOverlap(false);
+        detailAlarmFragment.setSharedElementEnterTransition(Manager.getChangeBounds());
+        detailAlarmFragment.setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
+        detailAlarmFragment.setAllowEnterTransitionOverlap(false);
 
     }
 
     @Override
     public void onClick(View view) {
+        FragmentTransaction fragmentTransaction;
         switch (view.getId()) {
             case (R.id.detail_layout_date):
                 break;
             case (R.id.detail_layout_ach):
                 layoutAch.setElevation(((InfoActivity) activity).getElevation());
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.addSharedElement(layoutAch, "layout_ach");
                 fragmentTransaction.addSharedElement(pbBody, "progressbar");
                 fragmentTransaction.addToBackStack(null);
@@ -169,6 +201,14 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                 fragmentManager.executePendingTransactions();
                 break;
             case (R.id.detail_layout_alarm):
+                layoutAch.setElevation(((InfoActivity) activity).getElevation());
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.addSharedElement(layoutAlarm, "layout_alarm");
+                fragmentTransaction.addSharedElement(pbBody, "progressbar");
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.info_framelayout_fragment, detailAlarmFragment);
+                fragmentTransaction.commit();
+                fragmentManager.executePendingTransactions();
                 break;
         }
     }

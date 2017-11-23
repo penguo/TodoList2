@@ -109,6 +109,7 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
     }
 
     public void setData() {
+        ((InfoActivity) activity).resetHeadEdit();
         pb.setSecondaryProgress(Manager.getSuggestAch(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE));
         updateAch();
     }
@@ -124,11 +125,14 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
         swipe.setRefreshing(false);
     }
 
-    public void setFab() {
-        if (!Manager.modifyMode) {
+    public void editMode() {
+        if (!Manager.editMode) {
             fab.setVisibility(View.GONE);
         } else {
             fab.setVisibility(View.VISIBLE);
         }
+        onRefresh();
     }
+
+
 }

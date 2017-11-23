@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -12,20 +12,29 @@
         <item name="android:duration">250</item>
         <item name="android:windowEnterTransition">@transition/window_fade</item>
         <item name="android:windowExitTransition">@transition/window_fade</item>
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
+
+        <item name="android:actionMenuTextColor">@color/white07</item>
+        <item name="android:itemTextAppearance">@style/MenuItemTextAppearance</item>
+        <item name="android:itemPadding">5dp</item>
 
         <!-- specify enter and exit transitions -->
         <!--<item name="android:windowEnterTransition">@transition/explode</item>-->
         <!--<item name="android:windowExitTransition">@transition/explode</item>-->
         <!-- specify shared element transitions -->
         <!--<item name="android:windowSharedElementEnterTransition">-->
-            <!--@transition/change_image_transform</item>-->
+        <!--@transition/change_image_transform</item>-->
         <!--<item name="android:windowSharedElementExitTransition">-->
-            <!--@transition/change_image_transform</item>-->
+        <!--@transition/change_image_transform</item>-->
+        <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
     </style>
 
-    <style name="MyActionBar" parent="Widget.AppCompat.ActionBar">
-        <item name="android:textColor">#FFFFFF</item>
+    <style name="MenuItemTextAppearance">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="OverFlow" parent="Base.Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_overflow</item>
     </style>
 
     <style name="icon">
@@ -40,7 +49,7 @@
     <style name="ToolbarTitle">
         <item name="android:textColor">#ffffff</item>
         <item name="android:alpha">1</item>
-        <item name="android:textSize">28sp</item>
+        <item name="android:textSize">21sp</item>
     </style>
 
     <style name="Divider">

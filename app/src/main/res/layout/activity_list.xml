@@ -23,67 +23,62 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp">
 
-            <ImageButton
-                android:id="@+id/listA_btn_category"
-                style="@style/icon"
-                app:srcCompat="@drawable/ic_sort" />
-
-            <TextView
-                style="@style/ToolbarTitle"
+            <android.support.design.widget.CoordinatorLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="TodoList" />
+                android:layout_marginRight="16dp"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/listA_btn_sort"
+                    style="@style/icon"
+                    android:layout_gravity="left|center_vertical"
+                    app:srcCompat="@drawable/ic_sort" />
+
+                <TextView
+                    android:id="@+id/listA_tv_toolbar_title"
+                    style="@style/ToolbarTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="72dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="TodoList"
+                    android:visibility="visible" />
+
+                <Spinner
+                    android:id="@+id/listA_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/listA_iv_dropdown"
+                    style="@style/icon"
+                    android:layout_gravity="right|center_vertical"
+                    android:clickable="false"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_arrow_dropdown" />
+
+
+            </android.support.design.widget.CoordinatorLayout>
 
             <ImageButton
                 android:id="@+id/listA_btn_setting"
                 style="@style/icon"
+                android:layout_gravity="right|center_vertical"
                 app:srcCompat="@drawable/ic_setting" />
+
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
-
-    <LinearLayout
-        android:id="@+id/listA_layout_sort"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="?attr/colorPrimaryDark"
-        android:clickable="true"
-        android:elevation="3dp"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="2dp"
-                android:alpha="0.7"
-                android:gravity="center"
-                android:text="category: "
-                android:textColor="#ffffff"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/listA_tv_sortequal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:alpha="0.7"
-                android:gravity="center"
-                android:text="SORTEQUAL VIEW POINT"
-                android:textColor="#ffffff"
-                android:textSize="21sp" />
-        </LinearLayout>
-
-    </LinearLayout>
 
 
     <android.support.design.widget.CoordinatorLayout

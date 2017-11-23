@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void initSetting(){
-        Manager.modifyMode = false;
+        Manager.editMode = false;
         Manager.isAnimationActive = true;
     }
 

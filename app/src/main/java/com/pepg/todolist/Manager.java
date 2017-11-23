@@ -24,7 +24,7 @@ public class Manager {
     public final static int RC_DETAIL_TO_UPDATE = 1002;
     public final static int RC_LIST_TO_ADDGUIDE = 1003;
     public final static int RC_DETAIL_TO_DETAILITEM = 1005;
-    public static boolean modifyMode;
+    public static boolean editMode;
     public static int viewState;
 
     // setting option

@@ -133,16 +133,6 @@ public class SimpleRcvAdapter extends RecyclerView.Adapter<SimpleRcvAdapter.View
                         break;
                     case ("category"):
                         switch (option) {
-                            case ("forSort"):
-                                if (!itemsCS[position].toString().equals(activity.getString(R.string.all))) {
-                                    DBManager.DATA_SORTTYPE = "CATEGORY";
-                                    DBManager.DATA_SORTTYPEEQUAL = itemsCS[position].toString();
-                                } else {
-                                    DBManager.DATA_SORTTYPE = "DEFAULT";
-                                    DBManager.DATA_SORTTYPEEQUAL = "";
-                                }
-                                ((ListActivity) activity).dialogDismiss();
-                                break;
                             case ("forEdit"): //TODO
                                 AlertDialog.Builder dialog = new AlertDialog.Builder(activity);
                                 dialog.setMessage("어떤 행동을 하시겠습니까?");
