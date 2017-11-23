@@ -3,19 +3,13 @@ package com.pepg.todolist;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.Pair;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -23,12 +17,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.support.v7.app.AlertDialog;
-
-import com.pepg.todolist.Adapter.SimpleRcvAdapter;
 
 import com.pepg.todolist.Adapter.ListRcvAdapter;
 import com.pepg.todolist.DataBase.DBManager;
@@ -140,22 +130,18 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         if (requestCode == Manager.RC_LIST_TO_UPDATE) {
             if (resultCode == RESULT_OK) {
                 dbManager.DATA_SORTTYPE = "DEFAULT";
-                refresh();
+                onRefresh();
             }
         }
         if (requestCode == Manager.RC_LIST_TO_INFO) {
-            refresh();
+            onRefresh();
         }
         if (requestCode == Manager.RC_LIST_TO_ADDGUIDE) {
             if (resultCode == RESULT_OK) {
                 dbManager.DATA_SORTTYPE = "DEFAULT";
-                refresh();
+                onRefresh();
             }
         }
-    }
-
-    public void refresh() {
-        listRcvAdapter.notifyDataSetChanged();
     }
 
     public List<Pair<View, String>> getPairs() {
@@ -166,7 +152,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onRefresh() {
-        listRcvAdapter.notifyDataSetChanged();
+        listRcvAdapter.refresh();
         swipe.setRefreshing(false);
     }
 

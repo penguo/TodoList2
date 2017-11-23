@@ -142,4 +142,10 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
         dbManager.setPosition();
         notifyItemRangeChanged(position, dbManager.getSize()); // 지워진 만큼 다시 채워넣기.
     }
+
+
+    public void refresh(){
+        dbManager.setPosition();
+        notifyDataSetChanged();
+    }
 }

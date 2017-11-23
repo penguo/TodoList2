@@ -84,11 +84,12 @@
 
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/info_framelayout_fragment"
+    <LinearLayout
+        android:id="@+id/info_linearlayout_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-    </FrameLayout>
+    </LinearLayout>
 
 </LinearLayout>

@@ -125,7 +125,6 @@ public class DBManager extends SQLiteOpenHelper {
 
     public void insertSimply() {
         insert(DATA_TITLE, DATA_CATEGORY, DATA_DATE, DATA_ACH, DATA_MEMO);
-        resetPublicData();
     }
 
     public void update(int id, String title, String category, String date, int ach, String memo) {
@@ -145,7 +144,6 @@ public class DBManager extends SQLiteOpenHelper {
 
     public void updateSimply() {
         update(DATA_id, DATA_TITLE, DATA_CATEGORY, DATA_DATE, DATA_ACH, DATA_MEMO);
-        resetPublicData();
     }
 
     public void delete(int id) {
@@ -260,7 +258,6 @@ public class DBManager extends SQLiteOpenHelper {
 
     public void semiUpdateSimply() {
         semiUpdate(DATA_semi_id, DATA_semi_TITLE, DATA_semi_WEIGHT, DATA_semi_DATE, DATA_semi_ACH, DATA_semi_ACHMAX);
-        resetPublicData();
     }
 
     public void semiDelete(int id) {

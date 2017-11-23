@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -29,13 +28,13 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
 
     View incHead;
     TextView tvToolbarTitle, tvAch, tvTitle, tvCategory, tvDday;
-    LinearLayout layoutHead, layoutData, layoutDataEditMode;
+    LinearLayout layoutHead, layoutData, layoutDataEditMode, layoutFragment;
     RoundCornerProgressBar pbHead;
     int id;
     final DBManager dbManager = new DBManager(this, "todolist2.db", null, MainActivity.DBVERSION);
     FragmentManager fragmentManager;
     DetailBodyFragment detailBodyFragment = new DetailBodyFragment();
-    FrameLayout frameLayoutHead, frameLayoutFragment;
+    FrameLayout frameLayoutHead;
     Toolbar toolbar;
     ImageButton btnReturn, btnEditMode, btnOverflow, btnHeadEdit;
     EditText etTitle;
@@ -53,7 +52,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         tvToolbarTitle = (TextView) findViewById(R.id.detail_tv_toolbar_title);
 
         frameLayoutHead = (FrameLayout) findViewById(R.id.info_framelayout_head);
-        frameLayoutFragment = (FrameLayout) findViewById(R.id.info_framelayout_fragment);
+        layoutFragment = (LinearLayout) findViewById(R.id.info_linearlayout_fragment);
 
         btnReturn = (ImageButton) findViewById(R.id.detail_btn_return);
         btnEditMode = (ImageButton) findViewById(R.id.detail_btn_edit);
@@ -81,7 +80,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
 
 
         items = dbManager.getSettingList("category");
-        items.add(0, getString(R.string.all));
+        items.add(getString(R.string.new_category));
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(
                 this,
                 R.layout.custom_spinner_toolbar,
@@ -125,14 +124,14 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case (R.id.head_btn_edit):
                 DBManager.DATA_TITLE = etTitle.getText().toString();
-                dbManager.getValue("_id", id);
                 dbManager.updateSimply();
+                dbManager.getValue("_id", id);
                 resetHeadEdit();
                 break;
         }
     }
 
-    public void resetHeadEdit(){
+    public void resetHeadEdit() {
         layoutData.setVisibility(View.VISIBLE);
         layoutDataEditMode.setVisibility(View.GONE);
         btnHeadEdit.setImageResource(R.drawable.ic_edit);
@@ -196,20 +195,21 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
             tvToolbarTitle.setText("Detail");
             btnHeadEdit.setVisibility(View.GONE);
             tvDday.setVisibility(View.VISIBLE);
-            layoutData.setVisibility(View.VISIBLE);
-            layoutDataEditMode.setVisibility(View.GONE);
+            resetHeadEdit();
         }
         switch (Manager.viewState) {
             case (0):
-                DetailBodyFragment dbf = (DetailBodyFragment) getFragmentManager().findFragmentById(R.id.info_framelayout_fragment);
+                DetailBodyFragment dbf = (DetailBodyFragment) getFragmentManager().findFragmentById(R.id.info_linearlayout_fragment);
                 dbf.editMode();
                 break;
             case (2):
-                DetailSemiFragment dsf = (DetailSemiFragment) getFragmentManager().findFragmentById(R.id.info_framelayout_fragment);
-                dsf.editMode();
+                DetailSemiFragment dsf = (DetailSemiFragment) getFragmentManager().findFragmentById(R.id.info_linearlayout_fragment);
+                dsf.checkEditMode();
+                break;
             default:
                 Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show();
                 Log.e("ERROR", "" + Manager.viewState);
+                break;
         }
     }
 
@@ -220,11 +220,11 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         tvAch.setText(DBManager.DATA_ACH + "%");
         switch (Manager.viewState) {
             case (2):
-                DetailSemiFragment dsf = (DetailSemiFragment) getFragmentManager().findFragmentById(R.id.info_framelayout_fragment);
+                DetailSemiFragment dsf = (DetailSemiFragment) getFragmentManager().findFragmentById(R.id.info_linearlayout_fragment);
                 dsf.updateAch();
                 break;
-            default:
-                DetailBodyFragment dbf = (DetailBodyFragment) getFragmentManager().findFragmentById(R.id.info_framelayout_fragment);
+            case (0):
+                DetailBodyFragment dbf = (DetailBodyFragment) getFragmentManager().findFragmentById(R.id.info_linearlayout_fragment);
                 dbf.updateAch();
                 break;
         }
@@ -232,7 +232,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
 
     public void viewBody() {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.info_framelayout_fragment, detailBodyFragment);
+        fragmentTransaction.replace(R.id.info_linearlayout_fragment, detailBodyFragment);
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
     }
@@ -242,7 +242,8 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void refreshRcv() {
-        DetailSemiFragment dsf = (DetailSemiFragment) getFragmentManager().findFragmentById(R.id.info_framelayout_fragment);
+        updateAch();
+        DetailSemiFragment dsf = (DetailSemiFragment) getFragmentManager().findFragmentById(R.id.info_linearlayout_fragment);
         dsf.onRefresh();
     }
 
@@ -250,12 +251,11 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     public void onBackPressed() {
         if (Manager.editMode && Manager.viewState == 0) {
             try {
-                DetailBodyFragment dbf = (DetailBodyFragment) getFragmentManager().findFragmentById(R.id.info_framelayout_fragment);
-                dbf.editMode();
+                onEditModePressed();
             } catch (Exception e) {
                 Log.e("ERROR", e.toString() + "");
             }
-
+            Log.e("",Manager.viewState+"");
         } else {
             super.onBackPressed();
         }

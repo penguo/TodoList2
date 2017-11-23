@@ -196,7 +196,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                 fragmentTransaction.addSharedElement(layoutAch, "layout_ach");
                 fragmentTransaction.addSharedElement(pbBody, "progressbar");
                 fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.replace(R.id.info_framelayout_fragment, detailSemiFragment);
+                fragmentTransaction.replace(R.id.info_linearlayout_fragment, detailSemiFragment);
                 fragmentTransaction.commit();
                 fragmentManager.executePendingTransactions();
                 break;
@@ -206,7 +206,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                 fragmentTransaction.addSharedElement(layoutAlarm, "layout_alarm");
                 fragmentTransaction.addSharedElement(pbBody, "progressbar");
                 fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.replace(R.id.info_framelayout_fragment, detailAlarmFragment);
+                fragmentTransaction.replace(R.id.info_linearlayout_fragment, detailAlarmFragment);
                 fragmentTransaction.commit();
                 fragmentManager.executePendingTransactions();
                 break;

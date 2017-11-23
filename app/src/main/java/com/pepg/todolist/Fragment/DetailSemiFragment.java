@@ -1,8 +1,6 @@
 package com.pepg.todolist.Fragment;
 
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -11,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,6 +109,7 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
         ((InfoActivity) activity).resetHeadEdit();
         pb.setSecondaryProgress(Manager.getSuggestAch(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE));
         updateAch();
+        checkEditMode();
     }
 
     public void updateAch() {
@@ -125,7 +123,7 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
         swipe.setRefreshing(false);
     }
 
-    public void editMode() {
+    public void checkEditMode() {
         if (!Manager.editMode) {
             fab.setVisibility(View.GONE);
         } else {
@@ -133,6 +131,4 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
         }
         onRefresh();
     }
-
-
 }

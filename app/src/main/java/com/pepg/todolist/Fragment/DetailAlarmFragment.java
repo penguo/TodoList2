@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.pepg.todolist.MainActivity;
+import com.pepg.todolist.Manager;
 import com.pepg.todolist.R;
 import com.pepg.todolist.DataBase.DBManager;
 
@@ -32,6 +33,7 @@ public class DetailAlarmFragment extends Fragment {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_detail_alarm, container, false);
         activity = this.getActivity();
         id = dbManager.DATA_id;
+        Manager.viewState=3;
 
         dbManager = new DBManager(activity, "todolist2.db", null, MainActivity.DBVERSION);
 
