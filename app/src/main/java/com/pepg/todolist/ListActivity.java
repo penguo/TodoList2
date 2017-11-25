@@ -100,6 +100,8 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case(R.id.listA_btn_setting):
+                intent = new Intent(ListActivity.this, SettingsActivity.class);
+                startActivity(intent);
                 break;
             case(R.id.listA_btn_sort):
                 spinnerSort.performClick();

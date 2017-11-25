@@ -165,6 +165,7 @@ public class DBManager extends SQLiteOpenHelper {
             DATA_MEMO = cursor.getString(6);
             DATA_CREATEDATE = cursor.getString(7);
         }
+        DATA_DDAY = Manager.calculateDday(DBManager.DATA_DATE);
         cursor = db.rawQuery("SELECT ACH, ACHMAX FROM SEMITODO WHERE _parentId = " + DATA_id + " ;", null);
         if (cursor.getCount() == 0) // Semi 데이터가 없을 경우 - 직접 설정한 퍼센트로 적용.
         {

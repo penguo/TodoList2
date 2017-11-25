@@ -36,9 +36,10 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
     int id;
     RoundCornerProgressBar pbBody;
     DBManager dbManager;
-    LinearLayout layoutDate, layoutAch, layoutAlarm, layoutMemo, layoutAchBg, layoutAlarmBg, layoutMemoBg, layoutBody;
+    LinearLayout layoutDate, layoutDateBg, layoutAch, layoutAlarm, layoutMemo, layoutAchBg, layoutAlarmBg, layoutMemoBg, layoutBody;
     ImageView ivZoomAch, ivZoomAlarm, ivZoomMemo;
-    TextView tvDate, tvAch, tvMemo, tvAchHead, tvAlarmHead, tvGone;
+    TextView tvDate, tvDateHead, tvAch, tvMemo, tvAchHead, tvAlarmHead, tvGone, tvStartDate;
+    DetailDateFragment detailDateFragment;
     DetailSemiFragment detailSemiFragment;
     DetailAlarmFragment detailAlarmFragment;
     FragmentManager fragmentManager;
@@ -68,9 +69,12 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         tvDate = (TextView) view.findViewById(R.id.detail_tv_date);
         tvMemo = (TextView) view.findViewById(R.id.detail_tv_memo);
         tvAch = (TextView) view.findViewById(R.id.detail_tv_ach);
+        tvDateHead = (TextView) view.findViewById(R.id.detail_tv_ach_head);
         tvAchHead = (TextView) view.findViewById(R.id.detail_tv_ach_head);
         tvAlarmHead = (TextView) view.findViewById(R.id.detail_tv_alarm_head);
+        tvStartDate = (TextView) view.findViewById(R.id.detail_tv_startdate);
         layoutDate = (LinearLayout) view.findViewById(R.id.detail_layout_date);
+        layoutDateBg = (LinearLayout) view.findViewById(R.id.detail_layout_date_bg);
         layoutAch = (LinearLayout) view.findViewById(R.id.detail_layout_ach);
         layoutAchBg = (LinearLayout) view.findViewById(R.id.detail_layout_ach_bg);
         layoutAlarm = (LinearLayout) view.findViewById(R.id.detail_layout_alarm);
@@ -105,9 +109,11 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         }
         Manager.viewState = 0;
         tvDate.setText(DBManager.DATA_DATE);
+        tvStartDate.setText(DBManager.DATA_CREATEDATE);
         tvMemo.setText(DBManager.DATA_MEMO);
         etMemo.setText(DBManager.DATA_MEMO);
         fragmentManager = getFragmentManager();
+        detailDateFragment = new DetailDateFragment();
         detailSemiFragment = new DetailSemiFragment();
         detailAlarmFragment = new DetailAlarmFragment();
         if (Manager.isAnimationActive) {
@@ -116,7 +122,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         updateAch();
     }
 
-    public void editMode(){
+    public void editMode() {
         if (!Manager.editMode) {
             etMemo.setVisibility(View.GONE);
             DBManager.DATA_MEMO = etMemo.getText().toString();
@@ -136,52 +142,57 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
     }
 
     public void checkViewState() {
-        final int currentTextColor = tvGone.getCurrentTextColor();
-        switch (Manager.viewState) {
-            case (1):
-//                layoutAchBg.setBackgroundResource(R.color.colorPrimaryDark);
-//                tvAchHead.setTextColor(getResources().getColor(R.color.white07));
-//                handler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        layoutAchBg.setBackgroundResource(R.drawable.xml_item);
-//                        tvAchHead.setTextColor(currentTextColor);
-//                    }
-//                }, 250);
-                break;
-            case (2):
-                layoutAchBg.setBackgroundResource(R.color.colorPrimaryDark);
-                tvAchHead.setTextColor(getResources().getColor(R.color.white07));
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        layoutAchBg.setBackgroundResource(R.drawable.xml_item);
-                        tvAchHead.setTextColor(currentTextColor);
-                    }
-                }, 300);
-                break;
-            case (3):
-                layoutAlarmBg.setBackgroundResource(R.color.colorPrimaryDark);
-                tvAlarmHead.setTextColor(getResources().getColor(R.color.white07));
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        layoutAlarmBg.setBackgroundResource(R.drawable.xml_item);
-                        tvAlarmHead.setTextColor(currentTextColor);
-                    }
-                }, 300);
-                break;
+        if (Manager.isAnimationActive) {
+            final int currentTextColor = tvGone.getCurrentTextColor();
+            switch (Manager.viewState) {
+                case (1):
+                    layoutDateBg.setBackgroundResource(R.color.colorPrimaryDark);
+                    tvDateHead.setTextColor(getResources().getColor(R.color.white07));
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            layoutDateBg.setBackgroundResource(R.drawable.xml_item);
+                            tvDateHead.setTextColor(currentTextColor);
+                        }
+                    }, 300);
+                    break;
+                case (2):
+                    layoutAchBg.setBackgroundResource(R.color.colorPrimaryDark);
+                    tvAchHead.setTextColor(getResources().getColor(R.color.white07));
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            layoutAchBg.setBackgroundResource(R.drawable.xml_item);
+                            tvAchHead.setTextColor(currentTextColor);
+                        }
+                    }, 300);
+                    break;
+                case (3):
+                    layoutAlarmBg.setBackgroundResource(R.color.colorPrimaryDark);
+                    tvAlarmHead.setTextColor(getResources().getColor(R.color.white07));
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            layoutAlarmBg.setBackgroundResource(R.drawable.xml_item);
+                            tvAlarmHead.setTextColor(currentTextColor);
+                        }
+                    }, 300);
+                    break;
+            }
         }
     }
 
     public void setAnimation() {
+        detailDateFragment.setSharedElementEnterTransition(Manager.getChangeBounds());
+        detailDateFragment.setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
+//        detailDateFragment.setExitTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
+        detailDateFragment.setAllowEnterTransitionOverlap(false);
         detailSemiFragment.setSharedElementEnterTransition(Manager.getChangeBounds());
         detailSemiFragment.setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
         detailSemiFragment.setAllowEnterTransitionOverlap(false);
         detailAlarmFragment.setSharedElementEnterTransition(Manager.getChangeBounds());
         detailAlarmFragment.setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
         detailAlarmFragment.setAllowEnterTransitionOverlap(false);
-
     }
 
     @Override
@@ -189,6 +200,14 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         FragmentTransaction fragmentTransaction;
         switch (view.getId()) {
             case (R.id.detail_layout_date):
+                layoutDate.setElevation(((InfoActivity) activity).getElevation());
+                fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.addSharedElement(layoutDate, "layout_date");
+                fragmentTransaction.addSharedElement(pbBody, "progressbar");
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.info_linearlayout_fragment, detailDateFragment);
+                fragmentTransaction.commit();
+                fragmentManager.executePendingTransactions();
                 break;
             case (R.id.detail_layout_ach):
                 layoutAch.setElevation(((InfoActivity) activity).getElevation());

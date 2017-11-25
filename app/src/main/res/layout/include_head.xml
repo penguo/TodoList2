@@ -17,6 +17,7 @@
         android:transitionName="layout_head">
 
         <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/head_layout_ach"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical">
@@ -97,27 +98,42 @@
             android:id="@+id/head_layout_data_editmode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
             android:visibility="gone">
 
-            <Spinner
-                android:id="@+id/head_spinner"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_height="match_parent"
+                android:layout_marginBottom="4dp"
+                android:layout_weight="1"
+                android:background="@color/white05">
 
-            <EditText
-                android:id="@+id/head_et_title"
+                <Spinner
+                    android:id="@+id/head_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </FrameLayout>
+
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="text"
-                android:text="TITLE EDIT POINT"
-                android:textColor="@color/white07"
-                android:textSize="21sp" />
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/white05">
+
+                <EditText
+                    android:id="@+id/head_et_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:text="TITLE EDIT POINT"
+                    android:textSize="21sp" />
+            </FrameLayout>
 
         </LinearLayout>
 

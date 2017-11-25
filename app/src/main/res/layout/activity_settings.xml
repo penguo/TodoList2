@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.pepg.todolist.InfoActivity">
+    android:orientation="vertical">
+
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/detail_toolbar"
+        android:id="@+id/setting_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
@@ -23,16 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
-            <Spinner
-                android:id="@+id/detail_spinner"
-                android:layout_width="200dp"
-                android:layout_height="0dp"
-                android:layout_gravity="right"
-                android:layout_marginRight="4dp"
-                android:layout_marginTop="4dp"
-                android:dropDownWidth="match_parent" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,7 +33,7 @@
                 android:paddingTop="4dp">
 
                 <ImageButton
-                    android:id="@+id/detail_btn_return"
+                    android:id="@+id/setting_btn_return"
                     style="@style/icon"
                     app:srcCompat="@drawable/ic_arrow_back" />
 
@@ -56,55 +45,26 @@
                     android:layout_weight="1">
 
                     <TextView
-                        android:id="@+id/detail_tv_toolbar_title"
+                        android:id="@+id/setting_tv_toolbar_title"
                         style="@style/ToolbarTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="Detail"
+                        android:text="Settings"
                         android:visibility="visible" />
 
                 </android.support.design.widget.CoordinatorLayout>
-
-                <ImageButton
-                    android:id="@+id/detail_btn_edit"
-                    style="@style/icon"
-                    android:layout_marginRight="4dp"
-                    app:srcCompat="@drawable/ic_edit" />
-
-                <ImageButton
-                    android:id="@+id/detail_btn_overflow"
-                    style="@style/icon"
-                    android:layout_width="36dp"
-                    app:srcCompat="@drawable/ic_overflow" />
 
             </LinearLayout>
         </android.support.design.widget.CoordinatorLayout>
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout
-        android:id="@+id/info_framelayout_head"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        android:elevation="3dp"
-        android:paddingBottom="1dp">
-
-        <include
-            android:id="@+id/info_include_head"
-            layout="@layout/include_head"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/info_linearlayout_fragment"
+        android:id="@+id/setting_framelayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_weight="1">
 
-    </LinearLayout>
-
+    </FrameLayout>
 </LinearLayout>

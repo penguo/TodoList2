@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.pepg.todolist.DataBase.DBManager;
-import com.pepg.todolist.Optional.BroadcastManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // TODO: BUILD INFO SET
         tvInfo.setText("build 0.171124.0011");
-
 
         btnList.setOnClickListener(this);
         btnSetting.setOnClickListener(this);
@@ -88,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 dbManager.reset();
                 break;
             case (R.id.mainA_btn_daily):
-                notificationSomethings();
+                Manager.notificationSomethings(this, getResources(), 0);
                 break;
             case (R.id.mainA_tv_title):
                 break;
@@ -107,33 +105,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toast.makeText(this, "준비 중 입니다.", Toast.LENGTH_SHORT).show();
     }
 
-
-    public void notificationSomethings() {
-        Resources res = getResources();
-
-        Intent notificationIntent = new Intent(this, ListActivity.class);
-        notificationIntent.putExtra("notificationId", 9999); //전달할 값
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-
-        builder.setContentTitle("상태바 드래그시 보이는 타이틀")
-                .setContentText("상태바 드래그시 보이는 서브타이틀")
-                .setTicker("상태바 한줄 메시지")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher))
-                .setContentIntent(contentIntent)
-                .setAutoCancel(true)
-                .setWhen(System.currentTimeMillis())
-                .setDefaults(Notification.DEFAULT_ALL);
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            builder.setCategory(Notification.CATEGORY_MESSAGE)
-                    .setPriority(Notification.PRIORITY_HIGH)
-                    .setVisibility(Notification.VISIBILITY_PUBLIC);
-        }
-
-        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.notify(1234, builder.build());
-    }
 }

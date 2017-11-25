@@ -150,7 +150,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setDday() {
-        tvDday.setText(Manager.getDday(tvDate.getText().toString()));
+        tvDday.setText(Manager.getDdayString(dbManager.DATA_DDAY));
         try {
             if (dbManager.DATA_DDAY >= 10 || dbManager.DATA_DDAY <= -10) {
                 tvDday.setTextSize(16);

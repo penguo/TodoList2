@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
@@ -33,6 +34,8 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     private Activity activity;
 
     DBManager dbManager;
+    int secondTitlePosition, checkSecondTitle;
+    boolean isFirstST;
 
     public ListRcvAdapter(DBManager dbManager, Activity activity) {
         this.dbManager = dbManager;
@@ -46,8 +49,9 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivLogo;
-        TextView tvTitle, tvDate, tvCategory, tvAch, tvDday;
+        TextView tvTitle, tvDate, tvCategory, tvAch, tvDday, tvSecondTitle;
         RoundCornerProgressBar pb;
+        LinearLayout layoutItem, layoutUpperMargin, layoutSecondTitle;
 
         /**************************************************/
         /** TODO initialize view components in item view **/
@@ -61,6 +65,10 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
             tvAch = (TextView) itemView.findViewById(R.id.todo_tv_ach);
             tvDday = (TextView) itemView.findViewById(R.id.todo_tv_dday);
             pb = (RoundCornerProgressBar) itemView.findViewById(R.id.todo_pb);
+            layoutItem = (LinearLayout) itemView.findViewById(R.id.todo_layout);
+            layoutUpperMargin = (LinearLayout) itemView.findViewById(R.id.todo_layout_uppermargin);
+            layoutSecondTitle = (LinearLayout) itemView.findViewById(R.id.todo_layout_secondtitle);
+            tvSecondTitle = (TextView) itemView.findViewById(R.id.todo_tv_secondtitle);
         }
     }
 
@@ -68,12 +76,17 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_todo, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         dbManager.setPosition();
+        secondTitlePosition = 0;
+        isFirstST = false;
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         dbManager.getValue("_position", position);
+
+        holder.layoutSecondTitle.setVisibility(View.GONE);
+        holder.layoutUpperMargin.setVisibility(View.GONE);
 
         if (!dbManager.DATA_TITLE.equals(activity.getString(R.string.empty_data))) {
             holder.tvTitle.setText(DBManager.DATA_TITLE);
@@ -85,7 +98,7 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
         }
         holder.tvDate.setText("~ " + DBManager.DATA_DATE);
         holder.tvAch.setText(DBManager.DATA_ACH + "%");
-        holder.tvDday.setText(Manager.getDday(DBManager.DATA_DATE));
+        holder.tvDday.setText(Manager.getDdayString(DBManager.DATA_DDAY));
         try {
             if (DBManager.DATA_DDAY >= 10 || DBManager.DATA_DDAY <= -10) {
                 holder.tvDday.setTextSize(16);
@@ -97,25 +110,28 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
         }
         holder.pb.setProgress(DBManager.DATA_ACH);
         holder.pb.setSecondaryProgress(Manager.getSuggestAch(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE));
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.layoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity, InfoActivity.class);
                 dbManager.getValue("_position", position);
                 intent.putExtra("_id", DBManager.DATA_id);
-
-                List<Pair<View, String>> pairs = ((ListActivity) activity).getPairs();
-                pairs.add(Pair.create((View) holder.itemView, "layout_head"));
-                Bundle options = ActivityOptions.makeSceneTransitionAnimation(activity,
-                        pairs.toArray(new Pair[pairs.size()])).toBundle();
-                activity.startActivityForResult(intent, Manager.RC_LIST_TO_INFO, options);
+                if (Manager.isAnimationActive) {
+                    List<Pair<View, String>> pairs = ((ListActivity) activity).getPairs();
+                    pairs.add(Pair.create((View) holder.layoutItem, "layout_head"));
+                    Bundle options = ActivityOptions.makeSceneTransitionAnimation(activity,
+                            pairs.toArray(new Pair[pairs.size()])).toBundle();
+                    activity.startActivityForResult(intent, Manager.RC_LIST_TO_INFO, options);
+                } else {
+                    activity.startActivityForResult(intent, Manager.RC_LIST_TO_INFO);
+                }
             }
         });
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.layoutItem.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(activity);
-                dialog.setMessage("정말로 삭제하시겠습니까? 이 todo의 모든 내용이 삭제됩니다.");
+                dialog.setMessage("정말로 삭제하시겠습니까? 모든 내용이 삭제되여 복구되지 않습니다.");
                 dialog.setCancelable(true);
                 dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
                     @Override
@@ -143,8 +159,8 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
         notifyItemRangeChanged(position, dbManager.getSize()); // 지워진 만큼 다시 채워넣기.
     }
 
-
-    public void refresh(){
+    public void refresh() {
+        secondTitlePosition = 0;
         dbManager.setPosition();
         notifyDataSetChanged();
     }

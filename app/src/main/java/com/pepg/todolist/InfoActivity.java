@@ -1,7 +1,11 @@
 package com.pepg.todolist;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +26,7 @@ import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.Fragment.DetailBodyFragment;
 import com.pepg.todolist.Fragment.DetailSemiFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InfoActivity extends AppCompatActivity implements View.OnClickListener {
@@ -38,13 +43,19 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     Toolbar toolbar;
     ImageButton btnReturn, btnEditMode, btnOverflow, btnHeadEdit;
     EditText etTitle;
-    Spinner spinnerCategory;
-    List<String> items;
+    Spinner spinnerCategory, spinnerMenu;
+    List<String> itemsCategory, itemsMenu;
+    AlertDialog.Builder dialog;
+    Activity activity;
+    String selectedItem;
+    CoordinatorLayout layoutAch;
+    boolean cancelEditMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
+        activity = this;
 
         toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
@@ -57,6 +68,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         btnReturn = (ImageButton) findViewById(R.id.detail_btn_return);
         btnEditMode = (ImageButton) findViewById(R.id.detail_btn_edit);
         btnOverflow = (ImageButton) findViewById(R.id.detail_btn_overflow);
+        spinnerMenu = (Spinner) findViewById(R.id.detail_spinner);
 
         incHead = findViewById(R.id.info_include_head);
         pbHead = incHead.findViewById(R.id.head_pb);
@@ -70,6 +82,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         layoutDataEditMode = incHead.findViewById(R.id.head_layout_data_editmode);
         etTitle = incHead.findViewById(R.id.head_et_title);
         spinnerCategory = incHead.findViewById(R.id.head_spinner);
+        layoutAch = incHead.findViewById(R.id.head_layout_ach);
 
         fragmentManager = getFragmentManager();
 
@@ -78,19 +91,68 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         btnOverflow.setOnClickListener(this);
         layoutHead.setOnClickListener(this);
 
-
-        items = dbManager.getSettingList("category");
-        items.add(getString(R.string.new_category));
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(
+        itemsCategory = dbManager.getSettingList("category");
+        itemsCategory.add(getString(R.string.new_category));
+        final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(
                 this,
                 R.layout.custom_spinner_toolbar,
-                items);
+                itemsCategory);
         spinnerCategory.setAdapter(spinnerAdapter);
-        spinnerCategory.setSelection(0);
         spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                ((TextView) adapterView.getChildAt(0)).setTextColor(getResources().getColor(R.color.white07));
+                selectedItem = itemsCategory.get(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        itemsMenu = new ArrayList<>();
+        itemsMenu.add("상태창에 고정");
+        itemsMenu.add("btn1");
+        itemsMenu.add("btn2");
+        itemsMenu.add("항목 삭제");
+        itemsMenu.add("취소");
+        ArrayAdapter<String> spinnerMenuAdapter = new ArrayAdapter<String>(
+                this,
+                R.layout.custom_spinner_toolbar,
+                itemsMenu);
+        spinnerMenu.setAdapter(spinnerMenuAdapter);
+        spinnerMenu.setSelection(4);
+        spinnerMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i) {
+                    case (0):
+                        Manager.notificationInfo(activity, getResources(), DBManager.DATA_id, dbManager);
+                        break;
+                    case (1):
+                        break;
+                    case (3):
+                        dialog = new AlertDialog.Builder(activity);
+                        dialog.setMessage("정말로 삭제하시겠습니까?");
+                        dialog.setCancelable(true);
+                        dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dbManager.delete(DBManager.DATA_id);
+
+                                supportFinishAfterTransition();
+                                dialog.dismiss();
+                            }
+                        });
+                        dialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        dialog.show();
+                        break;
+                }
             }
 
             @Override
@@ -100,6 +162,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         setData();
+
     }
 
     @Override
@@ -112,28 +175,34 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
                 onEditModePressed();
                 break;
             case (R.id.detail_btn_overflow):
+                spinnerMenu.performClick();
                 break;
             case (R.id.head_layout):
                 if (Manager.editMode) {
                     layoutData.setVisibility(View.GONE);
                     layoutDataEditMode.setVisibility(View.VISIBLE);
+                    layoutAch.setVisibility(View.GONE);
                     btnHeadEdit.setImageResource(R.drawable.ic_save);
                     btnHeadEdit.setClickable(true);
                     btnHeadEdit.setOnClickListener(this);
                 }
                 break;
             case (R.id.head_btn_edit):
-                DBManager.DATA_TITLE = etTitle.getText().toString();
-                dbManager.updateSimply();
-                dbManager.getValue("_id", id);
                 resetHeadEdit();
                 break;
         }
     }
 
     public void resetHeadEdit() {
+        if (cancelEditMode) {
+            DBManager.DATA_TITLE = etTitle.getText().toString();
+            DBManager.DATA_CATEGORY = selectedItem;
+            dbManager.updateSimply();
+            dbManager.getValue("_id", id);
+        }
         layoutData.setVisibility(View.VISIBLE);
         layoutDataEditMode.setVisibility(View.GONE);
+        layoutAch.setVisibility(View.VISIBLE);
         btnHeadEdit.setImageResource(R.drawable.ic_edit);
         btnHeadEdit.setOnClickListener(null);
         btnHeadEdit.setClickable(false);
@@ -157,14 +226,21 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
             tvCategory.setVisibility(View.GONE);
         }
         etTitle.setText(DBManager.DATA_TITLE);
+        for (int i = 0; i < itemsCategory.size(); i++) {
+            if (itemsCategory.get(i).equals(DBManager.DATA_CATEGORY)) {
+                selectedItem = DBManager.DATA_CATEGORY;
+                spinnerCategory.setSelection(i);
+            }
+        }
         setDday();
         viewBody();
         Manager.editMode = false;
+        cancelEditMode = false;
         btnEditMode.setImageResource(R.drawable.ic_edit);
     }
 
     private void setDday() {
-        tvDday.setText(Manager.getDday(DBManager.DATA_DATE));
+        tvDday.setText(Manager.getDdayString(DBManager.DATA_DDAY));
         try {
             if (DBManager.DATA_DDAY >= 10 || DBManager.DATA_DDAY <= -10) {
                 tvDday.setTextSize(16);
@@ -219,13 +295,13 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         pbHead.setSecondaryProgress(Manager.getSuggestAch(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE));
         tvAch.setText(DBManager.DATA_ACH + "%");
         switch (Manager.viewState) {
-            case (2):
-                DetailSemiFragment dsf = (DetailSemiFragment) getFragmentManager().findFragmentById(R.id.info_linearlayout_fragment);
-                dsf.updateAch();
-                break;
             case (0):
                 DetailBodyFragment dbf = (DetailBodyFragment) getFragmentManager().findFragmentById(R.id.info_linearlayout_fragment);
                 dbf.updateAch();
+                break;
+            case (2):
+                DetailSemiFragment dsf = (DetailSemiFragment) getFragmentManager().findFragmentById(R.id.info_linearlayout_fragment);
+                dsf.updateAch();
                 break;
         }
     }
@@ -251,11 +327,12 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     public void onBackPressed() {
         if (Manager.editMode && Manager.viewState == 0) {
             try {
+                cancelEditMode = true;
                 onEditModePressed();
             } catch (Exception e) {
                 Log.e("ERROR", e.toString() + "");
             }
-            Log.e("",Manager.viewState+"");
+            Log.e("", Manager.viewState + "");
         } else {
             super.onBackPressed();
         }
