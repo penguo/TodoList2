@@ -22,7 +22,8 @@ import com.pepg.todolist.SettingsActivity;
 
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
-    public static final String KEY_ANIMATION = "pref_animation" ;
+    public static final String KEY_ANIMATION = "pref_animation";
+    public static final String KEY_SUBTITLE = "pref_subtitle";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

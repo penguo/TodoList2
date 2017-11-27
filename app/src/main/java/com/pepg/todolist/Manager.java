@@ -40,8 +40,8 @@ public class Manager {
     public static boolean isAnimationActive;
 
     public static String[] strings;
-    public static Calendar todayCal, readCal;
-    public static long todayTime, ddayTime;
+    public static Calendar todayCal, readCal, startCal;
+    public static long todayTime, startTime, ddayTime;
     public static int resultDday, totalDay;
 
     public static void setSetting(Activity activity) {
@@ -74,10 +74,13 @@ public class Manager {
         return todayCal.get(Calendar.YEAR) + "-" + (todayCal.get(Calendar.MONTH) + 1) + "-" + todayCal.get(Calendar.DATE);
     }
 
-    public static int calculateDday(String date) {
+    public static int calculateDday(String startDate, String date) {
         todayCal = Calendar.getInstance();
+        startCal = Calendar.getInstance();
         readCal = Calendar.getInstance();
         try {
+            strings = startDate.split("\u002D");
+            startCal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
             strings = date.split("\u002D");
             readCal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
         } catch (Exception e) {
@@ -86,13 +89,27 @@ public class Manager {
         }
         todayCal.set(todayCal.get(Calendar.YEAR), todayCal.get(Calendar.MONTH), todayCal.get(Calendar.DATE));
         todayTime = todayCal.getTimeInMillis() / 86400000;
+        startTime = startCal.getTimeInMillis() / 86400000;
         ddayTime = readCal.getTimeInMillis() / 86400000;
-        resultDday = (int) (ddayTime - todayTime);
-        DBManager.DATA_DDAY = resultDday;
+        if (startTime - todayTime < 0) {
+            return -9999;
+        }
+        if(!startDate.equals(date)){
+            resultDday = (int) (ddayTime - todayTime);
+            DBManager.DATA_DDAY = resultDday;
+        }else{
+            resultDday = (int) (ddayTime - startTime);
+            DBManager.DATA_DDAY = resultDday;
+        }
         return resultDday;
     }
 
     public static String getDdayString(int result) {
+        if (result == 9999) {
+            return "\u221E";
+        } else if (result == -9999) {
+            return "Wait";
+        }
         if (result >= 1000) {
             return "D-\u2026";
         } else if (result <= -1000) {
@@ -128,14 +145,14 @@ public class Manager {
         } catch (Exception e) {
             return 0;
         }
-        todayTime = todayCal.getTimeInMillis() / 86400000;
+        startTime = todayCal.getTimeInMillis() / 86400000;
         ddayTime = readCal.getTimeInMillis() / 86400000;
-        totalDay = (int) (ddayTime - todayTime);
-        resultDday = calculateDday(goalDate);
+        totalDay = (int) (ddayTime - startTime);
+        resultDday = calculateDday(createDate, goalDate);
         int result;
         try {
             result = (100 - ((100 * resultDday) / (1 * totalDay)));
-        }catch (Exception e){
+        } catch (Exception e) {
             result = 0;
         }
         return result;
@@ -199,7 +216,7 @@ public class Manager {
         NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle(builder);
         style.setSummaryText("자세한 내용 보기 +");
         style.setBigContentTitle(DBManager.DATA_CATEGORY + " - " + DBManager.DATA_TITLE);
-        style.bigText(calculateDday(DBManager.DATA_DATE) + "일 남았습니다. 현재 " + DBManager.DATA_ACH + "% 완료하셨습니다.");
+        style.bigText(calculateDday(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE) + "일 남았습니다. 현재 " + DBManager.DATA_ACH + "% 완료하셨습니다.");
 
         builder.setStyle(style);
 

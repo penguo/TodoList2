@@ -34,12 +34,11 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     private Activity activity;
 
     DBManager dbManager;
-    int secondTitlePosition, checkSecondTitle;
-    boolean isFirstST;
 
     public ListRcvAdapter(DBManager dbManager, Activity activity) {
         this.dbManager = dbManager;
         this.activity = activity;
+        dbManager.setPosition();
     }
 
     @Override
@@ -49,9 +48,9 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView ivLogo;
-        TextView tvTitle, tvDate, tvCategory, tvAch, tvDday, tvSecondTitle;
+        TextView tvTitle, tvDate, tvCategory, tvAch, tvDday, tvSubTitle;
         RoundCornerProgressBar pb;
-        LinearLayout layoutItem, layoutUpperMargin, layoutSecondTitle;
+        LinearLayout layoutItem, layoutUpperMargin, layoutSubTitle;
 
         /**************************************************/
         /** TODO initialize view components in item view **/
@@ -67,17 +66,14 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
             pb = (RoundCornerProgressBar) itemView.findViewById(R.id.todo_pb);
             layoutItem = (LinearLayout) itemView.findViewById(R.id.todo_layout);
             layoutUpperMargin = (LinearLayout) itemView.findViewById(R.id.todo_layout_uppermargin);
-            layoutSecondTitle = (LinearLayout) itemView.findViewById(R.id.todo_layout_secondtitle);
-            tvSecondTitle = (TextView) itemView.findViewById(R.id.todo_tv_secondtitle);
+            layoutSubTitle = (LinearLayout) itemView.findViewById(R.id.todo_layout_subtitle);
+            tvSubTitle = (TextView) itemView.findViewById(R.id.todo_tv_subtitle);
         }
     }
 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_todo, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        dbManager.setPosition();
-        secondTitlePosition = 0;
-        isFirstST = false;
         return viewHolder;
     }
 
@@ -85,7 +81,7 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         dbManager.getValue("_position", position);
 
-        holder.layoutSecondTitle.setVisibility(View.GONE);
+        holder.layoutSubTitle.setVisibility(View.GONE);
         holder.layoutUpperMargin.setVisibility(View.GONE);
 
         if (!dbManager.DATA_TITLE.equals(activity.getString(R.string.empty_data))) {
@@ -160,8 +156,8 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     }
 
     public void refresh() {
-        secondTitlePosition = 0;
         dbManager.setPosition();
         notifyDataSetChanged();
     }
+
 }

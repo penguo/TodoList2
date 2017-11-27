@@ -33,6 +33,7 @@ public class DBManager extends SQLiteOpenHelper {
     public static String DATA_semi_TITLE, DATA_semi_DATE;
     public static String DATA_SORTTYPE = "DEFAULT", DATA_SORTTYPEEQUAL = "";
 
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(" CREATE TABLE TODOLIST ( " +
@@ -127,7 +128,7 @@ public class DBManager extends SQLiteOpenHelper {
         insert(DATA_TITLE, DATA_CATEGORY, DATA_DATE, DATA_ACH, DATA_MEMO);
     }
 
-    public void update(int id, String title, String category, String date, int ach, String memo) {
+    public void update(int id, String title, String category, String date, String createDate, int ach, String memo) {
         if (title.equals("")) {
             title = context.getString(R.string.empty_data);
         }
@@ -137,13 +138,14 @@ public class DBManager extends SQLiteOpenHelper {
                 "CATEGORY = '" + category + "', " +
                 "DATE = '" + date + "', " +
                 "ACH = " + ach + "," +
-                "MEMO = '" + memo + "'" +
+                "MEMO = '" + memo + "'," +
+                "CREATEDATE = '" + createDate + "'" +
                 "WHERE _id = " + id + " ; ");
         db.close();
     }
 
     public void updateSimply() {
-        update(DATA_id, DATA_TITLE, DATA_CATEGORY, DATA_DATE, DATA_ACH, DATA_MEMO);
+        update(DATA_id, DATA_TITLE, DATA_CATEGORY, DATA_DATE, DATA_CREATEDATE, DATA_ACH, DATA_MEMO);
     }
 
     public void delete(int id) {
@@ -165,7 +167,7 @@ public class DBManager extends SQLiteOpenHelper {
             DATA_MEMO = cursor.getString(6);
             DATA_CREATEDATE = cursor.getString(7);
         }
-        DATA_DDAY = Manager.calculateDday(DBManager.DATA_DATE);
+        DATA_DDAY = Manager.calculateDday(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE);
         cursor = db.rawQuery("SELECT ACH, ACHMAX FROM SEMITODO WHERE _parentId = " + DATA_id + " ;", null);
         if (cursor.getCount() == 0) // Semi 데이터가 없을 경우 - 직접 설정한 퍼센트로 적용.
         {

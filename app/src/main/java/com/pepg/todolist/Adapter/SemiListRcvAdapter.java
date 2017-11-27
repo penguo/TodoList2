@@ -39,6 +39,8 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
         this.dbManager = dbManager;
         this.activity = activity;
         this.parentId = parentId;
+        currentClassName = activity.getLocalClassName();
+        dbManager.setSemiPosition(parentId);
     }
 
     public SemiListRcvAdapter(DBManager dbManager, Activity activity, int parentId, boolean isEditMode) {
@@ -46,6 +48,8 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
         this.activity = activity;
         this.parentId = parentId;
         Manager.editMode = isEditMode;
+        currentClassName = activity.getLocalClassName();
+        dbManager.setSemiPosition(parentId);
     }
 
     @Override
@@ -77,8 +81,6 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_semi, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        currentClassName = activity.getLocalClassName();
-        dbManager.setSemiPosition(parentId);
         return viewHolder;
     }
 

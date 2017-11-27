@@ -177,7 +177,7 @@ public class UpdateActivity extends AppCompatActivity implements View.OnClickLis
                     dbManager.insert(etTitle.getText().toString(), tvCategory.getText().toString(), tvDate.getText().toString(), 0, etMemo.getText().toString());
                     dbManager.DATA_SORTTYPE = "DEFAULT";
                 } else {
-                    dbManager.update(id, etTitle.getText().toString(), tvCategory.getText().toString(), tvDate.getText().toString(), 0, etMemo.getText().toString());
+                    dbManager.update(id, etTitle.getText().toString(), tvCategory.getText().toString(), tvDate.getText().toString(),"9999-99-99", 0, etMemo.getText().toString());
                 }
                 setResult(RESULT_OK);
                 finish();

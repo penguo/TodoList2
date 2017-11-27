@@ -51,11 +51,11 @@ public class DBSortManager {
     public void sortByDate() {
         ArrayList<DataMerge> dataList = new ArrayList<>();
         ArrayList<DataMerge> result = new ArrayList<>();
-        cursor = dbR.rawQuery("SELECT _id, DATE FROM TODOLIST WHERE _position > -1 ;", null);
+        cursor = dbR.rawQuery("SELECT _id, DATE, CREATEDATE FROM TODOLIST WHERE _position > -1 ;", null);
         int length = cursor.getCount();
         i = 0;
         while (cursor.moveToNext()) {
-            dataList.add(new DataMerge(i, cursor.getInt(0), Manager.calculateDday(cursor.getString(1))));
+            dataList.add(new DataMerge(i, cursor.getInt(0), Manager.calculateDday(cursor.getString(1),cursor.getString(2))));
         }
         long[] list = new long[length];
         while (i < length) {
@@ -81,7 +81,6 @@ public class DBSortManager {
         cursor.close();
         for (i = 0; i < length; i++) {
             dbW.execSQL("UPDATE TODOLIST SET _position = " + i + " WHERE _id = '" + result.get(i).getId() + "';");
-
         }
     }
 
@@ -105,7 +104,7 @@ public class DBSortManager {
                 }
             }
         }
-        for(i=0;i<resultList.size();i++){
+        for (i = 0; i < resultList.size(); i++) {
             dbW.execSQL("UPDATE SEMITODO SET _position = " + i + " WHERE _id = '" + resultList.get(i).getId() + "';");
         }
         cursor.close();
