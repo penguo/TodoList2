@@ -49,6 +49,8 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
+        Manager.setSetting(this);
+
         toolbar = (Toolbar) findViewById(R.id.listA_toolbar);
         setSupportActionBar(toolbar);
 
@@ -101,7 +103,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case(R.id.listA_btn_setting):
                 intent = new Intent(ListActivity.this, SettingsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, Manager.RC_LIST_TO_SETTINGS);
                 break;
             case(R.id.listA_btn_sort):
                 spinnerSort.performClick();
@@ -144,6 +146,9 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 onRefresh();
             }
         }
+        if(requestCode == Manager.RC_LIST_TO_SETTINGS){
+            onRefresh();
+        }
     }
 
     public List<Pair<View, String>> getPairs() {
@@ -183,6 +188,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         tvToolbarTitle.setText("TodoList");
         ivDropdown.setVisibility(View.GONE);
         isSortView = false;
+        onRefresh();
     }
 
     @Override

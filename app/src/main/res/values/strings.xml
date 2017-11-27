@@ -24,4 +24,10 @@
         <item>한 달 동안</item>
     </string-array>
 
+    <string-array name="sortlist">
+        <item>종료날짜 순</item>
+        <item>시작날짜 순</item>
+        <item>D-day 순</item>
+    </string-array>
+
 </resources>

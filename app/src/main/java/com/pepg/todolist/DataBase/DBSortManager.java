@@ -3,9 +3,12 @@ package com.pepg.todolist.DataBase;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 
 import com.pepg.todolist.Manager;
 
@@ -20,6 +23,7 @@ public class DBSortManager {
     DBManager dbManager;
     Context context;
     int i, j;
+    public static List<Integer> subtitlePosition;
 
     public DBSortManager(DBManager dbManager, Context context, SQLiteDatabase dbW, SQLiteDatabase dbR) {
         this.dbManager = dbManager;
@@ -51,11 +55,11 @@ public class DBSortManager {
     public void sortByDate() {
         ArrayList<DataMerge> dataList = new ArrayList<>();
         ArrayList<DataMerge> result = new ArrayList<>();
-        cursor = dbR.rawQuery("SELECT _id, DATE, CREATEDATE FROM TODOLIST WHERE _position > -1 ;", null);
+        cursor = dbR.rawQuery("SELECT _id, DATE FROM TODOLIST WHERE _position > -1 ;", null);
         int length = cursor.getCount();
         i = 0;
         while (cursor.moveToNext()) {
-            dataList.add(new DataMerge(i, cursor.getInt(0), Manager.calculateDday(cursor.getString(1),cursor.getString(2))));
+            dataList.add(new DataMerge(i, cursor.getInt(0), Manager.calculateDday(cursor.getString(1))));
         }
         long[] list = new long[length];
         while (i < length) {
@@ -82,6 +86,7 @@ public class DBSortManager {
         for (i = 0; i < length; i++) {
             dbW.execSQL("UPDATE TODOLIST SET _position = " + i + " WHERE _id = '" + result.get(i).getId() + "';");
         }
+
     }
 
     public void sortSemiByAch(int parentId) {
@@ -108,5 +113,42 @@ public class DBSortManager {
             dbW.execSQL("UPDATE SEMITODO SET _position = " + i + " WHERE _id = '" + resultList.get(i).getId() + "';");
         }
         cursor.close();
+    }
+
+    public void setSubtitlePosition() {
+        ArrayList<DataMerge> dataList = new ArrayList<>();
+        for (int i = 0; i < dbManager.getSize(); i++) {
+            dbManager.getValue("_position", i);
+            dataList.add(new DataMerge(i, DBManager.DATA_id, DBManager.DATA_DDAY));
+        }
+        subtitlePosition = new ArrayList<>();
+        subtitlePosition.add(-1); // 지난
+        subtitlePosition.add(-1); // 당일
+        subtitlePosition.add(-1); // 일주일 내
+        subtitlePosition.add(-1); // 그 외
+        i = 0;
+        while (dataList.size() != 0) {
+            if (dataList.get(i).getNum() < 0) {
+                if (subtitlePosition.get(0) == -1) {
+                    subtitlePosition.set(0, dataList.get(i).getPosition());
+                }
+                dataList.remove(i);
+            } else if (dataList.get(i).getNum() == 0) {
+                if (subtitlePosition.get(1) == -1) {
+                    subtitlePosition.set(1, dataList.get(i).getPosition());
+                }
+                dataList.remove(i);
+            } else if (dataList.get(i).getNum() <= 7) {
+                if (subtitlePosition.get(2) == -1) {
+                    subtitlePosition.set(2, dataList.get(i).getPosition());
+                }
+                dataList.remove(i);
+            } else {
+                if (subtitlePosition.get(3) == -1) {
+                    subtitlePosition.set(3, dataList.get(i).getPosition());
+                }
+                dataList.remove(i);
+            }
+        }
     }
 }

@@ -23,7 +23,7 @@ import com.pepg.todolist.SettingsActivity;
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
 
     public static final String KEY_ANIMATION = "pref_animation";
-    public static final String KEY_SUBTITLE = "pref_subtitle";
+    public static final String KEY_ISVIEWSUBTITLE = "pref_isviewsubtitle";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +36,9 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Preference pref_animation = findPreference(KEY_ANIMATION);
+        Preference pref_isviewsubtitle = findPreference(KEY_ISVIEWSUBTITLE);
         pref_animation.setOnPreferenceClickListener(this);
+        pref_isviewsubtitle.setOnPreferenceClickListener(this);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }

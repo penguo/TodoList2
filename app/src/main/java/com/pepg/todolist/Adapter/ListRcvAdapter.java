@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
+import com.pepg.todolist.DataBase.DBSortManager;
 import com.pepg.todolist.InfoActivity;
 import com.pepg.todolist.ListActivity;
 import com.pepg.todolist.Manager;
@@ -47,7 +49,7 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView ivLogo;
+        ImageView ivSchedule;
         TextView tvTitle, tvDate, tvCategory, tvAch, tvDday, tvSubTitle;
         RoundCornerProgressBar pb;
         LinearLayout layoutItem, layoutUpperMargin, layoutSubTitle;
@@ -57,7 +59,7 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
         /**************************************************/
         public ViewHolder(View itemView) {
             super(itemView);
-            ivLogo = (ImageView) itemView.findViewById(R.id.todo_iv_logo);
+            ivSchedule = (ImageView) itemView.findViewById(R.id.todo_iv_schedule);
             tvTitle = (TextView) itemView.findViewById(R.id.todo_tv_title);
             tvDate = (TextView) itemView.findViewById(R.id.todo_tv_date);
             tvCategory = (TextView) itemView.findViewById(R.id.todo_tv_category);
@@ -80,9 +82,32 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         dbManager.getValue("_position", position);
-
         holder.layoutSubTitle.setVisibility(View.GONE);
         holder.layoutUpperMargin.setVisibility(View.GONE);
+
+        if (Manager.isViewSubTitle) {
+            for (int i = 0; i < DBSortManager.subtitlePosition.size(); i++)
+                if (DBSortManager.subtitlePosition.get(i) == position) {
+                    if (position != 0) {
+                        holder.layoutUpperMargin.setVisibility(View.VISIBLE);
+                    }
+                    holder.layoutSubTitle.setVisibility(View.VISIBLE);
+                    switch (i) {
+                        case (0):
+                            holder.tvSubTitle.setText("지난 할 일, 일정");
+                            break;
+                        case (1):
+                            holder.tvSubTitle.setText("오늘까지의 할 일, 일정");
+                            break;
+                        case (2):
+                            holder.tvSubTitle.setText("이번주동안 할 일, 일정");
+                            break;
+                        case (3):
+                            holder.tvSubTitle.setText("할 일, 일정");
+                            break;
+                    }
+                }
+        }
 
         if (!dbManager.DATA_TITLE.equals(activity.getString(R.string.empty_data))) {
             holder.tvTitle.setText(DBManager.DATA_TITLE);
@@ -93,8 +118,23 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
             holder.tvCategory.setVisibility(View.GONE);
         }
         holder.tvDate.setText("~ " + DBManager.DATA_DATE);
-        holder.tvAch.setText(DBManager.DATA_ACH + "%");
         holder.tvDday.setText(Manager.getDdayString(DBManager.DATA_DDAY));
+        if (DBManager.DATA_DATE.equals(DBManager.DATA_CREATEDATE)) {
+            holder.ivSchedule.setVisibility(View.VISIBLE);
+            holder.tvAch.setVisibility(View.GONE);
+            holder.pb.setVisibility(View.GONE);
+            holder.layoutItem.setAlpha(1);
+        } else {
+            holder.tvAch.setText(DBManager.DATA_ACH + "%");
+            holder.ivSchedule.setVisibility(View.GONE);
+            holder.tvAch.setVisibility(View.VISIBLE);
+            holder.pb.setVisibility(View.VISIBLE);
+            if (!Manager.calculateisStart(DBManager.DATA_CREATEDATE)) {
+                holder.layoutItem.setAlpha((float) 0.5);
+            } else {
+                holder.layoutItem.setAlpha(1);
+            }
+        }
         try {
             if (DBManager.DATA_DDAY >= 10 || DBManager.DATA_DDAY <= -10) {
                 holder.tvDday.setTextSize(16);

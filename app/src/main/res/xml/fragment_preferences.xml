@@ -8,15 +8,15 @@
             android:key="pref_animation"
             android:title="동작 애니메이션" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Preference category">
+    <PreferenceCategory android:title="List">
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="switch_preference_2"
-            android:title="Switch preference" />
+            android:key="pref_overtime"
+            android:title="지난 항목 숨기기" />
         <SwitchPreference
-            android:defaultValue="false"
-            android:key="switch_preference_2"
-            android:title="Switch preference" />
+            android:defaultValue="true"
+            android:key="pref_isviewsubtitle"
+            android:title="부제목 활성화" />
     </PreferenceCategory>
 </PreferenceScreen>

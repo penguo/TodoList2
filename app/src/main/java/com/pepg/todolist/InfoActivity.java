@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -50,6 +51,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     String selectedItem;
     CoordinatorLayout layoutAch;
     boolean cancelEditMode;
+    ImageView ivSchedule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         etTitle = incHead.findViewById(R.id.head_et_title);
         spinnerCategory = incHead.findViewById(R.id.head_spinner);
         layoutAch = incHead.findViewById(R.id.head_layout_ach);
+        ivSchedule = incHead.findViewById(R.id.head_iv_schedule);
 
         fragmentManager = getFragmentManager();
 
@@ -293,7 +296,14 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         dbManager.getValue("_id", DBManager.DATA_id);
         pbHead.setProgress(DBManager.DATA_ACH);
         pbHead.setSecondaryProgress(Manager.getSuggestAch(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE));
-        tvAch.setText(DBManager.DATA_ACH + "%");
+        if(DBManager.DATA_DATE.equals(DBManager.DATA_CREATEDATE)){
+            ivSchedule.setVisibility(View.VISIBLE);
+            tvAch.setVisibility(View.GONE);
+        }else{
+            tvAch.setText(DBManager.DATA_ACH + "%");
+            ivSchedule.setVisibility(View.GONE);
+            tvAch.setVisibility(View.VISIBLE);
+        }
         switch (Manager.viewState) {
             case (0):
                 DetailBodyFragment dbf = (DetailBodyFragment) getFragmentManager().findFragmentById(R.id.info_linearlayout_fragment);
