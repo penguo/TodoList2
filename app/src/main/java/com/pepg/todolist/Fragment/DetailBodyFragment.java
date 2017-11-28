@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
@@ -41,10 +42,9 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
     int id, isDateType, step;
     RoundCornerProgressBar pbBody;
     DBManager dbManager;
-    LinearLayout layoutDate, layoutDateBg, layoutAch, layoutAlarm, layoutMemo, layoutAchBg, layoutAlarmBg, layoutMemoBg, layoutBody;
+    LinearLayout layoutDate, layoutAch, layoutAlarm, layoutMemo, layoutBody;
     ImageView ivZoomAch, ivZoomAlarm, ivZoomMemo, ivEditDate;
     TextView tvDate, tvDateHead, tvAch, tvMemo, tvAchHead, tvAlarmHead, tvGone, tvStartDate, tvDateMiddle;
-    DetailDateFragment detailDateFragment;
     DetailSemiFragment detailSemiFragment;
     DetailAlarmFragment detailAlarmFragment;
     FragmentManager fragmentManager;
@@ -83,13 +83,9 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         tvStartDate = (TextView) view.findViewById(R.id.detail_tv_startdate);
         tvDateMiddle = (TextView) view.findViewById(R.id.detail_tv_datemiddle);
         layoutDate = (LinearLayout) view.findViewById(R.id.detail_layout_date);
-        layoutDateBg = (LinearLayout) view.findViewById(R.id.detail_layout_date_bg);
         layoutAch = (LinearLayout) view.findViewById(R.id.detail_layout_ach);
-        layoutAchBg = (LinearLayout) view.findViewById(R.id.detail_layout_ach_bg);
         layoutAlarm = (LinearLayout) view.findViewById(R.id.detail_layout_alarm);
-        layoutAlarmBg = (LinearLayout) view.findViewById(R.id.detail_layout_alarm_bg);
         layoutMemo = (LinearLayout) view.findViewById(R.id.detail_layout_memo);
-        layoutMemoBg = (LinearLayout) view.findViewById(R.id.detail_layout_memo_bg);
 
         etMemo = (EditText) view.findViewById(R.id.detail_et_memo);
 
@@ -128,7 +124,6 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         tvMemo.setText(DBManager.DATA_MEMO);
         etMemo.setText(DBManager.DATA_MEMO);
         fragmentManager = getFragmentManager();
-        detailDateFragment = new DetailDateFragment();
         detailSemiFragment = new DetailSemiFragment();
         detailAlarmFragment = new DetailAlarmFragment();
         if (Manager.isAnimationActive) {
@@ -159,50 +154,51 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
     }
 
     public void checkViewState() {
+        int[] attrs = new int[]{R.attr.selectableItemBackground}; // Ripple Effect
+        TypedArray typedArray = getActivity().obtainStyledAttributes(attrs);
+        final int backgroundResource = typedArray.getResourceId(0, 0);
         if (Manager.isAnimationActive) {
             final int currentTextColor = tvGone.getCurrentTextColor();
             switch (Manager.viewState) {
                 case (1):
-                    layoutDateBg.setBackgroundResource(R.color.colorPrimaryDark);
+                    layoutDate.setBackgroundResource(R.color.colorPrimaryDark);
                     tvDateHead.setTextColor(getResources().getColor(R.color.white07));
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            layoutDateBg.setBackgroundResource(R.drawable.xml_item);
+                            layoutDate.setBackgroundResource(backgroundResource);
                             tvDateHead.setTextColor(currentTextColor);
                         }
                     }, 300);
                     break;
                 case (2):
-                    layoutAchBg.setBackgroundResource(R.color.colorPrimaryDark);
+                    layoutAch.setBackgroundResource(R.color.colorPrimaryDark);
                     tvAchHead.setTextColor(getResources().getColor(R.color.white07));
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            layoutAchBg.setBackgroundResource(R.drawable.xml_item);
+                            layoutAch.setBackgroundResource(backgroundResource);
                             tvAchHead.setTextColor(currentTextColor);
                         }
                     }, 300);
                     break;
                 case (3):
-                    layoutAlarmBg.setBackgroundResource(R.color.colorPrimaryDark);
+                    layoutAlarm.setBackgroundResource(R.color.colorPrimaryDark);
                     tvAlarmHead.setTextColor(getResources().getColor(R.color.white07));
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            layoutAlarmBg.setBackgroundResource(R.drawable.xml_item);
+                            layoutAlarm.setBackgroundResource(backgroundResource);
                             tvAlarmHead.setTextColor(currentTextColor);
                         }
                     }, 300);
                     break;
             }
         }
+        typedArray.recycle();
     }
 
     public void setAnimation() {
-        detailDateFragment.setSharedElementEnterTransition(Manager.getChangeBounds());
-        detailDateFragment.setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
-        detailDateFragment.setAllowEnterTransitionOverlap(false);
         detailSemiFragment.setSharedElementEnterTransition(Manager.getChangeBounds());
         detailSemiFragment.setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(android.R.transition.fade));
         detailSemiFragment.setAllowEnterTransitionOverlap(false);
@@ -217,14 +213,6 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         switch (view.getId()) {
             case (R.id.detail_layout_date):
                 if (Manager.editMode) {
-//                    layoutDate.setElevation(((InfoActivity) activity).getElevation());
-//                    fragmentTransaction = fragmentManager.beginTransaction();
-//                    fragmentTransaction.addSharedElement(layoutDate, "layout_date");
-//                    fragmentTransaction.addSharedElement(pbBody, "progressbar");
-//                    fragmentTransaction.addToBackStack(null);
-//                    fragmentTransaction.replace(R.id.info_linearlayout_fragment, detailDateFragment);
-//                    fragmentTransaction.commit();
-//                    fragmentManager.executePendingTransactions();
                     DateEdit();
                 }
                 break;
@@ -255,10 +243,15 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         step = 0;
         final String[] items = {"할 일(~부터 ~까지)", "일정(선택한 날짜에)"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("항목의 유형을 선택해주세요.");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 isDateType = which;
-                DateSelectOption();
+                if (Manager.isOnFastAdd) {
+                    DateSelectOption();
+                } else {
+                    DateSelectOption2();
+                }
             }
         });
         builder.show();
@@ -310,6 +303,8 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                                 DBManager.DATA_CREATEDATE = result;
                                 DateSelectOption();
                             } else if (step == 2) {
+                                strings = DBManager.DATA_CREATEDATE.split("\u002D");
+                                cal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
                                 switch (which) {
                                     case (0):
                                         cal.add(Calendar.DATE, 1);
@@ -362,6 +357,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                         strings = DBManager.DATA_CREATEDATE.split("\u002D");
                         dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
                         cal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
+                        cal.add(Calendar.DATE, 1);
                         dpDialog.getDatePicker().setMinDate(cal.getTimeInMillis());
                     } else {
                         dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(CurYearFormat.format(date).toString()), Integer.parseInt(CurMonthFormat.format(date).toString()) - 1, Integer.parseInt(CurDayFormat.format(date).toString()));
@@ -373,6 +369,39 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
             }
         });
         builder.show();
+    }
+
+    public void DateSelectOption2() {
+        step++;
+        DatePickerDialog dpDialog;
+        Calendar cal = Calendar.getInstance();
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat CurYearFormat = new SimpleDateFormat("yyyy");
+        SimpleDateFormat CurMonthFormat = new SimpleDateFormat("MM");
+        SimpleDateFormat CurDayFormat = new SimpleDateFormat("dd");
+        if (isDateType == 0 && step == 2) {
+            strings = DBManager.DATA_CREATEDATE.split("\u002D");
+            dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
+            cal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
+            cal.add(Calendar.DATE, 1);
+            dpDialog.getDatePicker().setMinDate(cal.getTimeInMillis());
+        } else {
+            dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(CurYearFormat.format(date).toString()), Integer.parseInt(CurMonthFormat.format(date).toString()) - 1, Integer.parseInt(CurDayFormat.format(date).toString()));
+        }
+        switch (isDateType) {
+            case (0):
+                if (step == 1) {
+                    dpDialog.setTitle("할 일의 시작 날짜를 선택해주세요.");
+                } else if (step == 2) {
+                    dpDialog.setTitle("할 일의 종료 날짜를 선택해주세요.");
+                }
+                break;
+            case (1):
+                dpDialog.setTitle("일정 날짜를 선택해주세요.");
+                break;
+        }
+        dpDialog.show();
     }
 
     private DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
@@ -394,7 +423,11 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                 case (0):
                     if (step == 1) {
                         DBManager.DATA_CREATEDATE = result;
-                        DateSelectOption();
+                        if (Manager.isOnFastAdd) {
+                            DateSelectOption();
+                        } else {
+                            DateSelectOption2();
+                        }
                     } else if (step == 2) {
                         DBManager.DATA_DATE = result;
                         dbManager.updateSimply();
@@ -414,5 +447,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
     public void refresh() {
         dbManager.getValue("_id", id);
         setData();
+        ((InfoActivity) activity).updateAch();
+        ((InfoActivity) activity).setDday();
     }
 }

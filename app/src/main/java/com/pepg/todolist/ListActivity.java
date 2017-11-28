@@ -153,7 +153,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
 
     public List<Pair<View, String>> getPairs() {
         List<Pair<View, String>> pairs = new ArrayList<>();
-        pairs.add(Pair.create((View) toolbar, "toolbar"));
+//        pairs.add(Pair.create((View) toolbar, "toolbar"));
         return pairs;
     }
 

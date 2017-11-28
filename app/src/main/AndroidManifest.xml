@@ -20,10 +20,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ListActivity" />
-        <activity
-            android:name=".UpdateActivity"
-            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".AddguideActivity" />
+
+        <activity android:name=".InfoActivity" />
+        <activity android:name=".SettingsActivity" />
 
         <receiver
             android:name=".Widget.WidgetProvider"
@@ -37,8 +37,12 @@
                 android:resource="@xml/widget_provider_basic" />
         </receiver>
 
-        <activity android:name=".InfoActivity" />
-        <activity android:name=".SettingsActivity" />
+        <receiver android:name=".Optional.AlarmReceiver">
+            <intent-filter>
+                <action android:name="com.pepg.alarm.ALARM_START"></action>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

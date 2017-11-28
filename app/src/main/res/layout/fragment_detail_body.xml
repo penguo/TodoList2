@@ -12,7 +12,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/detail_tv_gone"
@@ -33,83 +33,72 @@
                     android:id="@+id/detail_layout_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
                     android:gravity="center_vertical"
-                    android:orientation="vertical"
+                    android:minHeight="48dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
                     android:transitionName="layout_date"
                     android:translationZ="4dp">
 
-                    <LinearLayout
-                        android:id="@+id/detail_layout_date_bg"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/xml_item"
-                        android:gravity="center_vertical"
-                        android:minHeight="72dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp">
+                    <TextView
+                        android:id="@+id/detail_tv_date_head"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="날짜:"
+                        android:textSize="16sp"
+                        android:visibility="visible" />
 
-                        <TextView
-                            android:id="@+id/detail_tv_date_head"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="날짜:"
-                            android:textSize="16sp"
-                            android:visibility="visible" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/detail_tv_startdate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="9999-99-99"
+                                android:textSize="16sp"
+                                android:visibility="visible" />
 
-                                <TextView
-                                    android:id="@+id/detail_tv_startdate"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="9999-99-99"
-                                    android:textSize="16sp"
-                                    android:visibility="visible" />
+                            <TextView
+                                android:id="@+id/detail_tv_datemiddle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="   ~   "
+                                android:textSize="16sp"
+                                android:visibility="visible" />
 
-                                <TextView
-                                    android:id="@+id/detail_tv_datemiddle"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="   ~   "
-                                    android:textSize="16sp"
-                                    android:visibility="visible" />
+                            <TextView
+                                android:id="@+id/detail_tv_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="9999-99-99"
+                                android:textSize="16sp"
+                                android:visibility="visible" />
 
-                                <TextView
-                                    android:id="@+id/detail_tv_date"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="9999-99-99"
-                                    android:textSize="16sp"
-                                    android:visibility="visible" />
-
-                            </LinearLayout>
-
-                            <ImageView
-                                android:id="@+id/detail_iv_edit_date"
-                                style="@style/icon"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginBottom="12dp"
-                                android:layout_marginTop="12dp"
-                                android:background="@null"
-                                app:srcCompat="@drawable/ic_edit_black" />
                         </LinearLayout>
 
+                        <ImageView
+                            android:id="@+id/detail_iv_edit_date"
+                            style="@style/icon"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginTop="12dp"
+                            android:background="@null"
+                            app:srcCompat="@drawable/ic_edit_black" />
                     </LinearLayout>
 
-                    <View style="@style/Divider" />
-
                 </LinearLayout>
+
+                <View style="@style/Divider" />
 
                 <LinearLayout
                     android:id="@+id/detail_layout_ach"
@@ -117,78 +106,68 @@
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:gravity="center_vertical"
-                    android:orientation="vertical"
+                    android:minHeight="72dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
                     android:transitionName="layout_ach"
                     android:translationZ="4dp">
 
-                    <LinearLayout
-                        android:id="@+id/detail_layout_ach_bg"
+                    <TextView
+                        android:id="@+id/detail_tv_ach_head"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="진행:"
+                        android:textSize="16sp"
+                        android:visibility="visible" />
+
+                    <android.support.design.widget.CoordinatorLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/xml_item"
-                        android:gravity="center_vertical"
-                        android:minHeight="72dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp">
+                        android:paddingLeft="6dp">
 
-                        <TextView
-                            android:id="@+id/detail_tv_ach_head"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="진행:"
-                            android:textSize="16sp"
-                            android:visibility="visible" />
-
-                        <android.support.design.widget.CoordinatorLayout
+                        <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:paddingLeft="6dp">
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginTop="12dp">
 
-                            <FrameLayout
+                            <include
+                                android:id="@+id/detail_pb"
+                                layout="@layout/include_progressbar"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginBottom="12dp"
-                                android:layout_marginTop="12dp">
+                                android:layout_height="match_parent" />
 
-                                <include
-                                    android:id="@+id/detail_pb"
-                                    layout="@layout/include_progressbar"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent" />
+                        </FrameLayout>
 
-                            </FrameLayout>
+                        <ImageView
+                            android:id="@+id/detail_iv_zoom_ach"
+                            style="@style/icon"
+                            android:layout_gravity="right"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            app:srcCompat="@drawable/ic_zoomin_black" />
 
-                            <ImageView
-                                android:id="@+id/detail_iv_zoom_ach"
-                                style="@style/icon"
-                                android:layout_gravity="right"
-                                android:layout_marginBottom="12dp"
-                                android:layout_marginTop="12dp"
-                                android:layout_weight="1"
-                                android:background="@null"
-                                app:srcCompat="@drawable/ic_zoomin_black" />
+                        <TextView
+                            android:id="@+id/detail_tv_ach"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="99 / 99"
+                            android:textSize="18sp"
+                            android:textStyle="bold|italic" />
 
-                            <TextView
-                                android:id="@+id/detail_tv_ach"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="99 / 99"
-                                android:textSize="18sp"
-                                android:textStyle="bold|italic" />
-
-                        </android.support.design.widget.CoordinatorLayout>
-
-                    </LinearLayout>
-
-                    <View
-                        android:id="@+id/detail_border_ach"
-                        style="@style/Divider" />
+                    </android.support.design.widget.CoordinatorLayout>
 
                 </LinearLayout>
+
+                <View
+                    android:id="@+id/detail_border_ach"
+                    style="@style/Divider" />
 
                 <LinearLayout
                     android:id="@+id/detail_layout_alarm"
@@ -196,164 +175,146 @@
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:gravity="center_vertical"
-                    android:orientation="vertical"
+                    android:minHeight="72dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
                     android:transitionName="layout_alarm"
                     android:translationZ="4dp">
 
-                    <LinearLayout
-                        android:id="@+id/detail_layout_alarm_bg"
+                    <TextView
+                        android:id="@+id/detail_tv_alarm_head"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="알림:"
+                        android:textSize="16sp"
+                        android:visibility="visible" />
+
+                    <android.support.design.widget.CoordinatorLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/xml_item"
-                        android:gravity="center_vertical"
-                        android:minHeight="72dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp">
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="6dp">
 
-                        <TextView
-                            android:id="@+id/detail_tv_alarm_head"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="알림:"
-                            android:textSize="16sp"
-                            android:visibility="visible" />
-
-                        <android.support.design.widget.CoordinatorLayout
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="6dp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:id="@+id/detail_iv_alarm1"
-                                    style="@style/icon"
-                                    android:layout_gravity="center_vertical"
-                                    android:layout_marginBottom="12dp"
-                                    android:layout_marginRight="4dp"
-                                    android:layout_marginTop="12dp"
-                                    android:background="@null"
-                                    app:srcCompat="@drawable/ic_alarm_dark" />
-
-                                <ImageView
-                                    android:id="@+id/detail_iv_alarm2"
-                                    style="@style/icon"
-                                    android:layout_gravity="center_vertical"
-                                    android:layout_marginBottom="12dp"
-                                    android:layout_marginRight="4dp"
-                                    android:layout_marginTop="12dp"
-                                    android:background="@null"
-                                    app:srcCompat="@drawable/ic_alarm_dark" />
-
-                                <ImageView
-                                    android:id="@+id/detail_iv_alarm3"
-                                    style="@style/icon"
-                                    android:layout_gravity="center_vertical"
-                                    android:layout_marginBottom="12dp"
-                                    android:layout_marginRight="4dp"
-                                    android:layout_marginTop="12dp"
-                                    android:background="@null"
-                                    app:srcCompat="@drawable/ic_alarm_dark" />
-                            </LinearLayout>
+                            android:orientation="horizontal">
 
                             <ImageView
-                                android:id="@+id/detail_iv_zoom_alarm"
+                                android:id="@+id/detail_iv_alarm1"
                                 style="@style/icon"
-                                android:layout_gravity="right"
+                                android:layout_gravity="center_vertical"
                                 android:layout_marginBottom="12dp"
+                                android:layout_marginRight="4dp"
                                 android:layout_marginTop="12dp"
-                                android:layout_weight="1"
                                 android:background="@null"
-                                app:srcCompat="@drawable/ic_zoomin_black" />
+                                app:srcCompat="@drawable/ic_alarm_dark" />
 
-                        </android.support.design.widget.CoordinatorLayout>
+                            <ImageView
+                                android:id="@+id/detail_iv_alarm2"
+                                style="@style/icon"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginBottom="12dp"
+                                android:layout_marginRight="4dp"
+                                android:layout_marginTop="12dp"
+                                android:background="@null"
+                                app:srcCompat="@drawable/ic_alarm_dark" />
 
-                    </LinearLayout>
+                            <ImageView
+                                android:id="@+id/detail_iv_alarm3"
+                                style="@style/icon"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginBottom="12dp"
+                                android:layout_marginRight="4dp"
+                                android:layout_marginTop="12dp"
+                                android:background="@null"
+                                app:srcCompat="@drawable/ic_alarm_dark" />
+                        </LinearLayout>
 
-                    <View
-                        android:id="@+id/detail_border_alarm"
-                        style="@style/Divider" />
+                        <ImageView
+                            android:id="@+id/detail_iv_zoom_alarm"
+                            style="@style/icon"
+                            android:layout_gravity="right"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            app:srcCompat="@drawable/ic_zoomin_black" />
+
+                    </android.support.design.widget.CoordinatorLayout>
 
                 </LinearLayout>
+
+                <View
+                    android:id="@+id/detail_border_alarm"
+                    style="@style/Divider" />
 
                 <LinearLayout
                     android:id="@+id/detail_layout_memo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
                     android:gravity="center_vertical"
-                    android:orientation="vertical"
+                    android:minHeight="72dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
                     android:transitionName="layout_memo"
                     android:translationZ="4dp">
 
-                    <LinearLayout
-                        android:id="@+id/detail_layout_memo_bg"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="메모:"
+                        android:textSize="16sp"
+                        android:visibility="visible" />
+
+                    <android.support.design.widget.CoordinatorLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/xml_item"
-                        android:gravity="center_vertical"
-                        android:minHeight="72dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="16dp"
-                        android:paddingRight="16dp">
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="6dp">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:id="@+id/detail_tv_memo"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="메모:"
+                            android:layout_alignParentBottom="true"
+                            android:layout_gravity="center_vertical"
+                            android:paddingLeft="12dp"
+                            android:text="MEMO VIEW POINT"
                             android:textSize="16sp"
                             android:visibility="visible" />
 
-                        <android.support.design.widget.CoordinatorLayout
+                        <EditText
+                            android:id="@+id/detail_et_memo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="6dp">
+                            android:ems="10"
+                            android:inputType="text"
+                            android:paddingLeft="12dp"
+                            android:text="MEMO VIEW POINT"
+                            android:textSize="16sp"
+                            android:visibility="gone" />
 
-                            <TextView
-                                android:id="@+id/detail_tv_memo"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:layout_gravity="center_vertical"
-                                android:paddingLeft="12dp"
-                                android:text="MEMO VIEW POINT"
-                                android:textSize="16sp"
-                                android:visibility="visible" />
 
-                            <EditText
-                                android:id="@+id/detail_et_memo"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:ems="10"
-                                android:inputType="text"
-                                android:paddingLeft="12dp"
-                                android:text="MEMO VIEW POINT"
-                                android:textSize="16sp"
-                                android:visibility="gone" />
+                        <ImageView
+                            android:id="@+id/detail_iv_zoom_memo"
+                            style="@style/icon"
+                            android:layout_gravity="right"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:visibility="gone"
+                            app:srcCompat="@drawable/ic_zoomin_black" />
 
-                            <ImageView
-                                android:id="@+id/detail_iv_zoom_memo"
-                                style="@style/icon"
-                                android:layout_gravity="right"
-                                android:layout_marginBottom="12dp"
-                                android:layout_marginTop="12dp"
-                                android:layout_weight="1"
-                                android:background="@null"
-                                android:visibility="gone"
-                                app:srcCompat="@drawable/ic_zoomin_black" />
+                    </android.support.design.widget.CoordinatorLayout>
 
-                        </android.support.design.widget.CoordinatorLayout>
 
-                    </LinearLayout>
-
-                    <View style="@style/Divider" />
                 </LinearLayout>
 
+                <View style="@style/Divider" />
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

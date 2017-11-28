@@ -20,10 +20,12 @@ import com.pepg.todolist.SettingsActivity;
  * Created by pengu on 2017-11-25.
  */
 
-public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener {
+public class SettingsFragment extends PreferenceFragment {
 
     public static final String KEY_ANIMATION = "pref_animation";
     public static final String KEY_ISVIEWSUBTITLE = "pref_isviewsubtitle";
+    public static final String KEY_FASTADD = "pref_fastadd";
+    public static final String KEY_NOTVIEWPASTDATA = "pref_notviewpastdata";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,17 +37,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Preference pref_animation = findPreference(KEY_ANIMATION);
-        Preference pref_isviewsubtitle = findPreference(KEY_ISVIEWSUBTITLE);
-        pref_animation.setOnPreferenceClickListener(this);
-        pref_isviewsubtitle.setOnPreferenceClickListener(this);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    @Override
-    public boolean onPreferenceClick(Preference preference) {
-        Manager.setSetting(getActivity());
-        return false;
-    }
 }

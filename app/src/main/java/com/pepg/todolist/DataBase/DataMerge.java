@@ -11,6 +11,7 @@ public class DataMerge {
     int position, id;
     Date date;
     int num;
+    String time;
 
     public DataMerge(int position, int id, Date date) {
         this.position = position;

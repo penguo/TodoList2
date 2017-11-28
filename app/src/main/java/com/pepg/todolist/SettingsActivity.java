@@ -36,4 +36,10 @@ public class SettingsActivity extends AppCompatActivity {
                 .replace(R.id.setting_framelayout, new SettingsFragment())
                 .commit();
     }
+
+    @Override
+    public void onBackPressed() {
+        Manager.setSetting(this);
+        super.onBackPressed();
+    }
 }

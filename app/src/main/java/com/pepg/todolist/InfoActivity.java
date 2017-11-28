@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.DataBase.DBManager;
+import com.pepg.todolist.Fragment.DetailAlarmFragment;
 import com.pepg.todolist.Fragment.DetailBodyFragment;
 import com.pepg.todolist.Fragment.DetailSemiFragment;
 
@@ -197,7 +198,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void resetHeadEdit() {
-        if (cancelEditMode) {
+        if (!cancelEditMode) {
             DBManager.DATA_TITLE = etTitle.getText().toString();
             DBManager.DATA_CATEGORY = selectedItem;
             dbManager.updateSimply();
@@ -242,7 +243,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         btnEditMode.setImageResource(R.drawable.ic_edit);
     }
 
-    private void setDday() {
+    public void setDday() {
         tvDday.setText(Manager.getDdayString(DBManager.DATA_DDAY));
         try {
             if (DBManager.DATA_DDAY >= 10 || DBManager.DATA_DDAY <= -10) {
@@ -285,6 +286,10 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
                 DetailSemiFragment dsf = (DetailSemiFragment) getFragmentManager().findFragmentById(R.id.info_linearlayout_fragment);
                 dsf.checkEditMode();
                 break;
+            case (3):
+                DetailAlarmFragment daf = (DetailAlarmFragment) getFragmentManager().findFragmentById(R.id.info_linearlayout_fragment);
+                daf.checkEditMode();
+                break;
             default:
                 Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show();
                 Log.e("ERROR", "" + Manager.viewState);
@@ -299,10 +304,12 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         if(DBManager.DATA_DATE.equals(DBManager.DATA_CREATEDATE)){
             ivSchedule.setVisibility(View.VISIBLE);
             tvAch.setVisibility(View.GONE);
+            pbHead.setVisibility(View.GONE);
         }else{
             tvAch.setText(DBManager.DATA_ACH + "%");
             ivSchedule.setVisibility(View.GONE);
             tvAch.setVisibility(View.VISIBLE);
+            pbHead.setVisibility(View.VISIBLE);
         }
         switch (Manager.viewState) {
             case (0):

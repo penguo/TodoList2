@@ -13,8 +13,7 @@
         android:elevation="3dp"
         android:gravity="center_vertical"
         android:minHeight="72dp"
-        android:orientation="horizontal"
-        android:transitionName="layout_head">
+        android:orientation="horizontal">
 
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/head_layout_ach"
@@ -53,10 +52,10 @@
             <ImageView
                 android:id="@+id/head_iv_schedule"
                 style="@style/icon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:background="@null"
                 android:clickable="false"
-                app:srcCompat="@drawable/ic_event_black" />
+                app:srcCompat="@drawable/ic_event" />
 
         </android.support.design.widget.CoordinatorLayout>
 
@@ -140,7 +139,7 @@
                     android:ems="10"
                     android:inputType="text"
                     android:text="TITLE EDIT POINT"
-                    android:textSize="21sp" />
+                    android:textSize="18sp" />
             </FrameLayout>
 
         </LinearLayout>
@@ -151,8 +150,8 @@
             android:layout_marginBottom="12dp"
             android:layout_marginRight="12dp"
             android:layout_marginTop="12dp"
-            android:visibility="gone"
             android:clickable="false"
+            android:visibility="gone"
             app:srcCompat="@drawable/ic_edit" />
 
         <TextView

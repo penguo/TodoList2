@@ -1,6 +1,7 @@
 package com.pepg.todolist;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,15 +13,20 @@ import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.support.v7.app.NotificationCompat;
 import android.transition.ChangeBounds;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.inputmethod.InputMethodManager;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
+import com.pepg.todolist.DataBase.AlarmData;
 import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.Fragment.SettingsFragment;
 
+import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
@@ -38,8 +44,9 @@ public class Manager {
 
     // setting option
     public static boolean isAnimationActive;
-    public static int sorttype;
     public static boolean isViewSubTitle;
+    public static boolean isOnFastAdd;
+    public static boolean notViewPastData;
 
     public static String[] strings;
     public static Calendar todayCal, readCal, startCal;
@@ -50,8 +57,9 @@ public class Manager {
         SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
 
         isAnimationActive = mySharedPreferences.getBoolean(SettingsFragment.KEY_ANIMATION, true);
-//        sorttype = mySharedPreferences.getInt(SettingsFragment.KEY_SORTLIST, 1);
         isViewSubTitle = mySharedPreferences.getBoolean(SettingsFragment.KEY_ISVIEWSUBTITLE, true);
+        isOnFastAdd = mySharedPreferences.getBoolean(SettingsFragment.KEY_FASTADD, true);
+        notViewPastData = mySharedPreferences.getBoolean(SettingsFragment.KEY_NOTVIEWPASTDATA, false);
     }
 
     public static int getDrawableResId(String resName) {
@@ -240,5 +248,24 @@ public class Manager {
 
         NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(1234, builder.build());
+    }
+
+
+    public static void alarmSet(Activity activity, DBManager dbManager) {
+        ArrayList<AlarmData> list = dbManager.getAlarmValue();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getCurrentState() == 0) {
+                strings = list.get(i).getDate().split("\u002D");
+                readCal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1])-1, Integer.parseInt(strings[2]), Integer.parseInt(strings[3]), Integer.parseInt(strings[4]), 0);
+
+                AlarmManager alarmManager = (AlarmManager) activity.getSystemService(ALARM_SERVICE);
+                Intent intent = new Intent("com.pepg.alarm.ALARM_START");
+                intent.putExtra("_id", list.get(i).getId());
+                PendingIntent pIntent = PendingIntent.getBroadcast(activity, 0, intent, 0);
+                Log.e("CHECK","OK"+readCal.get(Calendar.YEAR)+readCal.get(Calendar.MONTH)+readCal.get(Calendar.DATE)+readCal.get(Calendar.HOUR)+readCal.get(Calendar.MINUTE));
+                alarmManager.set(AlarmManager.RTC_WAKEUP, readCal.getTimeInMillis(), pIntent);
+                list.get(i).setCurrentState(1);
+            }
+        }
     }
 }

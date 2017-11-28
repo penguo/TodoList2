@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/xml_item"
     android:orientation="vertical"
+    android:transitionName="layout_head"
+    android:translationZ="8dp"
     tools:context="com.pepg.todolist.InfoActivity">
 
     <android.support.v7.widget.Toolbar

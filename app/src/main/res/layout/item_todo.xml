@@ -46,7 +46,7 @@
         android:minHeight="72dp"
         android:orientation="horizontal"
         android:transitionName="layout_head"
-        android:translationZ="1dp">
+        android:translationZ="8dp">
 
         <LinearLayout
             android:id="@+id/todo_layout_bg"

@@ -16,7 +16,6 @@ import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.InfoActivity;
 import com.pepg.todolist.Manager;
 import com.pepg.todolist.Optional.SmoothCheckBox;
-import com.pepg.todolist.UpdateActivity;
 
 import com.pepg.todolist.R;
 
@@ -58,9 +57,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvDate;
-        View includePB;
-        RoundCornerProgressBar pb;
+        TextView tvTitle, tvMemo;
         SmoothCheckBox scb;
         LinearLayout layoutTop;
         boolean isSet;
@@ -69,9 +66,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
         public ViewHolder(View itemView) {
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.semi_tv_title);
-            tvDate = (TextView) itemView.findViewById(R.id.semi_tv_date);
-            includePB = itemView.findViewById(R.id.semi_pb);
-            pb = (RoundCornerProgressBar) includePB.findViewById(R.id.progressBar);
+            tvMemo = (TextView) itemView.findViewById(R.id.semi_tv_memo);
             scb = (SmoothCheckBox) itemView.findViewById(R.id.semi_scb);
             layoutTop = (LinearLayout) itemView.findViewById(R.id.semi_layout);
             layoutEditMode = (FrameLayout)itemView.findViewById(R.id.semi_editmode);
@@ -91,9 +86,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
 //        holder.ivWeight.setImageResource(Manager.getDrawableResId("letter" + dbManager.DATA_semi_WEIGHT));
         holder.isSet = false;
         holder.tvTitle.setText(DBManager.DATA_semi_TITLE);
-        holder.tvDate.setText(DBManager.DATA_semi_DATE);
-        holder.pb.setMax(DBManager.DATA_semi_ACHMAX);
-        holder.pb.setProgress(DBManager.DATA_semi_ACH);
+        holder.tvMemo.setText(DBManager.DATA_semi_MEMO);
         holder.scb.setClickable(false);
         if (DBManager.DATA_semi_ACH == 100) {
             holder.scb.setChecked(true);
@@ -114,7 +107,6 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
                             DBManager.DATA_semi_ACH = 0;
                         }
                         dbManager.semiUpdateSimply();
-                        holder.pb.setProgress(DBManager.DATA_semi_ACH);
                         dbManager.getValue("_id", parentId);
                         if(currentClassName.equals("InfoActivity")){
                             ((InfoActivity) activity).updateAch();
@@ -134,9 +126,6 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (currentClassName.equals("UpdateActivity")) {
-                        ((UpdateActivity) activity).clearFocus();
-                    }
                     UpdateSemi us = new UpdateSemi(SemiListRcvAdapter.this, activity, dbManager);
                     dbManager.getSemiValue("_position", position);
                     us.updateSemi(DBManager.DATA_semi_id, activity, false);
@@ -178,9 +167,6 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
             switch(currentClassName){
                 case("InfoActivity"):
                     ((InfoActivity)activity).updateAch();
-                    break;
-                case("UpdateActivity"):
-                    ((UpdateActivity)activity).updateAch();
                     break;
             }
         }
