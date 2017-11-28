@@ -8,46 +8,56 @@
     tools:context="com.pepg.todolist.AddguideActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
+        android:theme="@android:style/Widget.Material.Toolbar"
+        android:transitionName="toolbar"
+        android:translationZ="0dp"
         app:contentInsetStart="0dp">
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp">
 
-            <LinearLayout
+            <android.support.design.widget.CoordinatorLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_marginRight="16dp"
+                android:layout_weight="1">
 
                 <ImageButton
                     android:id="@+id/aguide_btn_return"
                     style="@style/icon"
-                    app:srcCompat="@drawable/ic_undo" />
+                    android:layout_gravity="left|center_vertical"
+                    app:srcCompat="@drawable/ic_arrow_back" />
 
                 <TextView
                     style="@style/ToolbarTitle"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="72dp"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Add new Todo" />
+                    android:gravity="center_vertical"
+                    android:text="Add new Todo"
+                    android:visibility="visible" />
 
-                <ImageButton
-                    android:id="@+id/aguide_btn_save"
-                    style="@style/icon"
-                    app:srcCompat="@drawable/ic_save" />
 
-            </LinearLayout>
+            </android.support.design.widget.CoordinatorLayout>
+
+            <ImageButton
+                android:id="@+id/aguide_btn_save"
+                style="@style/icon"
+                android:layout_gravity="right|center_vertical"
+                app:srcCompat="@drawable/ic_save" />
 
         </LinearLayout>
     </android.support.v7.widget.Toolbar>

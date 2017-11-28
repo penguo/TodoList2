@@ -4,32 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
+    android:background="@drawable/xml_item"
     android:elevation="1dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="12dp">
 
     <TextView
-        android:id="@+id/textView6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
         android:gravity="center"
-        android:text="언제까지 해야하나요?"
-        android:textSize="25sp" />
+        android:text="구체적으로 무엇을 해야 하나요?"
+        android:textSize="24sp" />
 
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/xml_border"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/fs3_rcv"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <include
+                android:id="@+id/fs3_include"
+                layout="@layout/include_semi"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+        </LinearLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
 
 </LinearLayout>

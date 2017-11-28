@@ -413,6 +413,14 @@ public class DBManager extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void updateAlarmCurrent(int alarmId, int currentState){
+        db = getWritableDatabase();
+        db.execSQL(" UPDATE ALARM SET " +
+                "CURRENT = " + currentState +"" +
+                "WHERE _id = " + alarmId + " ; ");
+        db.close();
+    }
+
     public void deleteAlarm(int alarmId) {
         db = getWritableDatabase();
         db.execSQL("DELETE FROM ALARM WHERE _alarmId = " + alarmId + ";");

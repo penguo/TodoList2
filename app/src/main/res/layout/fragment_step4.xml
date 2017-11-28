@@ -5,37 +5,98 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="10dp"
+    android:background="@drawable/xml_item"
     android:elevation="1dp"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="구체적으로 무엇을 해야 하나요?"
-        android:textSize="25sp" />
-
-    <Button
-        android:id="@+id/fs4_btn_save"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save" />
+        android:text="알람 / 메모 설정"
+        android:textSize="24sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/xml_edititem"
+        android:minHeight="72dp"
+        android:orientation="horizontal"
+        android:transitionName="layout_date"
+        android:translationZ="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
             <TextView
-                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="메모:"
+                android:textSize="16sp"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left|center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp">
+
+                    <TextView
+                        android:id="@+id/fs4_tv_memo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MEMO VIEW POINT"
+                        android:textSize="16sp"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+                <ImageView
+                    style="@style/icon"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@null"
+                    app:srcCompat="@drawable/ic_edit_black" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:clipToPadding="true"
+        android:elevation="0dp"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="8dp">
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="// "
@@ -44,16 +105,14 @@
                 android:textStyle="bold|italic" />
 
             <TextView
-                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TODO"
+                android:text="ALARM"
                 android:textColor="@color/colorTodo"
                 android:textSize="18sp"
                 android:textStyle="bold|italic" />
 
             <TextView
-                android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" :"
@@ -63,29 +122,40 @@
 
         </LinearLayout>
 
-        <android.support.design.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        <View
+            style="@style/Divider"
+            android:layout_gravity="bottom" />
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fs4_fab_semiadd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_margin="20dp"
-                android:clickable="true"
-                android:scaleType="centerInside"
-                app:backgroundTint="@color/colorPrimary"
-                app:fabSize="normal"
-                app:srcCompat="@drawable/ic_add" />
+    </android.support.design.widget.CoordinatorLayout>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/xml_item"
+        android:elevation="0dp">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fdalarm_fab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="20dp"
+            android:clickable="true"
+            android:visibility="visible"
+            app:backgroundTint="@color/colorPrimary"
+            app:fabSize="normal"
+            app:srcCompat="@drawable/ic_add" />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/fdalarm_swipe"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/fs4_rcv"
+                android:id="@+id/fdalarm_rcv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </android.support.design.widget.CoordinatorLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
-
-    </LinearLayout>
 </LinearLayout>

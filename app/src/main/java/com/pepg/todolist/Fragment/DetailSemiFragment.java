@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -42,6 +43,7 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
     FloatingActionButton fab;
     TextView tvAch;
     RoundCornerProgressBar pb;
+    ImageButton btnLibraryAdd;
 
     public DetailSemiFragment() {
     }
@@ -59,6 +61,7 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
         rcvSemi = (RecyclerView) includeSemi.findViewById(R.id.semi_rcv);
         swipe = (SwipeRefreshLayout) includeSemi.findViewById(R.id.semi_swipe);
         fab = (FloatingActionButton) includeSemi.findViewById(R.id.semi_fab);
+        btnLibraryAdd = (ImageButton) includeSemi.findViewById(R.id.semi_btn_libraryadd);
 
         layoutHead = (LinearLayout) view.findViewById(R.id.fdsemi_layout_head);
         tvAch = (TextView) view.findViewById(R.id.fdsemi_tv_ach);
@@ -100,6 +103,12 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
                 us.updateSemi(id, activity, true);
             }
         });
+        btnLibraryAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Manager.callSemiLibraryAddLayout(id, activity, dbManager, semiRcvAdapter);
+            }
+        });
 
         onRefresh();
         setData();
@@ -126,8 +135,10 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
     public void checkEditMode() {
         if (!Manager.editMode) {
             fab.setVisibility(View.GONE);
+            btnLibraryAdd.setVisibility(View.GONE);
         } else {
             fab.setVisibility(View.VISIBLE);
+            btnLibraryAdd.setVisibility(View.VISIBLE);
         }
         onRefresh();
     }

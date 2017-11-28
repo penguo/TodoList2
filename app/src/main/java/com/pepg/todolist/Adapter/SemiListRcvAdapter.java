@@ -86,7 +86,12 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
 //        holder.ivWeight.setImageResource(Manager.getDrawableResId("letter" + dbManager.DATA_semi_WEIGHT));
         holder.isSet = false;
         holder.tvTitle.setText(DBManager.DATA_semi_TITLE);
-        holder.tvMemo.setText(DBManager.DATA_semi_MEMO);
+        if(DBManager.DATA_semi_MEMO.equals("")){
+            holder.tvMemo.setVisibility(View.GONE);
+        }else{
+            holder.tvMemo.setVisibility(View.VISIBLE);
+            holder.tvMemo.setText(DBManager.DATA_semi_MEMO);
+        }
         holder.scb.setClickable(false);
         if (DBManager.DATA_semi_ACH == 100) {
             holder.scb.setChecked(true);

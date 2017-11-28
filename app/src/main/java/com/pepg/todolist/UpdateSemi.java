@@ -4,14 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
 import com.pepg.todolist.DataBase.DBManager;
@@ -38,7 +35,7 @@ public class UpdateSemi implements View.OnClickListener {
         context = cont;
 
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout updateLayout = (LinearLayout) li.inflate(R.layout.semi_update, null);
+        LinearLayout updateLayout = (LinearLayout) li.inflate(R.layout.update_semi, null);
         final EditText title = (EditText) updateLayout.findViewById(R.id.semiup_et_title);
         final EditText memo = (EditText) updateLayout.findViewById(R.id.semiup_et_memo);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

@@ -26,6 +26,7 @@ public class SettingsFragment extends PreferenceFragment {
     public static final String KEY_ISVIEWSUBTITLE = "pref_isviewsubtitle";
     public static final String KEY_FASTADD = "pref_fastadd";
     public static final String KEY_NOTVIEWPASTDATA = "pref_notviewpastdata";
+    public static final String KEY_ADDTIMETYPE = "pref_addtimetype";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

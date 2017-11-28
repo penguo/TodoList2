@@ -114,7 +114,8 @@ public class AlarmRcvAdapter extends RecyclerView.Adapter<AlarmRcvAdapter.ViewHo
     private void removeItemView(int position) {
         dbManager.deleteAlarm(list.get(position).getAlarmId());
         notifyItemRemoved(position);
-        refresh();
+        list = dbManager.getAlarmOnesValue(id);
+        notifyItemRangeChanged(position, dbManager.getAlarmSize(id));
     }
 
     public void refresh() {

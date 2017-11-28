@@ -15,31 +15,46 @@
  */
 package com.pepg.todolist.Fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import com.pepg.todolist.Adapter.SemiListRcvAdapter;
 import com.pepg.todolist.Adapter.SimpleRcvAdapter;
 
 import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.MainActivity;
+import com.pepg.todolist.Manager;
 import com.pepg.todolist.R;
+import com.pepg.todolist.UpdateSemi;
 
 /**
  * author @Fobid
  */
 
-public class Step3Fragment extends Fragment {
+public class Step3Fragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    DBManager dbM;
+    View includeSemi;
+    DBManager dbManager;
     RecyclerView rcvFs3;
-    SimpleRcvAdapter simpleRcvAdapter;
+    SemiListRcvAdapter semiRcvAdapter;
+    Activity activity;
+    int id;
+    SwipeRefreshLayout swipe;
+    FloatingActionButton fab;
+    UpdateSemi us;
+    ImageButton btnLibraryAdd;
 
     public Step3Fragment() {
     }
@@ -52,18 +67,56 @@ public class Step3Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_step3, container, false);
-
-        dbM = new DBManager(this.getContext(), "todolist2.db", null, MainActivity.DBVERSION);
-
-        rcvFs3 = (RecyclerView) layout.findViewById(R.id.fs3_rcv);
-        LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(getContext());
-        rcvFs3.setLayoutManager(rcvLayoutManager);
-        simpleRcvAdapter = new SimpleRcvAdapter(dbM, this.getActivity(), "date");
-        rcvFs3.setAdapter(simpleRcvAdapter);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), rcvLayoutManager.getOrientation());
-        rcvFs3.addItemDecoration(dividerItemDecoration);
+        activity = getActivity();
+        includeSemi = layout.findViewById(R.id.fs3_include);
+        rcvFs3 = (RecyclerView) includeSemi.findViewById(R.id.semi_rcv);
+        swipe = (SwipeRefreshLayout) includeSemi.findViewById(R.id.semi_swipe);
+        fab = (FloatingActionButton) includeSemi.findViewById(R.id.semi_fab);
+        btnLibraryAdd = (ImageButton) includeSemi.findViewById(R.id.semi_btn_libraryadd);
 
         return layout;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        dbManager = new DBManager(activity, "todolist2.db", null, MainActivity.DBVERSION);
+
+        LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(activity);
+        rcvFs3.setLayoutManager(rcvLayoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(activity, rcvLayoutManager.getOrientation());
+        rcvFs3.addItemDecoration(dividerItemDecoration);
+        semiRcvAdapter = new SemiListRcvAdapter(dbManager, activity, id, true);
+        rcvFs3.setAdapter(semiRcvAdapter);
+
+        us = new UpdateSemi(semiRcvAdapter, activity, dbManager);
+
+        swipe.setColorSchemeResources(
+                R.color.colorPrimary,
+                android.R.color.holo_red_light,
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_orange_light
+        );
+        swipe.setOnRefreshListener(this);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                us.updateSemi(id, activity, true);
+            }
+        });
+        btnLibraryAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Manager.callSemiLibraryAddLayout(id, activity, dbManager, semiRcvAdapter);
+            }
+        });
+    }
+
+    @Override
+    public void onRefresh() {
+        semiRcvAdapter.refresh();
+        swipe.setRefreshing(false);
+    }
 }

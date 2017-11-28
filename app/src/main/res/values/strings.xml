@@ -1,13 +1,6 @@
 <resources>
     <string name="app_name">TodoList</string>
 
-    <string-array name="titles">
-        <item>제목</item>
-        <item>카테고리</item>
-        <item>최종날짜</item>
-        <item>상세내용</item>
-    </string-array>
-
     <string name="new_category">새로운 카테고리</string>
     <string name="new_date">직접 설정</string>
     <string name="date_forever">살아가면서</string>
@@ -28,6 +21,18 @@
         <item>종료날짜 순</item>
         <item>시작날짜 순</item>
         <item>D-day 순</item>
+    </string-array>
+
+    <string-array name="titles">
+        <item>분류/제목</item>
+        <item>종류/날짜</item>
+        <item>상세내용</item>
+        <item>알림설정</item>
+    </string-array>
+
+    <string-array name="addType">
+        <item>Type Picker</item>
+        <item>Type Spinner</item>
     </string-array>
 
 </resources>

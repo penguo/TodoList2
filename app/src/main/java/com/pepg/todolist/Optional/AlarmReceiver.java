@@ -24,12 +24,8 @@ import com.pepg.todolist.R;
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Toast.makeText(context, "yeah", Toast.LENGTH_SHORT).show();
-        Log.e("YY", "YY");
         int id = intent.getIntExtra("_id", -1);
         final DBManager dbManager = new DBManager(context, "todolist2.db", null, MainActivity.DBVERSION);
         Manager.notificationInfo(context, context.getResources(), id, dbManager);
-
-//        throw new UnsupportedOperationException("Not yet implemented");
     }
 }

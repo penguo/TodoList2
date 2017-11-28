@@ -1,8 +1,10 @@
 package com.pepg.todolist;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +20,7 @@ import com.gigamole.navigationtabstrip.NavigationTabStrip;
 
 public class AddguideActivity extends AppCompatActivity implements View.OnClickListener {
 
-    DBManager dbM = new DBManager(this, "todolist2.db", null, MainActivity.DBVERSION);
+    DBManager dbManager = new DBManager(this, "todolist2.db", null, MainActivity.DBVERSION);
 
     ViewPager vp;
     NavigationTabStrip nts;
@@ -34,10 +36,6 @@ public class AddguideActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_addguide);
 
         activity = this;
-
-        dbM.resetPublicData();
-        dbM.DATA_DATE = getString(R.string.unregistered);
-        dbM.DATA_CATEGORY = getString(R.string.unregistered);
 
         vp = (ViewPager) findViewById(R.id.aguide_vp);
         nts = (NavigationTabStrip) findViewById(R.id.aguide_nts);
@@ -63,14 +61,6 @@ public class AddguideActivity extends AppCompatActivity implements View.OnClickL
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                if (state == 0) {
-                    if (vp.getCurrentItem() != 0) {
-                        dbM.DATA_TITLE = fs1.getDataTitle();
-                        Manager.controlKeyboard(false, activity);
-                    } else {
-                        Manager.controlKeyboard(true, activity);
-                    }
-                }
             }
         });
 
@@ -91,7 +81,7 @@ public class AddguideActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void save() {
-        dbM.insertSimply();
+        dbManager.insertSimply();
         setResult(RESULT_OK);
         finish();
     }
@@ -128,7 +118,23 @@ public class AddguideActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void onBackPressed() {
-        dbM.deleteDummyData_Semi();
-        finish();
+        AlertDialog.Builder dialog = new AlertDialog.Builder(activity);
+        dialog.setMessage("정말로 삭제하시겠습니까?");
+        dialog.setCancelable(true);
+        dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dbManager.deleteDummyData_Semi();
+                finish();
+                dialog.dismiss();
+            }
+        });
+        dialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 }

@@ -92,6 +92,10 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent;
         switch (v.getId()) {
             case (R.id.listA_fab):
+                dbManager.deleteDummyData_Semi();
+                dbManager.resetPublicData();
+                dbManager.DATA_DATE = getString(R.string.unregistered);
+                dbManager.DATA_CATEGORY = getString(R.string.unregistered);
                 intent = new Intent(ListActivity.this, AddguideActivity.class);
                 intent.putExtra("_id", 0);
                 startActivityForResult(intent, Manager.RC_LIST_TO_ADDGUIDE);

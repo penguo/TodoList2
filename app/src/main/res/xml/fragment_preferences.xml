@@ -25,5 +25,11 @@
             android:defaultValue="true"
             android:key="pref_fastadd"
             android:title="빠른 추가 도움" />
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/addType"
+            android:entryValues="@array/addType"
+            android:key="pref_addtimetype"
+            android:title="시간 선택창 타입 설정" />
     </PreferenceCategory>
 </PreferenceScreen>

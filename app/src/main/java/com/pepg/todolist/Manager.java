@@ -6,22 +6,27 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
 import android.transition.ChangeBounds;
-import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import com.pepg.todolist.Adapter.SemiListRcvAdapter;
 import com.pepg.todolist.DataBase.AlarmData;
 import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.Fragment.SettingsFragment;
@@ -47,6 +52,8 @@ public class Manager {
     public static boolean isViewSubTitle;
     public static boolean isOnFastAdd;
     public static boolean notViewPastData;
+    public static int addTimeType;
+
 
     public static String[] strings;
     public static Calendar todayCal, readCal, startCal;
@@ -60,6 +67,7 @@ public class Manager {
         isViewSubTitle = mySharedPreferences.getBoolean(SettingsFragment.KEY_ISVIEWSUBTITLE, true);
         isOnFastAdd = mySharedPreferences.getBoolean(SettingsFragment.KEY_FASTADD, true);
         notViewPastData = mySharedPreferences.getBoolean(SettingsFragment.KEY_NOTVIEWPASTDATA, false);
+        addTimeType = mySharedPreferences.getInt(SettingsFragment.KEY_ADDTIMETYPE, 1);
     }
 
     public static int getDrawableResId(String resName) {
@@ -256,16 +264,88 @@ public class Manager {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getCurrentState() == 0) {
                 strings = list.get(i).getDate().split("\u002D");
-                readCal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1])-1, Integer.parseInt(strings[2]), Integer.parseInt(strings[3]), Integer.parseInt(strings[4]), 0);
+                readCal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]), Integer.parseInt(strings[3]), Integer.parseInt(strings[4]), 0);
 
                 AlarmManager alarmManager = (AlarmManager) activity.getSystemService(ALARM_SERVICE);
                 Intent intent = new Intent("com.pepg.alarm.ALARM_START");
                 intent.putExtra("_id", list.get(i).getId());
-                PendingIntent pIntent = PendingIntent.getBroadcast(activity, 0, intent, 0);
-                Log.e("CHECK","OK"+readCal.get(Calendar.YEAR)+readCal.get(Calendar.MONTH)+readCal.get(Calendar.DATE)+readCal.get(Calendar.HOUR)+readCal.get(Calendar.MINUTE));
+                PendingIntent pIntent = PendingIntent.getBroadcast(activity, list.get(i).getAlarmId(), intent, 0);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, readCal.getTimeInMillis(), pIntent);
                 list.get(i).setCurrentState(1);
             }
         }
     }
+
+    public static void callSetTitleLayout(Activity activity, DBManager dbManager, int id) {
+        LayoutInflater li = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout updateLayout = (LinearLayout) li.inflate(R.layout.update_edittext1, null);
+        final EditText title = (EditText) updateLayout.findViewById(R.id.upitem_et);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        AlertDialog dialog;
+
+        builder.setTitle("제목을 입력해주세요.");
+        if (id == -1) {
+            title.setText("");
+        } else {
+            dbManager.getValue("_id", id);
+            title.setText(DBManager.DATA_TITLE);
+        }
+        builder.setView(updateLayout);
+
+        builder.setPositiveButton("저장", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                DBManager.DATA_TITLE = title.getText().toString();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        // Dialog
+        dialog = builder.create(); //builder.show()를 create하여 dialog에 저장하는 방식.
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        dialog.show();
+    }
+
+    public static void callSemiLibraryAddLayout(final int parentId, Activity activity, final DBManager dbManager, final SemiListRcvAdapter semiListRcvAdapter) {
+        LayoutInflater li = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout updateLayout = (LinearLayout) li.inflate(R.layout.update_edittext2, null);
+        final EditText title = (EditText) updateLayout.findViewById(R.id.upitem2_et);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        AlertDialog dialog;
+
+        builder.setTitle("세부적으로 할 일을 입력해주세요.");
+        builder.setMessage("행바꿈으로 항목들이 분리됩니다.");
+        title.setText("");
+        builder.setView(updateLayout);
+
+        builder.setPositiveButton("저장", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                strings = title.getText().toString().split("\n");
+                for (int i = 0; i < strings.length; i++) {
+                    dbManager.semiInsert(parentId, strings[i], "");
+                }
+                semiListRcvAdapter.refresh();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        // Dialog
+        dialog = builder.create(); //builder.show()를 create하여 dialog에 저장하는 방식.
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        dialog.show();
+    }
+
 }

@@ -4,38 +4,147 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:elevation="1dp"
-    android:orientation="vertical">
+    android:background="@drawable/xml_item"
+    android:elevation="0dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:padding="12dp">
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:orientation="vertical">
+        android:layout_marginBottom="12dp"
+        android:gravity="center"
+        android:text="무엇을 해야 하나요?"
+        android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/textView"
+    <LinearLayout
+        android:id="@+id/fs1_layout_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/xml_edititem"
+        android:minHeight="48dp"
+        android:orientation="horizontal"
+        android:transitionName="layout_date"
+        android:translationZ="4dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:gravity="center"
-            android:text="무엇을 해야 하나요?"
-            android:textSize="25sp" />
+            android:layout_gravity="center_vertical"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
-        <Spinner
-            android:id="@+id/fs1_spinner"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="분류:"
+                android:textSize="16sp"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left|center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp">
+
+                    <TextView
+                        android:id="@+id/fs1_tv_category"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="미지정"
+                        android:textSize="18sp"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+                <ImageView
+                    style="@style/icon"
+                    android:layout_gravity="center_vertical"
+                    android:background="@null"
+                    app:srcCompat="@drawable/ic_edit_black" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fs1_layout_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/xml_edititem"
+        android:minHeight="72dp"
+        android:orientation="horizontal"
+        android:transitionName="layout_date"
+        android:translationZ="4dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp" />
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
-        <EditText
-            android:id="@+id/fs1_et"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            android:inputType="text"
-            android:text=""
-            android:textSize="18sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="제목:"
+                android:textSize="16sp"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left|center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="8dp">
+
+                    <TextView
+                        android:id="@+id/fs1_tv_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TITLE VIEW POINT"
+                        android:textSize="18sp"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+                <ImageView
+                    style="@style/icon"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@null"
+                    app:srcCompat="@drawable/ic_edit_black" />
+            </LinearLayout>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
