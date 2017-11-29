@@ -12,19 +12,26 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
 import android.transition.ChangeBounds;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
 import com.pepg.todolist.DataBase.AlarmData;
@@ -52,7 +59,7 @@ public class Manager {
     public static boolean isViewSubTitle;
     public static boolean isOnFastAdd;
     public static boolean notViewPastData;
-    public static int addTimeType;
+    public static String addTimeType;
 
 
     public static String[] strings;
@@ -67,7 +74,7 @@ public class Manager {
         isViewSubTitle = mySharedPreferences.getBoolean(SettingsFragment.KEY_ISVIEWSUBTITLE, true);
         isOnFastAdd = mySharedPreferences.getBoolean(SettingsFragment.KEY_FASTADD, true);
         notViewPastData = mySharedPreferences.getBoolean(SettingsFragment.KEY_NOTVIEWPASTDATA, false);
-        addTimeType = mySharedPreferences.getInt(SettingsFragment.KEY_ADDTIMETYPE, 1);
+        addTimeType = mySharedPreferences.getString(SettingsFragment.KEY_ADDTIMETYPE, "");
     }
 
     public static int getDrawableResId(String resName) {
@@ -192,35 +199,6 @@ public class Manager {
         return changeBoundsTransition;
     }
 
-
-    public static void notificationSomethings(Context context, Resources res, int id) {
-
-        Intent notificationIntent = new Intent(context, InfoActivity.class);
-        notificationIntent.putExtra("notificationId", id); //전달할 값
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-
-        builder.setContentTitle("상태바 드래그시 보이는 타이틀")
-                .setContentText("상태바 드래그시 보이는 서브타이틀")
-                .setTicker("상태바 한줄 메시지")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher))
-                .setContentIntent(contentIntent)
-                .setAutoCancel(true)
-                .setWhen(System.currentTimeMillis())
-                .setDefaults(Notification.DEFAULT_ALL);
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            builder.setCategory(Notification.CATEGORY_MESSAGE)
-                    .setPriority(Notification.PRIORITY_HIGH)
-                    .setVisibility(Notification.VISIBILITY_PUBLIC);
-        }
-
-        NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.notify(1234, builder.build());
-    }
-
     public static void notificationInfo(Context context, Resources res, int id, DBManager dbManager) {
 
         dbManager.getValue("_id", id);
@@ -276,7 +254,7 @@ public class Manager {
         }
     }
 
-    public static void callSetTitleLayout(Activity activity, DBManager dbManager, int id) {
+    public static void callSetTitleLayout(Activity activity, DBManager dbManager, int id, final TextView tvTitle) {
         LayoutInflater li = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout updateLayout = (LinearLayout) li.inflate(R.layout.update_edittext1, null);
         final EditText title = (EditText) updateLayout.findViewById(R.id.upitem_et);
@@ -296,6 +274,7 @@ public class Manager {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 DBManager.DATA_TITLE = title.getText().toString();
+                tvTitle.setText(DBManager.DATA_TITLE);
                 dialog.dismiss();
             }
         });
@@ -312,7 +291,7 @@ public class Manager {
         dialog.show();
     }
 
-    public static void callSemiLibraryAddLayout(final int parentId, Activity activity, final DBManager dbManager, final SemiListRcvAdapter semiListRcvAdapter) {
+    public static void callSemiLibraryAddLayout(Activity activity, final DBManager dbManager, final int parentId, final SemiListRcvAdapter semiListRcvAdapter) {
         LayoutInflater li = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout updateLayout = (LinearLayout) li.inflate(R.layout.update_edittext2, null);
         final EditText title = (EditText) updateLayout.findViewById(R.id.upitem2_et);
@@ -332,6 +311,38 @@ public class Manager {
                     dbManager.semiInsert(parentId, strings[i], "");
                 }
                 semiListRcvAdapter.refresh();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        // Dialog
+        dialog = builder.create(); //builder.show()를 create하여 dialog에 저장하는 방식.
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        dialog.show();
+    }
+
+    public static void callMemoLayout(Activity activity, final TextView tvMemo){
+        LayoutInflater li = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout updateLayout = (LinearLayout) li.inflate(R.layout.update_edittext2, null);
+        final EditText editText = (EditText) updateLayout.findViewById(R.id.upitem2_et);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        AlertDialog dialog;
+
+        builder.setTitle("메모");
+        editText.setText("");
+        builder.setView(updateLayout);
+
+        builder.setPositiveButton("저장", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                DBManager.DATA_MEMO = editText.getText().toString();
+                tvMemo.setText(DBManager.DATA_MEMO);
                 dialog.dismiss();
             }
         });

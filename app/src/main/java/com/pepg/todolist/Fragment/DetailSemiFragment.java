@@ -106,7 +106,7 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
         btnLibraryAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Manager.callSemiLibraryAddLayout(id, activity, dbManager, semiRcvAdapter);
+                Manager.callSemiLibraryAddLayout(activity, dbManager, id, semiRcvAdapter);
             }
         });
 

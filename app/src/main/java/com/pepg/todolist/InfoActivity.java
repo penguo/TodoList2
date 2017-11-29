@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -34,8 +35,8 @@ import java.util.List;
 public class InfoActivity extends AppCompatActivity implements View.OnClickListener {
 
     View incHead;
-    TextView tvToolbarTitle, tvAch, tvTitle, tvCategory, tvDday;
-    LinearLayout layoutHead, layoutData, layoutDataEditMode, layoutFragment;
+    TextView tvToolbarTitle, tvAch, tvTitle, tvCategory, tvDday, tvTitleEdit, tvCategoryEdit;
+    LinearLayout layoutHead, layoutData, layoutDataEditMode, layoutFragment, layoutCategoryEdit, layoutTitleEdit;
     RoundCornerProgressBar pbHead;
     int id;
     final DBManager dbManager = new DBManager(this, "todolist2.db", null, MainActivity.DBVERSION);
@@ -44,12 +45,10 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     FrameLayout frameLayoutHead;
     Toolbar toolbar;
     ImageButton btnReturn, btnEditMode, btnOverflow, btnHeadEdit;
-    EditText etTitle;
-    Spinner spinnerCategory, spinnerMenu;
-    List<String> itemsCategory, itemsMenu;
+    Spinner spinnerMenu;
+    List<String> itemsMenu;
     AlertDialog.Builder dialog;
     Activity activity;
-    String selectedItem;
     CoordinatorLayout layoutAch;
     boolean cancelEditMode;
     ImageView ivSchedule;
@@ -83,10 +82,12 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         layoutHead = incHead.findViewById(R.id.head_layout);
         layoutData = incHead.findViewById(R.id.head_layout_data);
         layoutDataEditMode = incHead.findViewById(R.id.head_layout_data_editmode);
-        etTitle = incHead.findViewById(R.id.head_et_title);
-        spinnerCategory = incHead.findViewById(R.id.head_spinner);
         layoutAch = incHead.findViewById(R.id.head_layout_ach);
         ivSchedule = incHead.findViewById(R.id.head_iv_schedule);
+        layoutCategoryEdit = incHead.findViewById(R.id.head_layout_category_edit);
+        layoutTitleEdit = incHead.findViewById(R.id.head_layout_title_edit);
+        tvCategoryEdit = incHead.findViewById(R.id.head_tv_category_edit);
+        tvTitleEdit = incHead.findViewById(R.id.head_tv_title_edit);
 
         fragmentManager = getFragmentManager();
 
@@ -94,25 +95,9 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         btnEditMode.setOnClickListener(this);
         btnOverflow.setOnClickListener(this);
         layoutHead.setOnClickListener(this);
+        layoutCategoryEdit.setOnClickListener(this);
+        layoutTitleEdit.setOnClickListener(this);
 
-        itemsCategory = dbManager.getSettingList("category");
-        itemsCategory.add(getString(R.string.new_category));
-        final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(
-                this,
-                R.layout.custom_spinner_toolbar,
-                itemsCategory);
-        spinnerCategory.setAdapter(spinnerAdapter);
-        spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedItem = itemsCategory.get(i);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
 
         itemsMenu = new ArrayList<>();
         itemsMenu.add("상태창에 고정");
@@ -194,13 +179,17 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
             case (R.id.head_btn_edit):
                 resetHeadEdit();
                 break;
+            case (R.id.head_layout_category_edit):
+                DialogSelectOption();
+                break;
+            case (R.id.head_layout_title_edit):
+                Manager.callSetTitleLayout(activity, dbManager, id, tvTitleEdit);
+                break;
         }
     }
 
     public void resetHeadEdit() {
         if (!cancelEditMode) {
-            DBManager.DATA_TITLE = etTitle.getText().toString();
-            DBManager.DATA_CATEGORY = selectedItem;
             dbManager.updateSimply();
             dbManager.getValue("_id", id);
         }
@@ -229,13 +218,8 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
             tvTitle.setText(DBManager.DATA_CATEGORY);
             tvCategory.setVisibility(View.GONE);
         }
-        etTitle.setText(DBManager.DATA_TITLE);
-        for (int i = 0; i < itemsCategory.size(); i++) {
-            if (itemsCategory.get(i).equals(DBManager.DATA_CATEGORY)) {
-                selectedItem = DBManager.DATA_CATEGORY;
-                spinnerCategory.setSelection(i);
-            }
-        }
+        tvTitleEdit.setText(DBManager.DATA_TITLE);
+        tvCategoryEdit.setText(DBManager.DATA_CATEGORY);
         setDday();
         viewBody();
         Manager.editMode = false;
@@ -301,11 +285,11 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         dbManager.getValue("_id", DBManager.DATA_id);
         pbHead.setProgress(DBManager.DATA_ACH);
         pbHead.setSecondaryProgress(Manager.getSuggestAch(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE));
-        if(DBManager.DATA_DATE.equals(DBManager.DATA_CREATEDATE)){
+        if (DBManager.DATA_DATE.equals(DBManager.DATA_CREATEDATE)) {
             ivSchedule.setVisibility(View.VISIBLE);
             tvAch.setVisibility(View.GONE);
             pbHead.setVisibility(View.GONE);
-        }else{
+        } else {
             tvAch.setText(DBManager.DATA_ACH + "%");
             ivSchedule.setVisibility(View.GONE);
             tvAch.setVisibility(View.VISIBLE);
@@ -354,4 +338,65 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
             super.onBackPressed();
         }
     }
+
+    private void DialogSelectOption() {
+        final List<String> Items = dbManager.getSettingList("category");
+        Items.add(getString(R.string.new_category));
+        final CharSequence[] items = Items.toArray(new String[Items.size()]);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (!items[which].toString().equals(getString(R.string.new_category))) {
+                    DBManager.DATA_CATEGORY = items[which].toString();
+                    tvCategoryEdit.setText(DBManager.DATA_CATEGORY);
+                } else {
+                    DialogAdd();
+                }
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
+
+    private void DialogAdd() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("추가할 카테고리의 이름을 입력해주세요.");
+        final EditText title = new EditText(activity);
+        builder.setView(title);
+        builder.setPositiveButton("완료", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String selected = title.getText().toString();
+                if (!dbManager.isAlreadyResCategory(selected)) {
+                    if (selected.equals("")) {
+                        Toast.makeText(activity, "분류 이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                        selected = activity.getString(R.string.unregistered);
+                    } else {
+                        dbManager.addSetting("category", selected);
+                    }
+                } else {
+                    Toast.makeText(activity, "이미 존재하는 카테고리입니다. 해당 카테고리로 선택되었습니다.", Toast.LENGTH_SHORT).show();
+                }
+                DBManager.DATA_CATEGORY = selected;
+                tvCategoryEdit.setText(DBManager.DATA_CATEGORY);
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        // Dialog
+        AlertDialog dialog;
+        dialog = builder.create(); //builder.show()를 create하여 dialog에 저장하는 방식.
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        dialog.show();
+    }
+
 }

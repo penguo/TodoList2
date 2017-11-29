@@ -86,11 +86,10 @@ public class DBManager extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void insert(String title, String category, String date, int ach, String memo) {
+    public void insert(String title, String category, String date, int ach, String memo, String createDate) {
         if (title.equals("")) {
             title = context.getString(R.string.empty_data);
         }
-        String createDate = Manager.todayDate();
         db = getWritableDatabase();
         db.execSQL(" INSERT INTO TODOLIST VALUES ( " +
                 " null, " +
@@ -133,7 +132,7 @@ public class DBManager extends SQLiteOpenHelper {
     }
 
     public void insertSimply() {
-        insert(DATA_TITLE, DATA_CATEGORY, DATA_DATE, DATA_ACH, DATA_MEMO);
+        insert(DATA_TITLE, DATA_CATEGORY, DATA_DATE, DATA_ACH, DATA_MEMO, DATA_CREATEDATE);
     }
 
     public void update(int id, String title, String category, String date, String createDate, int ach, String memo) {

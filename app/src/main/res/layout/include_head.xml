@@ -112,35 +112,59 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <FrameLayout
+            <LinearLayout
+                android:id="@+id/head_layout_category_edit"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:layout_weight="1"
-                android:background="@color/white05">
+                android:background="@drawable/xml_edititem_alphaup"
+                android:orientation="horizontal">
 
-                <Spinner
-                    android:id="@+id/head_spinner"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/head_tv_category_edit"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </FrameLayout>
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:text="category edit"
+                    android:textSize="16sp" />
 
-            <FrameLayout
+                <ImageButton
+                    style="@style/icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginRight="4dp"
+                    android:clickable="false"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_arrow_dropdown" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/head_layout_title_edit"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
                 android:layout_weight="1"
-                android:background="@color/white05">
+                android:background="@drawable/xml_edititem_alphaup"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/head_et_title"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/head_tv_title_edit"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="text"
-                    android:text="TITLE EDIT POINT"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:text="title edit"
                     android:textSize="18sp" />
-            </FrameLayout>
+
+                <ImageButton
+                    style="@style/icon"
+                    android:clickable="false"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/ic_edit" />
+            </LinearLayout>
 
         </LinearLayout>
 

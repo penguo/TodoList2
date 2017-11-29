@@ -43,12 +43,11 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
     RoundCornerProgressBar pbBody;
     DBManager dbManager;
     LinearLayout layoutDate, layoutAch, layoutAlarm, layoutMemo, layoutBody;
-    ImageView ivZoomAch, ivZoomAlarm, ivZoomMemo, ivEditDate;
+    ImageView ivZoomAch, ivZoomAlarm, ivEditDate, ivEditMemo;
     TextView tvDate, tvDateHead, tvAch, tvMemo, tvAchHead, tvAlarmHead, tvGone, tvStartDate, tvDateMiddle;
     DetailSemiFragment detailSemiFragment;
     DetailAlarmFragment detailAlarmFragment;
     FragmentManager fragmentManager;
-    EditText etMemo;
     final Handler handler = new Handler();
     String result;
     String[] items, strings;
@@ -69,8 +68,8 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         borderAlarm = (View) view.findViewById(R.id.detail_border_alarm);
         ivZoomAch = (ImageView) view.findViewById(R.id.detail_iv_zoom_ach);
         ivZoomAlarm = (ImageView) view.findViewById(R.id.detail_iv_zoom_alarm);
-        ivZoomMemo = (ImageView) view.findViewById(R.id.detail_iv_zoom_memo);
         ivEditDate = (ImageView) view.findViewById(R.id.detail_iv_edit_date);
+        ivEditMemo = (ImageView) view.findViewById(R.id.detail_iv_edit_memo);
 
         layoutBody = (LinearLayout) view.findViewById(R.id.detail_layout_body);
 
@@ -87,8 +86,6 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         layoutAlarm = (LinearLayout) view.findViewById(R.id.detail_layout_alarm);
         layoutMemo = (LinearLayout) view.findViewById(R.id.detail_layout_memo);
 
-        etMemo = (EditText) view.findViewById(R.id.detail_et_memo);
-
         tvGone = (TextView) view.findViewById(R.id.detail_tv_gone);
         return view;
     }
@@ -104,6 +101,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         layoutDate.setOnClickListener(this);
         layoutAch.setOnClickListener(this);
         layoutAlarm.setOnClickListener(this);
+        layoutMemo.setOnClickListener(this);
 
         setData();
         editMode();
@@ -122,7 +120,6 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
             tvDateMiddle.setVisibility(View.GONE);
         }
         tvMemo.setText(DBManager.DATA_MEMO);
-        etMemo.setText(DBManager.DATA_MEMO);
         fragmentManager = getFragmentManager();
         detailSemiFragment = new DetailSemiFragment();
         detailAlarmFragment = new DetailAlarmFragment();
@@ -134,13 +131,12 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
 
     public void editMode() {
         if (!Manager.editMode) {
-            etMemo.setVisibility(View.GONE);
-            DBManager.DATA_MEMO = etMemo.getText().toString();
+            ivEditMemo.setVisibility(View.GONE);
             tvMemo.setVisibility(View.VISIBLE);
             dbManager.updateSimply();
             ivEditDate.setVisibility(View.GONE);
         } else {
-            etMemo.setVisibility(View.VISIBLE);
+            ivEditMemo.setVisibility(View.VISIBLE);
             tvMemo.setVisibility(View.GONE);
             ivEditDate.setVisibility(View.VISIBLE);
         }
@@ -235,6 +231,11 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                 fragmentTransaction.replace(R.id.info_linearlayout_fragment, detailAlarmFragment);
                 fragmentTransaction.commit();
                 fragmentManager.executePendingTransactions();
+                break;
+            case (R.id.detail_layout_memo):
+                if (Manager.editMode) {
+                    Manager.callMemoLayout(activity, tvMemo);
+                }
                 break;
         }
     }

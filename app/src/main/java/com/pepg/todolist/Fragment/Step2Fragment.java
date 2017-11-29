@@ -87,9 +87,10 @@ public class Step2Fragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        layoutSchedule.setOnClickListener(new View.OnClickListener() {
+        layoutTodo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                step = 0;
                 isDateType = 0;
                 if (Manager.isOnFastAdd) {
                     DateSelectOption();
@@ -98,9 +99,10 @@ public class Step2Fragment extends Fragment {
                 }
             }
         });
-        layoutTodo.setOnClickListener(new View.OnClickListener() {
+        layoutSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                step = 0;
                 isDateType = 1;
                 if (Manager.isOnFastAdd) {
                     DateSelectOption();
@@ -112,6 +114,7 @@ public class Step2Fragment extends Fragment {
         layoutDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                step = 0;
                 if (Manager.isOnFastAdd) {
                     DateSelectOption();
                 } else {
@@ -129,12 +132,12 @@ public class Step2Fragment extends Fragment {
             ivCheckSchedule.setVisibility(View.GONE);
         } else if (DBManager.DATA_DATE.equals(DBManager.DATA_CREATEDATE)) { // 일정
             layoutDate.setVisibility(View.VISIBLE);
-            ivCheckTodo.setVisibility(View.VISIBLE);
-            ivCheckSchedule.setVisibility(View.GONE);
+            ivCheckSchedule.setVisibility(View.VISIBLE);
+            ivCheckTodo.setVisibility(View.GONE);
         } else { // 할일
             layoutDate.setVisibility(View.VISIBLE);
-            ivCheckTodo.setVisibility(View.GONE);
-            ivCheckSchedule.setVisibility(View.VISIBLE);
+            ivCheckSchedule.setVisibility(View.GONE);
+            ivCheckTodo.setVisibility(View.VISIBLE);
         }
         tvDate.setText(DBManager.DATA_DATE);
         if (!DBManager.DATA_DATE.equals(DBManager.DATA_CREATEDATE)) {
@@ -170,6 +173,7 @@ public class Step2Fragment extends Fragment {
                 itemAlready.add(activity.getString(R.string.new_date));
                 break;
         }
+
         items = new String[itemAlready.size()];
         for (int i = 0; i < itemAlready.size(); i++) {
             items[i] = itemAlready.get(i);
@@ -267,6 +271,7 @@ public class Step2Fragment extends Fragment {
         Calendar cal = Calendar.getInstance();
         long now = System.currentTimeMillis();
         Date date = new Date(now);
+
         SimpleDateFormat CurYearFormat = new SimpleDateFormat("yyyy");
         SimpleDateFormat CurMonthFormat = new SimpleDateFormat("MM");
         SimpleDateFormat CurDayFormat = new SimpleDateFormat("dd");
@@ -279,18 +284,20 @@ public class Step2Fragment extends Fragment {
         } else {
             dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(CurYearFormat.format(date).toString()), Integer.parseInt(CurMonthFormat.format(date).toString()) - 1, Integer.parseInt(CurDayFormat.format(date).toString()));
         }
+
+
         switch (isDateType) {
             case (0):
                 if (step == 1) {
-                    dpDialog.setTitle("할 일의 시작 날짜를 선택해주세요.");
+                    dpDialog.setTitle("시작 날짜");
                 } else if (step == 2) {
-                    dpDialog.setTitle("할 일의 종료 날짜를 선택해주세요.");
+                    dpDialog.setTitle("종료 날짜");
                 }
                 break;
             case (1):
-                dpDialog.setTitle("일정 날짜를 선택해주세요.");
                 break;
         }
+
         dpDialog.show();
     }
 

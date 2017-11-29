@@ -119,9 +119,9 @@ public class AddguideActivity extends AppCompatActivity implements View.OnClickL
 
     public void onBackPressed() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(activity);
-        dialog.setMessage("정말로 삭제하시겠습니까?");
+        dialog.setMessage("페이지를 나가면 작성한 내용이 모두 사라집니다.");
         dialog.setCancelable(true);
-        dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+        dialog.setPositiveButton("나가기", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dbManager.deleteDummyData_Semi();

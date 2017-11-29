@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 dbManager.reset();
                 break;
             case (R.id.mainA_btn_daily):
-                Manager.notificationSomethings(this, getResources(), 0);
                 break;
             case (R.id.mainA_tv_title):
                 break;

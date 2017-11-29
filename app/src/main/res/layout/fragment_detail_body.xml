@@ -273,39 +273,36 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="6dp">
 
-                        <TextView
-                            android:id="@+id/detail_tv_memo"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
                             android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:gravity="left|center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingBottom="8dp"
                             android:paddingLeft="12dp"
-                            android:text="MEMO VIEW POINT"
-                            android:textSize="16sp"
-                            android:visibility="visible" />
+                            android:paddingTop="8dp">
 
-                        <EditText
-                            android:id="@+id/detail_et_memo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ems="10"
-                            android:inputType="text"
-                            android:paddingLeft="12dp"
-                            android:text="MEMO VIEW POINT"
-                            android:textSize="16sp"
-                            android:visibility="gone" />
+                            <TextView
+                                android:id="@+id/detail_tv_memo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="MEMO VIEW POINT"
+                                android:textSize="16sp"
+                                android:visibility="visible" />
 
+                        </LinearLayout>
 
                         <ImageView
-                            android:id="@+id/detail_iv_zoom_memo"
+                            android:id="@+id/detail_iv_edit_memo"
                             style="@style/icon"
-                            android:layout_gravity="right"
+                            android:layout_gravity="right|center_vertical"
                             android:layout_marginBottom="12dp"
                             android:layout_marginTop="12dp"
-                            android:layout_weight="1"
                             android:background="@null"
-                            android:visibility="gone"
-                            app:srcCompat="@drawable/ic_zoomin_black" />
+                            app:srcCompat="@drawable/ic_edit_black" />
+
 
                     </android.support.design.widget.CoordinatorLayout>
 

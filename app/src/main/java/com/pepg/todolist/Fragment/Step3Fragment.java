@@ -109,7 +109,7 @@ public class Step3Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         btnLibraryAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Manager.callSemiLibraryAddLayout(id, activity, dbManager, semiRcvAdapter);
+                Manager.callSemiLibraryAddLayout(activity, dbManager, id, semiRcvAdapter);
             }
         });
     }

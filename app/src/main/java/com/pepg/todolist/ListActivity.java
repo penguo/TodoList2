@@ -1,8 +1,16 @@
 package com.pepg.todolist;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -10,6 +18,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -17,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -26,7 +37,7 @@ import com.pepg.todolist.DataBase.DBManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemSelectedListener {
+public class ListActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemSelectedListener, NavigationView.OnNavigationItemSelectedListener {
 
     TextView tvToolbarTitle;
     RecyclerView rcvTodo;
@@ -41,6 +52,10 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     List<String> items;
     ImageButton btnSetting, btnSort;
     boolean isSortView;
+    private String[] mPlanetTitles;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    ActionBarDrawerToggle drawerToggle;
 
     final DBManager dbManager = new DBManager(this, "todolist2.db", null, MainActivity.DBVERSION);
 
@@ -57,9 +72,9 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         spinnerSort = (Spinner) findViewById(R.id.listA_spinner);
         fabAdd = (FloatingActionButton) findViewById(R.id.listA_fab);
         tvToolbarTitle = (TextView) findViewById(R.id.listA_tv_toolbar_title);
-        ivDropdown = (ImageView)findViewById(R.id.listA_iv_dropdown);
-        btnSort = (ImageButton)findViewById(R.id.listA_btn_sort);
-        btnSetting = (ImageButton)findViewById(R.id.listA_btn_setting);
+        ivDropdown = (ImageView) findViewById(R.id.listA_iv_dropdown);
+        btnSort = (ImageButton) findViewById(R.id.listA_btn_sort);
+        btnSetting = (ImageButton) findViewById(R.id.listA_btn_setting);
 
         swipe = (SwipeRefreshLayout) findViewById(R.id.listA_swipe);
         swipe.setColorSchemeResources(
@@ -71,6 +86,17 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         swipe.setOnRefreshListener(this);
         viewSlideOut = AnimationUtils.loadAnimation(this, R.anim.anim_slide_out_up);
         viewSlideIn = AnimationUtils.loadAnimation(this, R.anim.anim_slide_in_up);
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.listA_drawerlayout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
 
         rcvTodo = (RecyclerView) findViewById(R.id.listA_rcv_todo);
         LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(this);
@@ -95,22 +121,31 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 dbManager.deleteDummyData_Semi();
                 dbManager.resetPublicData();
                 dbManager.DATA_DATE = getString(R.string.unregistered);
+                dbManager.DATA_CREATEDATE = getString(R.string.unregistered);
                 dbManager.DATA_CATEGORY = getString(R.string.unregistered);
+
+//                List<Pair<View, String>> pairs = getPairs();
+//                pairs.add(Pair.create((View) fabAdd, "list_fab"));
+//                Bundle options = ActivityOptions.makeSceneTransitionAnimation(this,
+//                        pairs.toArray(new Pair[pairs.size()])).toBundle();
+
                 intent = new Intent(ListActivity.this, AddguideActivity.class);
                 intent.putExtra("_id", 0);
+//                startActivity(intent, options);
                 startActivityForResult(intent, Manager.RC_LIST_TO_ADDGUIDE);
                 break;
-            case(R.id.listA_tv_toolbar_title):
-                if(isSortView){
+            case (R.id.listA_tv_toolbar_title):
+                if (isSortView) {
                     spinnerSort.performClick();
                 }
                 break;
-            case(R.id.listA_btn_setting):
+            case (R.id.listA_btn_setting):
                 intent = new Intent(ListActivity.this, SettingsActivity.class);
                 startActivityForResult(intent, Manager.RC_LIST_TO_SETTINGS);
                 break;
-            case(R.id.listA_btn_sort):
-                spinnerSort.performClick();
+            case (R.id.listA_btn_sort):
+//                spinnerSort.performClick();
+//                mDrawerLayout
                 break;
         }
     }
@@ -150,7 +185,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 onRefresh();
             }
         }
-        if(requestCode == Manager.RC_LIST_TO_SETTINGS){
+        if (requestCode == Manager.RC_LIST_TO_SETTINGS) {
             onRefresh();
         }
     }
@@ -186,7 +221,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public void resetSort(){
+    public void resetSort() {
         DBManager.DATA_SORTTYPE = "DEFAULT";
         DBManager.DATA_SORTTYPEEQUAL = "";
         tvToolbarTitle.setText("TodoList");
@@ -197,10 +232,40 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        if(isSortView){
-            resetSort();
-        }else{
-            finish();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.listA_drawerlayout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            if (isSortView) {
+                resetSort();
+            } else {
+                finish();
+            }
         }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.listA_drawerlayout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

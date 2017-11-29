@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.pepg.todolist.Adapter.AlarmRcvAdapter;
@@ -62,6 +63,8 @@ public class Step4Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
     SwipeRefreshLayout swipe;
     AlarmRcvAdapter alarmRcvAdapter;
     String result;
+    TextView tvMemo;
+    LinearLayout layoutMemo;
 
     public Step4Fragment() {
     }
@@ -80,6 +83,8 @@ public class Step4Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         fabAdd = (FloatingActionButton) layout.findViewById(R.id.fdalarm_fab);
         rcvAlarm = (RecyclerView) layout.findViewById(R.id.fdalarm_rcv);
         swipe = (SwipeRefreshLayout) layout.findViewById(R.id.fdalarm_swipe);
+        layoutMemo = (LinearLayout) layout.findViewById(R.id.fs4_layout_memo);
+        tvMemo = (TextView) layout.findViewById(R.id.fs4_tv_memo);
 
         return layout;
     }
@@ -110,6 +115,13 @@ public class Step4Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
         });
 
+        tvMemo.setText(DBManager.DATA_MEMO);
+        layoutMemo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Manager.callMemoLayout(activity, tvMemo);
+            }
+        });
     }
 
     public void DateSelectOption() {

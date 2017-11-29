@@ -60,7 +60,7 @@ public class Step1Fragment extends Fragment {
         layoutTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Manager.callSetTitleLayout(activity, dbManager, id);
+                Manager.callSetTitleLayout(activity, dbManager, id, tvTitle);
             }
         });
         layoutCategory.setOnClickListener(new View.OnClickListener() {
