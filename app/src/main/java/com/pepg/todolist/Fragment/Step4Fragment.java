@@ -29,19 +29,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.pepg.todolist.Adapter.AlarmRcvAdapter;
-import com.pepg.todolist.Adapter.SemiListRcvAdapter;
-import com.pepg.todolist.AddguideActivity;
 import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.MainActivity;
 import com.pepg.todolist.Manager;
-import com.pepg.todolist.UpdateSemi;
 
 import com.pepg.todolist.R;
 
@@ -56,7 +52,6 @@ import java.util.Date;
 public class Step4Fragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     Activity activity;
-    int id;
     DBManager dbManager;
     FloatingActionButton fabAdd;
     RecyclerView rcvAlarm;
@@ -97,7 +92,7 @@ public class Step4Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         rcvAlarm.setLayoutManager(rcvLayoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(activity, rcvLayoutManager.getOrientation());
         rcvAlarm.addItemDecoration(dividerItemDecoration);
-        alarmRcvAdapter = new AlarmRcvAdapter(dbManager, activity, id);
+        alarmRcvAdapter = new AlarmRcvAdapter(dbManager, activity, 0);
         rcvAlarm.setAdapter(alarmRcvAdapter);
 
         swipe.setColorSchemeResources(
@@ -175,7 +170,7 @@ public class Step4Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
             sb.append(minute);
             result = result + sb.toString();
-            dbManager.insertAlarm(id, result, "");
+            dbManager.insertAlarm(0, result, "");
             Manager.alarmSet(activity, dbManager);
             alarmRcvAdapter.refresh();
         }

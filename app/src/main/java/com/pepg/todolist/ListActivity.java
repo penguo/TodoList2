@@ -1,22 +1,20 @@
 package com.pepg.todolist;
 
-import android.app.ActivityOptions;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.Color;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -27,24 +25,33 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.pepg.todolist.Adapter.ListRcvAdapter;
 import com.pepg.todolist.DataBase.DBManager;
+import com.pepg.todolist.Login.KakaoLoginActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
+
 public class ListActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemSelectedListener, NavigationView.OnNavigationItemSelectedListener {
 
-    TextView tvToolbarTitle;
+    TextView tvToolbarTitle, tvNavHeaderName, tvNavHeaderEmail;
     RecyclerView rcvTodo;
     ListRcvAdapter listRcvAdapter;
     FloatingActionButton fabAdd;
     Animation viewSlideOut, viewSlideIn;
-    ImageView ivDropdown;
+    ImageView ivDropdown, ivProfile;
     DividerItemDecoration dividerItemDecoration;
     Toolbar toolbar;
     SwipeRefreshLayout swipe;
@@ -52,10 +59,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     List<String> items;
     ImageButton btnSetting, btnSort;
     boolean isSortView;
-    private String[] mPlanetTitles;
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    ActionBarDrawerToggle drawerToggle;
+    DrawerLayout drawer;
 
     final DBManager dbManager = new DBManager(this, "todolist2.db", null, MainActivity.DBVERSION);
 
@@ -87,16 +91,15 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         viewSlideOut = AnimationUtils.loadAnimation(this, R.anim.anim_slide_out_up);
         viewSlideIn = AnimationUtils.loadAnimation(this, R.anim.anim_slide_in_up);
 
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.listA_drawerlayout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        drawer = (DrawerLayout) findViewById(R.id.listA_drawerlayout);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View viewNavHeader = navigationView.getHeaderView(0);
 
+        tvNavHeaderName = (TextView) viewNavHeader.findViewById(R.id.navheader_tv_name);
+        tvNavHeaderEmail = (TextView) viewNavHeader.findViewById(R.id.navheader_tv_email);
+        ivProfile = (ImageView) viewNavHeader.findViewById(R.id.navheader_iv_profile);
 
         rcvTodo = (RecyclerView) findViewById(R.id.listA_rcv_todo);
         LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(this);
@@ -119,19 +122,14 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case (R.id.listA_fab):
                 dbManager.deleteDummyData_Semi();
+                dbManager.deleteDummyData_Alarm();
                 dbManager.resetPublicData();
-                dbManager.DATA_DATE = getString(R.string.unregistered);
-                dbManager.DATA_CREATEDATE = getString(R.string.unregistered);
-                dbManager.DATA_CATEGORY = getString(R.string.unregistered);
-
-//                List<Pair<View, String>> pairs = getPairs();
-//                pairs.add(Pair.create((View) fabAdd, "list_fab"));
-//                Bundle options = ActivityOptions.makeSceneTransitionAnimation(this,
-//                        pairs.toArray(new Pair[pairs.size()])).toBundle();
+                DBManager.DATA_DATE = getString(R.string.unregistered);
+                DBManager.DATA_CREATEDATE = getString(R.string.unregistered);
+                DBManager.DATA_CATEGORY = getString(R.string.unregistered);
 
                 intent = new Intent(ListActivity.this, AddguideActivity.class);
                 intent.putExtra("_id", 0);
-//                startActivity(intent, options);
                 startActivityForResult(intent, Manager.RC_LIST_TO_ADDGUIDE);
                 break;
             case (R.id.listA_tv_toolbar_title):
@@ -144,8 +142,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 startActivityForResult(intent, Manager.RC_LIST_TO_SETTINGS);
                 break;
             case (R.id.listA_btn_sort):
-//                spinnerSort.performClick();
-//                mDrawerLayout
+                drawer.openDrawer(Gravity.LEFT);
                 break;
         }
     }
@@ -161,11 +158,17 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         spinnerSort.setAdapter(spinnerAdapter);
         spinnerSort.setSelection(0);
         spinnerSort.setOnItemSelectedListener(this);
-    }
-
-    public void refreshSort() {
-        listRcvAdapter = new ListRcvAdapter(dbManager, this);
-        rcvTodo.setAdapter(listRcvAdapter);
+        tvNavHeaderEmail.setVisibility(View.GONE);
+        try {
+            tvNavHeaderName.setText(Manager.userProfile.getNickname());
+            tvNavHeaderEmail.setText(Manager.userProfile.getEmail()+"");
+            Glide.with(this).load(Manager.userProfile.getProfileImagePath())
+                    .apply(bitmapTransform(new CropCircleTransformation()))
+                    .into(ivProfile);
+        } catch (Exception e) {
+            tvNavHeaderName.setText("로그인이 필요한 서비스입니다.");
+            tvNavHeaderEmail.setText("");
+        }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -213,7 +216,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             resetSort();
         }
-        refreshSort();
+        onRefresh();
     }
 
     @Override
@@ -223,6 +226,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
 
     public void resetSort() {
         DBManager.DATA_SORTTYPE = "DEFAULT";
+        DBManager.DATA_SORTTYPE2 = "";
         DBManager.DATA_SORTTYPEEQUAL = "";
         tvToolbarTitle.setText("TodoList");
         ivDropdown.setVisibility(View.GONE);
@@ -232,7 +236,6 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.listA_drawerlayout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -247,25 +250,68 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.listA_drawerlayout);
         drawer.closeDrawer(GravityCompat.START);
+        Intent intent;
+        switch (item.getItemId()) {
+            case (R.id.nav_sort):
+                CategorySelectOption();
+                break;
+            case (R.id.nav_settings):
+                intent = new Intent(ListActivity.this, SettingsActivity.class);
+                startActivityForResult(intent, Manager.RC_LIST_TO_SETTINGS);
+                break;
+            case (R.id.nav_kakao):
+                intent = new Intent(ListActivity.this, KakaoLoginActivity.class);
+                startActivity(intent);
+                break;
+            case (R.id.nav_kakaoout):
+                onClickLogout();
+                break;
+            case(R.id.nav_sortschedule):
+                DBManager.DATA_SORTTYPE2 = "SCHEDULE";
+                tvToolbarTitle.setText("일정");
+                isSortView = true;
+                onRefresh();
+                break;
+            case(R.id.nav_sorttodo):
+                DBManager.DATA_SORTTYPE2 = "TODO";
+                tvToolbarTitle.setText("할 일");
+                isSortView = true;
+                onRefresh();
+                break;
+        }
         return true;
+    }
+
+    private void onClickLogout() {
+        UserManagement.requestLogout(new LogoutResponseCallback() {
+            @Override
+            public void onCompleteLogout() {
+                Manager.userProfile = null;
+                Intent intent = new Intent(ListActivity.this, ListActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
+    private void CategorySelectOption() {
+        final List<String> Items = dbManager.getSettingList("category");
+        final CharSequence[] items = Items.toArray(new String[Items.size()]);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                DBManager.DATA_SORTTYPE = "CATEGORY";
+                DBManager.DATA_SORTTYPEEQUAL = items[which].toString();
+                tvToolbarTitle.setText(items[which] + "");
+                ivDropdown.setVisibility(View.VISIBLE);
+                isSortView = true;
+                onRefresh();
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 }

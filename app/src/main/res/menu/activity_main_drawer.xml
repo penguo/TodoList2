@@ -1,31 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="none">
         <item
-            android:id="@+id/nav_camera"
-            android:title="Import" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_sort"
+            android:icon="@drawable/ic_sort"
+            android:title="카테고리 정렬" />
     </group>
+    <item android:title="분류">
+        <menu>
 
-    <item android:title="Communicate">
+            <item
+                android:id="@+id/nav_sortschedule"
+                android:icon="@drawable/ic_event_black"
+                android:title="일정" />
+            <item
+                android:id="@+id/nav_sorttodo"
+                android:icon="@drawable/ic_list"
+                android:title="할 일" />
+        </menu>
+    </item>
+
+    <item android:title="other">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:title="Share" />
+                android:id="@+id/nav_kakao"
+                android:title="카카오 로그인" />
             <item
-                android:id="@+id/nav_send"
-                android:title="Send" />
+                android:id="@+id/nav_kakaoout"
+                android:title="카카오 로그아웃" />
+            <item
+                android:id="@+id/nav_settings"
+                android:title="설정" />
+            <item
+                android:id="@+id/nav_mailtodev"
+                android:title="문의하기" />
         </menu>
     </item>
 

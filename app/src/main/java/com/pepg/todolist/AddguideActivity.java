@@ -125,6 +125,7 @@ public class AddguideActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dbManager.deleteDummyData_Semi();
+                dbManager.deleteDummyData_Alarm();
                 finish();
                 dialog.dismiss();
             }

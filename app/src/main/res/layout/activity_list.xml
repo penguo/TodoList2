@@ -1,27 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/listA_drawerlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.pepg.todolist.ListActivity">
+    android:fitsSystemWindows="true"
+    tools:context="com.pepg.todolist.ListActivity"
+    tools:openDrawer="start">
 
-    <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/listA_drawerlayout"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <android.support.design.widget.NavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:fitsSystemWindows="true"
-            app:headerLayout="@layout/nav_header_main"
-            app:menu="@menu/activity_main_drawer" />
-
-    </android.support.v4.widget.DrawerLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,7 +53,7 @@
                         android:id="@+id/listA_btn_sort"
                         style="@style/icon"
                         android:layout_gravity="left|center_vertical"
-                        app:srcCompat="@drawable/ic_sort" />
+                        app:srcCompat="@drawable/ic_menu" />
 
                     <TextView
                         android:id="@+id/listA_tv_toolbar_title"
@@ -136,4 +128,13 @@
         </android.support.design.widget.CoordinatorLayout>
 
     </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer" />
+</android.support.v4.widget.DrawerLayout>

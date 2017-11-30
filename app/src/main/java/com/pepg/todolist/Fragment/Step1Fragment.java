@@ -28,7 +28,6 @@ public class Step1Fragment extends Fragment {
     Activity activity;
     TextView tvTitle, tvCategory;
     LinearLayout layoutTitle, layoutCategory;
-    int id;
 
     public Step1Fragment() {
     }
@@ -41,7 +40,6 @@ public class Step1Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_step1, container, false);
-        id = DBManager.DATA_id;
         dbManager = new DBManager(this.getContext(), "todolist2.db", null, MainActivity.DBVERSION);
         activity = getActivity();
         tvTitle = (TextView) layout.findViewById(R.id.fs1_tv_title);
@@ -60,7 +58,7 @@ public class Step1Fragment extends Fragment {
         layoutTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Manager.callSetTitleLayout(activity, dbManager, id, tvTitle);
+                Manager.callSetTitleLayout(activity, dbManager, 0, tvTitle);
             }
         });
         layoutCategory.setOnClickListener(new View.OnClickListener() {

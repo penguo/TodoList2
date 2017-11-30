@@ -61,7 +61,7 @@ public class DBSortManager {
         while (cursor.moveToNext()) {
             dataList.add(new DataMerge(i, cursor.getInt(0), Manager.calculateDday(cursor.getString(1))));
         }
-        long[] list = new long[length];
+        int[] list = new int[length];
         while (i < length) {
             list[i] = dataList.get(i).getNum();
             i++;
@@ -83,10 +83,10 @@ public class DBSortManager {
             i++;
         }
         cursor.close();
+        length = result.size();
         for (i = 0; i < length; i++) {
             dbW.execSQL("UPDATE TODOLIST SET _position = " + i + " WHERE _id = '" + result.get(i).getId() + "';");
         }
-
     }
 
     public void sortSemiByAch(int parentId) {

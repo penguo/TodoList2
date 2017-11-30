@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
+import com.kakao.usermgmt.response.model.UserProfile;
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
 import com.pepg.todolist.DataBase.AlarmData;
 import com.pepg.todolist.DataBase.DBManager;
@@ -51,8 +52,9 @@ public class Manager {
     public final static int RC_DETAIL_TO_UPDATE = 1002;
     public final static int RC_LIST_TO_ADDGUIDE = 1003;
     public final static int RC_LIST_TO_SETTINGS = 1006;
-    public static boolean editMode;
+    public static boolean editMode, isLogin;
     public static int viewState;
+    public static UserProfile userProfile;
 
     // setting option
     public static boolean isAnimationActive;
@@ -60,7 +62,6 @@ public class Manager {
     public static boolean isOnFastAdd;
     public static boolean notViewPastData;
     public static String addTimeType;
-
 
     public static String[] strings;
     public static Calendar todayCal, readCal, startCal;
@@ -262,7 +263,7 @@ public class Manager {
         AlertDialog dialog;
 
         builder.setTitle("제목을 입력해주세요.");
-        if (id == -1) {
+        if (id == 0) {
             title.setText("");
         } else {
             dbManager.getValue("_id", id);

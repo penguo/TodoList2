@@ -4,8 +4,10 @@
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".Login.GlobalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_tododebug"
         android:label="@string/app_name"
@@ -21,7 +23,6 @@
         </activity>
         <activity android:name=".ListActivity" />
         <activity android:name=".AddguideActivity" />
-
         <activity android:name=".InfoActivity" />
         <activity android:name=".SettingsActivity" />
 
@@ -36,12 +37,17 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_provider_basic" />
         </receiver>
-
         <receiver android:name=".Optional.AlarmReceiver">
             <intent-filter>
-                <action android:name="com.pepg.alarm.ALARM_START"></action>
+                <action android:name="com.pepg.alarm.ALARM_START" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".Login.KakaoLoginActivity" />
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
+        <activity android:name=".Login.KakaoSignupActivity"></activity>
 
     </application>
 

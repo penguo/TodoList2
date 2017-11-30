@@ -40,11 +40,12 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     public ListRcvAdapter(DBManager dbManager, Activity activity) {
         this.dbManager = dbManager;
         this.activity = activity;
-        dbManager.setPosition();
     }
 
     @Override
     public int getItemCount() {
+
+        dbManager.setPosition();
         return dbManager.getSize();
     }
 
@@ -94,16 +95,16 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
                     holder.layoutSubTitle.setVisibility(View.VISIBLE);
                     switch (i) {
                         case (0):
-                            holder.tvSubTitle.setText("지난 할 일, 일정");
+                            holder.tvSubTitle.setText("과거");
                             break;
                         case (1):
-                            holder.tvSubTitle.setText("오늘까지의 할 일, 일정");
+                            holder.tvSubTitle.setText("오늘");
                             break;
                         case (2):
-                            holder.tvSubTitle.setText("이번주동안 할 일, 일정");
+                            holder.tvSubTitle.setText("이번 주");
                             break;
                         case (3):
-                            holder.tvSubTitle.setText("할 일, 일정");
+                            holder.tvSubTitle.setText("그 외");
                             break;
                     }
                 }
@@ -199,5 +200,4 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
         dbManager.setPosition();
         notifyDataSetChanged();
     }
-
 }

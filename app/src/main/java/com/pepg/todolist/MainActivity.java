@@ -1,28 +1,24 @@
 package com.pepg.todolist;
 
 import android.Manifest;
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.BitmapFactory;
+import android.content.pm.PackageInstaller;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethod;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.kakao.auth.Session;
 import com.pepg.todolist.DataBase.DBManager;
+import com.pepg.todolist.Login.KakaoSignupActivity;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -45,19 +41,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvInfo = (TextView) findViewById(R.id.mainA_tv_info);
 
         // TODO: BUILD INFO SET
-        tvInfo.setText("build 0.171124.0011");
+        tvInfo.setText("build 0.171129.1547");
 
         btnList.setOnClickListener(this);
         btnSetting.setOnClickListener(this);
         btnDaily.setOnClickListener(this);
 
+        Log.e("CHECK",Session.getCurrentSession().checkAndImplicitOpen()+"");
+        if (Session.getCurrentSession().checkAndImplicitOpen()) {
+            Intent intent = new Intent(this, KakaoSignupActivity.class);
+            startActivity(intent);
+        } else {
+            // 무조건 재로그인을 시켜야 하는 경우
+        }
         initSetting();
     }
 
     public void initSetting(){
         Manager.editMode = false;
         Manager.isAnimationActive = true;
-
+        Manager.setSetting(this);
         permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {

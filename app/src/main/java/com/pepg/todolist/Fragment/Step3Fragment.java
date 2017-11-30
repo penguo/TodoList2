@@ -50,7 +50,6 @@ public class Step3Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
     RecyclerView rcvFs3;
     SemiListRcvAdapter semiRcvAdapter;
     Activity activity;
-    int id;
     SwipeRefreshLayout swipe;
     FloatingActionButton fab;
     UpdateSemi us;
@@ -87,7 +86,7 @@ public class Step3Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         rcvFs3.setLayoutManager(rcvLayoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(activity, rcvLayoutManager.getOrientation());
         rcvFs3.addItemDecoration(dividerItemDecoration);
-        semiRcvAdapter = new SemiListRcvAdapter(dbManager, activity, id, true);
+        semiRcvAdapter = new SemiListRcvAdapter(dbManager, activity, 0, true);
         rcvFs3.setAdapter(semiRcvAdapter);
 
         us = new UpdateSemi(semiRcvAdapter, activity, dbManager);
@@ -103,13 +102,13 @@ public class Step3Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                us.updateSemi(id, activity, true);
+                us.updateSemi(0, activity, true);
             }
         });
         btnLibraryAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Manager.callSemiLibraryAddLayout(activity, dbManager, id, semiRcvAdapter);
+                Manager.callSemiLibraryAddLayout(activity, dbManager, 0, semiRcvAdapter);
             }
         });
     }

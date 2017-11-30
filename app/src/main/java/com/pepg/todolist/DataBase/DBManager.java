@@ -11,6 +11,7 @@ import com.pepg.todolist.R;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -34,6 +35,7 @@ public class DBManager extends SQLiteOpenHelper {
     public static int DATA_semi_id, DATA_semi_position, DATA_semi_parentId, DATA_semi_ACH, DATA_semi_ACHMAX;
     public static String DATA_semi_TITLE, DATA_semi_MEMO;
     public static String DATA_SORTTYPE = "DEFAULT", DATA_SORTTYPEEQUAL = "";
+    public static String DATA_SORTTYPE2 = "";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -101,6 +103,7 @@ public class DBManager extends SQLiteOpenHelper {
                 "'" + memo + "'," +
                 "'" + createDate + "');");
         setDummyData_Semi(title);
+        setDummyData_Alarm(title);
         db.close();
     }
 
@@ -128,6 +131,33 @@ public class DBManager extends SQLiteOpenHelper {
         cursor = db.rawQuery("SELECT _id FROM SEMITODO WHERE _parentId = 0;", null);
         while (cursor.moveToNext()) {
             semiDelete(cursor.getInt(0));
+        }
+    }
+
+    public void setDummyData_Alarm(String title) {
+        // _parentId == 0 인 더미데이터들을 해당 _parentId에 배분합니다.
+        db = getWritableDatabase();
+        dbr = getReadableDatabase();
+        int parentId = 0;
+        // getId
+        cursor = dbr.rawQuery("SELECT _id FROM TODOLIST WHERE title = '" + title + "';", null);
+        while (cursor.moveToNext()) {
+            parentId = cursor.getInt(0);
+        }
+        cursor = dbr.rawQuery("SELECT _AlarmId FROM ALARM WHERE id = 0;", null);
+        while (cursor.moveToNext()) {
+            db.execSQL(" UPDATE ALARM SET " +
+                    "id = '" + parentId + "' " +
+                    "WHERE _AlarmId = '" + cursor.getInt(0) + "'; ");
+        }
+    }
+
+    public void deleteDummyData_Alarm() {
+        // _parentId == 0 인 더미데이터들을 삭제합니다.
+        db = getReadableDatabase();
+        cursor = db.rawQuery("SELECT _AlarmId FROM ALARM WHERE id = 0;", null);
+        while (cursor.moveToNext()) {
+            deleteAlarm(cursor.getInt(0));
         }
     }
 
@@ -175,18 +205,13 @@ public class DBManager extends SQLiteOpenHelper {
             DATA_CREATEDATE = cursor.getString(7);
         }
         DATA_DDAY = Manager.calculateDday(DBManager.DATA_DATE);
+        cursor.close();
         cursor = db.rawQuery("SELECT ACH, ACHMAX FROM SEMITODO WHERE _parentId = " + DATA_id + " ;", null);
         if (cursor.getCount() == 0) // Semi 데이터가 없을 경우 - 직접 설정한 퍼센트로 적용.
         {
-            try {
-                DATA_ACH_FINISH = 0;
-                DATA_ACH_MAX = 0;
-                DATA_ACH = cursor.getInt(5);
-            } catch (Exception e) {
-                DATA_ACH_FINISH = 0;
-                DATA_ACH_MAX = 0;
-                DATA_ACH = 0;
-            }
+            DATA_ACH_FINISH = 0;
+            DATA_ACH_MAX = 0;
+            DATA_ACH = 0;
         } else { // Semi 데이터가 하나 이상 있을 경우 - Semi의 완수도에 따라 적용.
             int totalAch = 0, totalAchMax = 0;
             while (cursor.moveToNext()) {
@@ -213,6 +238,31 @@ public class DBManager extends SQLiteOpenHelper {
                 dbSortManager.sortByCategory(DATA_SORTTYPEEQUAL);
                 break;
         }
+        if (!DATA_SORTTYPE2.equals("")) {
+            cursor = dbr.rawQuery("SELECT _id, CREATEDATE, DATE FROM TODOLIST WHERE _position > -1", null);
+            while (cursor.moveToNext()) {
+                if (DATA_SORTTYPE2.equals("SCHEDULE")) {
+                    if (!cursor.getString(1).equals(cursor.getString(2))) {
+                        db.execSQL("UPDATE TODOLIST SET _position = -1 WHERE _id = " + cursor.getInt(0) + ";");
+                    }
+                } else if (DATA_SORTTYPE2.equals("TODO")) {
+                    if (cursor.getString(1).equals(cursor.getString(2))) {
+                        db.execSQL("UPDATE TODOLIST SET _position = -1 WHERE _id = " + cursor.getInt(0) + ";");
+                    }
+                }
+            }
+        }
+        if (Manager.notViewPastData) {
+            cursor = dbr.rawQuery("SELECT _id, DATE FROM TODOLIST WHERE _position > -1", null);
+            int i;
+            while (cursor.moveToNext()) {
+                i = Manager.calculateDday(cursor.getString(1));
+                if (i < 0) {
+                    db.execSQL("UPDATE TODOLIST SET _position = -1 WHERE _id = " + cursor.getInt(0) + ";");
+                }
+            }
+        }
+        cursor.close();
         dbSortManager.sortByDate();
         if (Manager.isViewSubTitle) {
             dbSortManager.setSubtitlePosition();
@@ -305,6 +355,7 @@ public class DBManager extends SQLiteOpenHelper {
         DATA_TITLE = "";
         DATA_CATEGORY = "";
         DATA_DATE = "";
+        DATA_CREATEDATE = "";
         DATA_MEMO = "";
         DATA_semi_TITLE = "";
         DATA_semi_MEMO = "";
@@ -314,10 +365,10 @@ public class DBManager extends SQLiteOpenHelper {
         db = getReadableDatabase();
         switch (DATA_SORTTYPE) {
             case ("DEFAULT"):
-                cursor = db.rawQuery("SELECT _id FROM TODOLIST;", null);
+                cursor = db.rawQuery("SELECT _id FROM TODOLIST WHERE _position > -1;", null);
                 break;
             case ("CATEGORY"):
-                cursor = db.rawQuery("SELECT _id FROM TODOLIST WHERE CATEGORY = '" + DATA_SORTTYPEEQUAL + "';", null);
+                cursor = db.rawQuery("SELECT _id FROM TODOLIST WHERE CATEGORY = '" + DATA_SORTTYPEEQUAL + "'AND _position > -1;", null);
                 break;
         }
         int result = cursor.getCount();
@@ -406,16 +457,16 @@ public class DBManager extends SQLiteOpenHelper {
         db.execSQL(" UPDATE ALARM SET " +
                 "id = " + id + "," +
                 "TIME = '" + time + "'," +
-                "CURRENT = " + currentState +"," +
+                "CURRENT = " + currentState + "," +
                 "DETAIL = '" + detail + "'" +
                 "WHERE _id = " + alarmId + " ; ");
         db.close();
     }
 
-    public void updateAlarmCurrent(int alarmId, int currentState){
+    public void updateAlarmCurrent(int alarmId, int currentState) {
         db = getWritableDatabase();
         db.execSQL(" UPDATE ALARM SET " +
-                "CURRENT = " + currentState +"" +
+                "CURRENT = " + currentState + "" +
                 "WHERE _id = " + alarmId + " ; ");
         db.close();
     }
