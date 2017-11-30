@@ -132,6 +132,8 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
             holder.pb.setVisibility(View.VISIBLE);
             if (!Manager.calculateisStart(DBManager.DATA_CREATEDATE)) {
                 holder.layoutItem.setAlpha((float) 0.5);
+            } else if (Manager.calculateDday(DBManager.DATA_DATE) < 0) {
+                holder.layoutItem.setAlpha((float) 0.5);
             } else {
                 holder.layoutItem.setAlpha(1);
             }

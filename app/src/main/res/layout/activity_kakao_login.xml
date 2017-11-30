@@ -51,11 +51,11 @@
         android:layout_gravity="bottom"
         android:layout_margin="30dp">
 
-        <ImageButton
-            android:id="@+id/login_btn_kakao"
-            android:layout_width="wrap_content"
+        <com.kakao.usermgmt.LoginButton
+            android:id="@+id/com_kakao_login"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/kakaotalk_icon" />
+            android:layout_gravity="bottom" />
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

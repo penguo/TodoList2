@@ -141,6 +141,8 @@ public class Step2Fragment extends Fragment {
         }
         tvDate.setText(DBManager.DATA_DATE);
         if (!DBManager.DATA_DATE.equals(DBManager.DATA_CREATEDATE)) {
+            tvStartDate.setVisibility(View.VISIBLE);
+            tvDateMiddle.setVisibility(View.VISIBLE);
             tvStartDate.setText(DBManager.DATA_CREATEDATE);
         } else {
             tvStartDate.setVisibility(View.GONE);

@@ -158,7 +158,6 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         spinnerSort.setAdapter(spinnerAdapter);
         spinnerSort.setSelection(0);
         spinnerSort.setOnItemSelectedListener(this);
-        tvNavHeaderEmail.setVisibility(View.GONE);
         try {
             tvNavHeaderName.setText(Manager.userProfile.getNickname());
             tvNavHeaderEmail.setText(Manager.userProfile.getEmail()+"");

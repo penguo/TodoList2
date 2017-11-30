@@ -19,7 +19,7 @@
                 android:title="일정" />
             <item
                 android:id="@+id/nav_sorttodo"
-                android:icon="@drawable/ic_list"
+                android:icon="@drawable/ic_list_dark"
                 android:title="할 일" />
         </menu>
     </item>

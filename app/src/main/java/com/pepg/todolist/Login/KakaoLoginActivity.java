@@ -2,7 +2,6 @@ package com.pepg.todolist.Login;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
-import android.app.Activity;
 import android.os.Bundle;
 
 import com.kakao.auth.ISessionCallback;
@@ -18,8 +17,7 @@ public class KakaoLoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_kakao_login);
 
         callback = new SessionCallback();                  // 이 두개의 함수 중요함
         Session.getCurrentSession().addCallback(callback);
@@ -52,7 +50,7 @@ public class KakaoLoginActivity extends AppCompatActivity {
             if (exception != null) {
                 Logger.e(exception);
             }
-            setContentView(R.layout.activity_login); // 세션 연결이 실패했을때
+            setContentView(R.layout.activity_kakao_login); // 세션 연결이 실패했을때
         }                                            // 로그인화면을 다시 불러옴
     }
 

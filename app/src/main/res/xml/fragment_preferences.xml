@@ -3,6 +3,11 @@
 
     <PreferenceCategory android:title="기본 설정">
 
+        <Preference android:title="계정 설정">
+            <intent android:action="android.intent.action.ACCOUNT"
+            android:targetPackage="com.pepg.todolist"
+            android:targetClass="com.pepg.todolist.Login.KakaoLoginActivity" />
+        </Preference>
         <SwitchPreference
             android:defaultValue="true"
             android:key="pref_animation"

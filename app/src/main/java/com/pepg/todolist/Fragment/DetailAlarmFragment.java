@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -52,6 +53,7 @@ public class DetailAlarmFragment extends Fragment implements SwipeRefreshLayout.
     SwipeRefreshLayout swipe;
     AlarmRcvAdapter alarmRcvAdapter;
     String result;
+    TextView tvAlarmSize;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class DetailAlarmFragment extends Fragment implements SwipeRefreshLayout.
         fabAdd = (FloatingActionButton) layout.findViewById(R.id.fdalarm_fab);
         rcvAlarm = (RecyclerView) layout.findViewById(R.id.fdalarm_rcv);
         swipe = (SwipeRefreshLayout) layout.findViewById(R.id.fdalarm_swipe);
+        tvAlarmSize = (TextView)layout.findViewById(R.id.fdalarm_tv_alarmsize);
 
         return layout;
     }
@@ -83,6 +86,9 @@ public class DetailAlarmFragment extends Fragment implements SwipeRefreshLayout.
         rcvAlarm.addItemDecoration(dividerItemDecoration);
         alarmRcvAdapter = new AlarmRcvAdapter(dbManager, activity, id);
         rcvAlarm.setAdapter(alarmRcvAdapter);
+
+        tvAlarmSize.setText(dbManager.getAlarmSize(id)+"");
+
 
         swipe.setColorSchemeResources(
                 R.color.colorPrimary,

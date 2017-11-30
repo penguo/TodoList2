@@ -44,7 +44,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
     DBManager dbManager;
     LinearLayout layoutDate, layoutAch, layoutAlarm, layoutMemo, layoutBody;
     ImageView ivZoomAch, ivZoomAlarm, ivEditDate, ivEditMemo;
-    TextView tvDate, tvDateHead, tvAch, tvMemo, tvAchHead, tvAlarmHead, tvGone, tvStartDate, tvDateMiddle;
+    TextView tvDate, tvDateHead, tvAch, tvMemo, tvAchHead, tvAlarmHead, tvGone, tvStartDate, tvDateMiddle, tvAlarmSize;
     DetailSemiFragment detailSemiFragment;
     DetailAlarmFragment detailAlarmFragment;
     FragmentManager fragmentManager;
@@ -85,6 +85,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         layoutAch = (LinearLayout) view.findViewById(R.id.detail_layout_ach);
         layoutAlarm = (LinearLayout) view.findViewById(R.id.detail_layout_alarm);
         layoutMemo = (LinearLayout) view.findViewById(R.id.detail_layout_memo);
+        tvAlarmSize = (TextView) view.findViewById(R.id.detail_tv_alarmsize);
 
         tvGone = (TextView) view.findViewById(R.id.detail_tv_gone);
         return view;
@@ -120,6 +121,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
             tvDateMiddle.setVisibility(View.GONE);
         }
         tvMemo.setText(DBManager.DATA_MEMO);
+        tvAlarmSize.setText(dbManager.getAlarmSize(DBManager.DATA_id)+"");
         fragmentManager = getFragmentManager();
         detailSemiFragment = new DetailSemiFragment();
         detailAlarmFragment = new DetailAlarmFragment();

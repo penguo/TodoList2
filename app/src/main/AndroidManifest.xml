@@ -24,7 +24,11 @@
         <activity android:name=".ListActivity" />
         <activity android:name=".AddguideActivity" />
         <activity android:name=".InfoActivity" />
-        <activity android:name=".SettingsActivity" />
+        <activity android:name=".SettingsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.ACCOUNT" />
+            </intent-filter>
+        </activity>
 
         <receiver
             android:name=".Widget.WidgetProvider"
@@ -44,11 +48,13 @@
         </receiver>
 
         <activity android:name=".Login.KakaoLoginActivity" />
+
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
-        <activity android:name=".Login.KakaoSignupActivity"></activity>
 
+        <activity android:name=".Login.KakaoSignupActivity" />
+        <activity android:name=".Login.LoginActivity"></activity>
     </application>
 
 </manifest>
