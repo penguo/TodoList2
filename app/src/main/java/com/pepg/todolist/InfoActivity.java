@@ -98,19 +98,16 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         layoutCategoryEdit.setOnClickListener(this);
         layoutTitleEdit.setOnClickListener(this);
 
-
         itemsMenu = new ArrayList<>();
         itemsMenu.add("상태창에 고정");
-        itemsMenu.add("btn1");
-        itemsMenu.add("btn2");
         itemsMenu.add("항목 삭제");
         itemsMenu.add("취소");
-        ArrayAdapter<String> spinnerMenuAdapter = new ArrayAdapter<String>(
+        ArrayAdapter<String> spinnerMenuAdapter = new ArrayAdapter<>(
                 this,
                 R.layout.custom_spinner_toolbar,
                 itemsMenu);
         spinnerMenu.setAdapter(spinnerMenuAdapter);
-        spinnerMenu.setSelection(4);
+        spinnerMenu.setSelection(2);
         spinnerMenu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -119,8 +116,6 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
                         Manager.notificationInfo(activity, getResources(), DBManager.DATA_id, dbManager);
                         break;
                     case (1):
-                        break;
-                    case (3):
                         dialog = new AlertDialog.Builder(activity);
                         dialog.setMessage("정말로 삭제하시겠습니까?");
                         dialog.setCancelable(true);
@@ -214,6 +209,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         if (!DBManager.DATA_TITLE.equals(getString(R.string.empty_data))) {
             tvTitle.setText(DBManager.DATA_TITLE);
             tvCategory.setText(DBManager.DATA_CATEGORY);
+            tvCategory.setVisibility(View.VISIBLE);
         } else {
             tvTitle.setText(DBManager.DATA_CATEGORY);
             tvCategory.setVisibility(View.GONE);

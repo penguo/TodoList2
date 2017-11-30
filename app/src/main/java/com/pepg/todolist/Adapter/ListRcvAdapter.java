@@ -26,6 +26,7 @@ import com.pepg.todolist.DataBase.DBManager;
 
 import com.pepg.todolist.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -156,7 +157,7 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
                 dbManager.getValue("_position", position);
                 intent.putExtra("_id", DBManager.DATA_id);
                 if (Manager.isAnimationActive) {
-                    List<Pair<View, String>> pairs = ((ListActivity) activity).getPairs();
+                    List<Pair<View, String>> pairs = new ArrayList<>();
                     pairs.add(Pair.create((View) holder.layoutItem, "layout_head"));
                     Bundle options = ActivityOptions.makeSceneTransitionAnimation(activity,
                             pairs.toArray(new Pair[pairs.size()])).toBundle();

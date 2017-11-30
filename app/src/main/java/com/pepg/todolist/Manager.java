@@ -292,7 +292,7 @@ public class Manager {
         dialog.show();
     }
 
-    public static void callSemiLibraryAddLayout(Activity activity, final DBManager dbManager, final int parentId, final SemiListRcvAdapter semiListRcvAdapter) {
+    public static void callSemiLibraryAddLayout(final Activity activity, final DBManager dbManager, final int parentId, final SemiListRcvAdapter semiListRcvAdapter) {
         LayoutInflater li = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout updateLayout = (LinearLayout) li.inflate(R.layout.update_edittext2, null);
         final EditText title = (EditText) updateLayout.findViewById(R.id.upitem2_et);
@@ -311,7 +311,13 @@ public class Manager {
                 for (int i = 0; i < strings.length; i++) {
                     dbManager.semiInsert(parentId, strings[i], "");
                 }
-                semiListRcvAdapter.refresh();
+                switch (activity.getLocalClassName()) {
+                    case ("InfoActivity"):
+                        ((InfoActivity) activity).refreshRcv();
+                        break;
+                    default:
+                        semiListRcvAdapter.notifyDataSetChanged();
+                }
                 dialog.dismiss();
             }
         });

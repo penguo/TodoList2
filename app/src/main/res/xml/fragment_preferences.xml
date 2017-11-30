@@ -4,9 +4,10 @@
     <PreferenceCategory android:title="기본 설정">
 
         <Preference android:title="계정 설정">
-            <intent android:action="android.intent.action.ACCOUNT"
-            android:targetPackage="com.pepg.todolist"
-            android:targetClass="com.pepg.todolist.Login.KakaoLoginActivity" />
+            <intent
+                android:action="android.intent.action.ACCOUNT"
+                android:targetClass="com.pepg.todolist.Login.LoginActivity"
+                android:targetPackage="com.pepg.todolist" />
         </Preference>
         <SwitchPreference
             android:defaultValue="true"

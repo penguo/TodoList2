@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fs1_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/xml_item"
@@ -124,13 +125,26 @@
                     android:paddingBottom="8dp"
                     android:paddingTop="8dp">
 
+                    <EditText
+                        android:id="@+id/fs1_et_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:alpha="0.7"
+                        android:background="@null"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="Name"
+                        android:textSize="18sp"
+                        android:visibility="visible" />
+
                     <TextView
                         android:id="@+id/fs1_tv_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TITLE VIEW POINT"
                         android:textSize="18sp"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                 </LinearLayout>
 

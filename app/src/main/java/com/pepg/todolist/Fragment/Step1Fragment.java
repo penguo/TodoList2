@@ -27,7 +27,8 @@ public class Step1Fragment extends Fragment {
     DBManager dbManager;
     Activity activity;
     TextView tvTitle, tvCategory;
-    LinearLayout layoutTitle, layoutCategory;
+    LinearLayout layoutBody, layoutTitle, layoutCategory;
+    EditText etTitle;
 
     public Step1Fragment() {
     }
@@ -43,9 +44,11 @@ public class Step1Fragment extends Fragment {
         dbManager = new DBManager(this.getContext(), "todolist2.db", null, MainActivity.DBVERSION);
         activity = getActivity();
         tvTitle = (TextView) layout.findViewById(R.id.fs1_tv_title);
+        layoutBody = (LinearLayout)layout.findViewById(R.id.fs1_layout);
         layoutTitle = (LinearLayout) layout.findViewById(R.id.fs1_layout_title);
         layoutCategory = (LinearLayout) layout.findViewById(R.id.fs1_layout_category);
         tvCategory = (TextView) layout.findViewById(R.id.fs1_tv_category);
+        etTitle = (EditText) layout.findViewById(R.id.fs1_et_title);
         return layout;
     }
 
@@ -53,12 +56,14 @@ public class Step1Fragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        tvTitle.setText(dbManager.DATA_TITLE);
+        tvTitle.setText(DBManager.DATA_TITLE);
+        etTitle.setText(DBManager.DATA_TITLE);
         tvCategory.setText(DBManager.DATA_CATEGORY);
         layoutTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Manager.callSetTitleLayout(activity, dbManager, 0, tvTitle);
+//                Manager.callSetTitleLayout(activity, dbManager, 0, tvTitle);
+                etTitle.requestFocus();
             }
         });
         layoutCategory.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +72,7 @@ public class Step1Fragment extends Fragment {
                 DialogSelectOption();
             }
         });
+        layoutBody.requestFocus();
     }
 
     private void DialogSelectOption() {

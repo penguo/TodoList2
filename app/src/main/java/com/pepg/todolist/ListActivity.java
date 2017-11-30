@@ -1,5 +1,6 @@
 package com.pepg.todolist;
 
+import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -127,8 +128,14 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 DBManager.DATA_DATE = getString(R.string.unregistered);
                 DBManager.DATA_CREATEDATE = getString(R.string.unregistered);
                 DBManager.DATA_CATEGORY = getString(R.string.unregistered);
-
                 intent = new Intent(ListActivity.this, AddguideActivity.class);
+//                intent.putExtra("_id", 0);
+//                List<Pair<View, String>> pairs = new ArrayList<>();
+//                pairs.add(Pair.create((View) fabAdd, "list_fab"));
+//                Bundle options = ActivityOptions.makeSceneTransitionAnimation(this,
+//                        pairs.toArray(new Pair[pairs.size()])).toBundle();
+//                startActivity(intent, options);
+
                 intent.putExtra("_id", 0);
                 startActivityForResult(intent, Manager.RC_LIST_TO_ADDGUIDE);
                 break;
@@ -160,7 +167,11 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         spinnerSort.setOnItemSelectedListener(this);
         try {
             tvNavHeaderName.setText(Manager.userProfile.getNickname());
-            tvNavHeaderEmail.setText(Manager.userProfile.getEmail()+"");
+            if(Manager.userProfile.getEmail()!=null){
+                tvNavHeaderEmail.setText(Manager.userProfile.getEmail()+"");
+            }else{
+                tvNavHeaderEmail.setVisibility(View.GONE);
+            }
             Glide.with(this).load(Manager.userProfile.getProfileImagePath())
                     .apply(bitmapTransform(new CropCircleTransformation()))
                     .into(ivProfile);
@@ -190,12 +201,6 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         if (requestCode == Manager.RC_LIST_TO_SETTINGS) {
             onRefresh();
         }
-    }
-
-    public List<Pair<View, String>> getPairs() {
-        List<Pair<View, String>> pairs = new ArrayList<>();
-//        pairs.add(Pair.create((View) toolbar, "toolbar"));
-        return pairs;
     }
 
     @Override
@@ -259,13 +264,6 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(ListActivity.this, SettingsActivity.class);
                 startActivityForResult(intent, Manager.RC_LIST_TO_SETTINGS);
                 break;
-            case (R.id.nav_kakao):
-                intent = new Intent(ListActivity.this, KakaoLoginActivity.class);
-                startActivity(intent);
-                break;
-            case (R.id.nav_kakaoout):
-                onClickLogout();
-                break;
             case(R.id.nav_sortschedule):
                 DBManager.DATA_SORTTYPE2 = "SCHEDULE";
                 tvToolbarTitle.setText("일정");
@@ -278,20 +276,15 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 isSortView = true;
                 onRefresh();
                 break;
+            case(R.id.nav_clear):
+                dbManager.reset();
+                onRefresh();
+                break;
+            case(R.id.nav_analysis):
+                Toast.makeText(this, "준비 중 입니다.", Toast.LENGTH_SHORT).show();
+                break;
         }
         return true;
-    }
-
-    private void onClickLogout() {
-        UserManagement.requestLogout(new LogoutResponseCallback() {
-            @Override
-            public void onCompleteLogout() {
-                Manager.userProfile = null;
-                Intent intent = new Intent(ListActivity.this, ListActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
     }
 
     private void CategorySelectOption() {

@@ -7,31 +7,31 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".Login.GlobalApplication"
+        android:name="com.pepg.todolist.Login.GlobalApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher_tododebug"
+        android:icon="@mipmap/ic_launcher_todo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_todo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="com.pepg.todolist.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ListActivity" />
-        <activity android:name=".AddguideActivity" />
-        <activity android:name=".InfoActivity" />
-        <activity android:name=".SettingsActivity">
+        <activity android:name="com.pepg.todolist.ListActivity" />
+        <activity android:name="com.pepg.todolist.AddguideActivity" />
+        <activity android:name="com.pepg.todolist.InfoActivity" />
+        <activity android:name="com.pepg.todolist.SettingsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.ACCOUNT" />
             </intent-filter>
         </activity>
 
         <receiver
-            android:name=".Widget.WidgetProvider"
+            android:name="com.pepg.todolist.Widget.WidgetProvider"
             android:label="위젯 테스트">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -41,20 +41,20 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_provider_basic" />
         </receiver>
-        <receiver android:name=".Optional.AlarmReceiver">
+        <receiver android:name="com.pepg.todolist.Optional.AlarmReceiver">
             <intent-filter>
                 <action android:name="com.pepg.alarm.ALARM_START" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".Login.KakaoLoginActivity" />
+        <activity android:name="com.pepg.todolist.Login.KakaoLoginActivity" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
 
-        <activity android:name=".Login.KakaoSignupActivity" />
-        <activity android:name=".Login.LoginActivity"></activity>
+        <activity android:name="com.pepg.todolist.Login.KakaoSignupActivity" />
+        <activity android:name="com.pepg.todolist.Login.LoginActivity"></activity>
     </application>
 
 </manifest>

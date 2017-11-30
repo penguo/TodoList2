@@ -9,9 +9,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.kakao.auth.Session;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
+import com.pepg.todolist.ListActivity;
 import com.pepg.todolist.Manager;
 import com.pepg.todolist.R;
 
@@ -70,7 +74,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(intent);
                 break;
             case(R.id.login_btn_logout):
-
+                onClickLogout();
+                break;
         }
+    }
+
+    private void onClickLogout() {
+        UserManagement.requestLogout(new LogoutResponseCallback() {
+            @Override
+            public void onCompleteLogout() {
+                Manager.userProfile = null;
+                Intent intent = new Intent(LoginActivity.this, ListActivity.class);
+                startActivity(intent);
+                Toast.makeText(LoginActivity.this, "카카오 로그아웃 완료.", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
     }
 }

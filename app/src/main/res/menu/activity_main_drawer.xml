@@ -12,7 +12,6 @@
     </group>
     <item android:title="분류">
         <menu>
-
             <item
                 android:id="@+id/nav_sortschedule"
                 android:icon="@drawable/ic_event_black"
@@ -23,21 +22,34 @@
                 android:title="할 일" />
         </menu>
     </item>
+    <item android:title="분석">
+        <menu>
+            <item
+                android:id="@+id/nav_analysis"
+                android:icon="@drawable/ic_equalizer_black"
+                android:title="수행도 분석" />
+        </menu>
+    </item>
 
     <item android:title="other">
         <menu>
-            <item
-                android:id="@+id/nav_kakao"
-                android:title="카카오 로그인" />
-            <item
-                android:id="@+id/nav_kakaoout"
-                android:title="카카오 로그아웃" />
             <item
                 android:id="@+id/nav_settings"
                 android:title="설정" />
             <item
                 android:id="@+id/nav_mailtodev"
                 android:title="문의하기" />
+
+        </menu>
+    </item>
+
+
+    <item android:title="Debug">
+        <menu>
+            <item
+                android:id="@+id/nav_clear"
+                android:title="데이터베이스 초기화" />
+
         </menu>
     </item>
 

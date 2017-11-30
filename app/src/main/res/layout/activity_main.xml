@@ -40,29 +40,9 @@
             android:layout_weight="1"
             android:background="@null"
             android:gravity="bottom|center_horizontal"
-            android:paddingBottom="20dp"
+            android:paddingBottom="40dp"
             android:text="화면을 클릭하면 이동합니다."
             android:textSize="24sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/mainA_btn_setting"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="RESET" />
-
-        <Button
-            android:id="@+id/mainA_btn_daily"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="test_button" />
-
-    </LinearLayout>
 </LinearLayout>

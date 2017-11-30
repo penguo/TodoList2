@@ -14,7 +14,7 @@
         <EditText
             android:id="@+id/upitem2_et"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="108dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_weight="1"
@@ -22,7 +22,6 @@
             android:ems="10"
             android:gravity="top"
             android:inputType="textMultiLine"
-            android:minHeight="108dp"
             android:padding="8dp"
             android:text="TEXT VIEW POINT"
             android:textSize="16sp" />

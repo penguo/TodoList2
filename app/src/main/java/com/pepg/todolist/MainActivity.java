@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public static int DBVERSION = 3;
 
-    Button btnList, btnSetting, btnDaily;
+    Button btnList;
     TextView tvTitle, tvInfo;
     final DBManager dbManager = new DBManager(this, "todolist2.db", null, DBVERSION);
     PermissionListener permissionlistener;
@@ -35,25 +35,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         btnList = (Button) findViewById(R.id.mainA_btn_list);
-        btnSetting = (Button) findViewById(R.id.mainA_btn_setting);
-        btnDaily = (Button) findViewById(R.id.mainA_btn_daily);
         tvTitle = (TextView) findViewById(R.id.mainA_tv_title);
         tvInfo = (TextView) findViewById(R.id.mainA_tv_info);
 
         // TODO: BUILD INFO SET
-        tvInfo.setText("build 0.171129.1547");
+        tvInfo.setText("build 0.171130.1701");
 
         btnList.setOnClickListener(this);
-        btnSetting.setOnClickListener(this);
-        btnDaily.setOnClickListener(this);
 
         Log.e("CHECK",Session.getCurrentSession().checkAndImplicitOpen()+"");
-        if (Session.getCurrentSession().checkAndImplicitOpen()) {
-            Intent intent = new Intent(this, KakaoSignupActivity.class);
-            startActivity(intent);
-        } else {
-            // 무조건 재로그인을 시켜야 하는 경우
-        }
         initSetting();
     }
 
@@ -81,14 +71,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case (R.id.mainA_btn_list):
                 dbManager.DATA_SORTTYPE = "DEFAULT";
-                intent = new Intent(MainActivity.this, ListActivity.class);
-                startActivity(intent);
+                if (Session.getCurrentSession().checkAndImplicitOpen()) {
+                    intent = new Intent(this, KakaoSignupActivity.class);
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(MainActivity.this, ListActivity.class);
+                    startActivity(intent);
+                }
                 finish();
-                break;
-            case (R.id.mainA_btn_setting):
-                dbManager.reset();
-                break;
-            case (R.id.mainA_btn_daily):
                 break;
             case (R.id.mainA_tv_title):
                 break;

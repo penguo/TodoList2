@@ -36,7 +36,6 @@
                 android:layout_weight="1">
 
                 <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/listA_fab"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_gravity="center"
