@@ -134,5 +134,4 @@ public class Step1Fragment extends Fragment {
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
     }
-
 }
