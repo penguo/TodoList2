@@ -235,30 +235,31 @@ public class DBManager extends SQLiteOpenHelper {
 
     public DataTodo getValue2(String where, int equal) {
         db = getReadableDatabase();
-        DataTodo dt = new DataTodo();
+        DataTodo data = new DataTodo();
         cursor = db.rawQuery("SELECT * FROM TODOLIST WHERE " + where + " = '" + equal + "';", null);
         while (cursor.moveToNext()) {
-            dt = new DataTodo(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(6), cursor.getString(7));
+            data = new DataTodo(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(6), cursor.getString(7));
         }
         cursor.close();
+
         cursor = db.rawQuery("SELECT ACH, ACHMAX FROM SEMITODO WHERE _parentId = " + DATA_id + " ;", null);
         if (cursor.getCount() == 0) // Semi 데이터가 없을 경우 - 직접 설정한 퍼센트로 적용.
         {
-            dt.setAch_finish(0);
-            dt.setAch_max(0);
-            dt.setAch(0);
+            data.setAch_finish(0);
+            data.setAch_max(0);
+            data.setAch(0);
         } else { // Semi 데이터가 하나 이상 있을 경우 - Semi의 완수도에 따라 적용.
             int totalAch = 0, totalAchMax = 0;
             while (cursor.moveToNext()) {
                 totalAch += cursor.getInt(0);
                 totalAchMax += cursor.getInt(1);
             }
-            dt.setAch_finish(totalAch);
-            dt.setAch_max(totalAchMax);
-            dt.setAch((totalAch * 100) / totalAchMax);
+            data.setAch_finish(totalAch);
+            data.setAch_max(totalAchMax);
+            data.setAch((totalAch * 100) / totalAchMax);
         }
         cursor.close();
-        return dt;
+        return data;
     }
 
     public void setPosition() {

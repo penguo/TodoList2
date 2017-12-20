@@ -1,6 +1,7 @@
 package com.pepg.todolist.Fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,7 +28,7 @@ public class Step1Fragment extends Fragment {
 
     DBManager dbManager;
     Activity activity;
-    TextView tvTitle, tvCategory;
+    TextView tvCategory;
     LinearLayout layoutBody, layoutTitle, layoutCategory;
     EditText etTitle;
 
@@ -43,7 +45,6 @@ public class Step1Fragment extends Fragment {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_step1, container, false);
         dbManager = new DBManager(this.getContext(), "todolist2.db", null, MainActivity.DBVERSION);
         activity = getActivity();
-        tvTitle = (TextView) layout.findViewById(R.id.fs1_tv_title);
         layoutBody = (LinearLayout)layout.findViewById(R.id.fs1_layout);
         layoutTitle = (LinearLayout) layout.findViewById(R.id.fs1_layout_title);
         layoutCategory = (LinearLayout) layout.findViewById(R.id.fs1_layout_category);
@@ -55,15 +56,14 @@ public class Step1Fragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        tvTitle.setText(DBManager.DATA_TITLE);
         etTitle.setText(DBManager.DATA_TITLE);
         tvCategory.setText(DBManager.DATA_CATEGORY);
         layoutTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Manager.callSetTitleLayout(activity, dbManager, 0, tvTitle);
                 etTitle.requestFocus();
+                InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.showSoftInput(etTitle, 0);
             }
         });
         layoutCategory.setOnClickListener(new View.OnClickListener() {
@@ -133,5 +133,9 @@ public class Step1Fragment extends Fragment {
         dialog = builder.create(); //builder.show()를 create하여 dialog에 저장하는 방식.
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
+    }
+
+    public String getEtTitle(){
+        return etTitle.getText().toString();
     }
 }

@@ -99,8 +99,10 @@ public class AddguideActivity extends AppCompatActivity implements View.OnClickL
                 case 1:
                     return new Step2Fragment();
                 case 2:
+                    DBManager.DATA_TITLE = fs1.getEtTitle();
                     return new Step3Fragment();
                 case 3:
+                    DBManager.DATA_TITLE = fs1.getEtTitle();
                     return new Step4Fragment();
                 default:
                     return null;

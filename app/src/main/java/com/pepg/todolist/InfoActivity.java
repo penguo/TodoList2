@@ -197,6 +197,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         if (!DBManager.DATA_TITLE.equals(getString(R.string.empty_data))) {
             tvTitle.setText(DBManager.DATA_TITLE);
             tvCategory.setText(DBManager.DATA_CATEGORY);
+            tvCategory.setVisibility(View.VISIBLE);
         } else {
             tvTitle.setText(DBManager.DATA_CATEGORY);
             tvCategory.setVisibility(View.GONE);

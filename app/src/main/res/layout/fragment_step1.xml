@@ -138,14 +138,6 @@
                         android:textSize="18sp"
                         android:visibility="visible" />
 
-                    <TextView
-                        android:id="@+id/fs1_tv_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="TITLE VIEW POINT"
-                        android:textSize="18sp"
-                        android:visibility="gone" />
-
                 </LinearLayout>
 
                 <ImageView
