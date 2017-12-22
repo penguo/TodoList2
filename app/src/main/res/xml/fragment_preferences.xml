@@ -3,7 +3,7 @@
 
     <PreferenceCategory android:title="기본 설정">
 
-        <Preference android:title="계정 설정">
+        <Preference android:title="계정 로그인 설정">
             <intent
                 android:action="android.intent.action.ACCOUNT"
                 android:targetClass="com.pepg.todolist.Login.LoginActivity"
@@ -20,7 +20,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="pref_notviewpastdata"
-            android:title="지난 항목 숨기기" />
+            android:title="과거 항목 숨기기" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="pref_isviewsubtitle"
@@ -31,12 +31,6 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="pref_fastadd"
-            android:title="빠른 추가 도움" />
-        <ListPreference
-            android:defaultValue="1"
-            android:entries="@array/addType"
-            android:entryValues="@array/addType"
-            android:key="pref_addtimetype"
-            android:title="시간 선택창 타입 설정" />
+            android:title="빠른 추가 도우미" />
     </PreferenceCategory>
 </PreferenceScreen>

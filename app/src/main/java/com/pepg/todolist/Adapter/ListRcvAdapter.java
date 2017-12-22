@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.DataBase.DBSortManager;
+import com.pepg.todolist.DataBase.DataTodo;
 import com.pepg.todolist.InfoActivity;
 import com.pepg.todolist.ListActivity;
 import com.pepg.todolist.Manager;
@@ -33,20 +34,20 @@ import java.util.List;
  * Created by pengu on 2017-08-10.
  */
 
-public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHolder> {
+public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHolder>{
     private Activity activity;
 
     DBManager dbManager;
+    ArrayList<DataTodo> dataList;
 
     public ListRcvAdapter(DBManager dbManager, Activity activity) {
         this.dbManager = dbManager;
         this.activity = activity;
+        dataList = dbManager.getValueList();
     }
 
     @Override
     public int getItemCount() {
-
-        dbManager.setPosition();
         return dbManager.getSize();
     }
 
@@ -78,15 +79,14 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_todo, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
+        Log.e("onCreateViewHolder", "called");
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        dbManager.getValue("_position", position);
         holder.layoutSubTitle.setVisibility(View.GONE);
         holder.layoutUpperMargin.setVisibility(View.GONE);
-
         if (Manager.isViewSubTitle) {
             for (int i = 0; i < DBSortManager.subtitlePosition.size(); i++)
                 if (DBSortManager.subtitlePosition.get(i) == position) {
@@ -110,37 +110,40 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
                     }
                 }
         }
-
-        if (!dbManager.DATA_TITLE.equals(activity.getString(R.string.empty_data))) {
-            holder.tvTitle.setText(DBManager.DATA_TITLE);
-            holder.tvCategory.setText(DBManager.DATA_CATEGORY);
+        if (!dataList.get(position).getTitle().equals(activity.getString(R.string.empty_data))) {
+            holder.tvTitle.setText(dataList.get(position).getTitle());
+            holder.tvCategory.setText(dataList.get(position).getCategory());
             holder.tvCategory.setVisibility(View.VISIBLE);
         } else {
-            holder.tvTitle.setText(DBManager.DATA_CATEGORY);
+            holder.tvTitle.setText(dataList.get(position).getCategory());
             holder.tvCategory.setVisibility(View.GONE);
         }
-        holder.tvDate.setText("~ " + DBManager.DATA_DATE);
-        holder.tvDday.setText(Manager.getDdayString(DBManager.DATA_DDAY));
-        if (DBManager.DATA_DATE.equals(DBManager.DATA_CREATEDATE)) {
-            holder.ivSchedule.setVisibility(View.VISIBLE);
-            holder.tvAch.setVisibility(View.GONE);
-            holder.pb.setVisibility(View.GONE);
-            holder.layoutItem.setAlpha(1);
-        } else {
-            holder.tvAch.setText(DBManager.DATA_ACH + "%");
-            holder.ivSchedule.setVisibility(View.GONE);
-            holder.tvAch.setVisibility(View.VISIBLE);
-            holder.pb.setVisibility(View.VISIBLE);
-            if (!Manager.calculateisStart(DBManager.DATA_CREATEDATE)) {
-                holder.layoutItem.setAlpha((float) 0.5);
-            } else if (Manager.calculateDday(DBManager.DATA_DATE) < 0) {
-                holder.layoutItem.setAlpha((float) 0.5);
-            } else {
+        holder.tvDate.setText("~ " + dataList.get(position).getDate());
+        holder.tvDday.setText(Manager.getDdayString(dataList.get(position).getDday()));
+
+        switch(dataList.get(position).getType()){
+            case(1):
+                holder.tvAch.setText(dataList.get(position).getAch() + "%");
+                holder.ivSchedule.setVisibility(View.GONE);
+                holder.tvAch.setVisibility(View.VISIBLE);
+                holder.pb.setVisibility(View.VISIBLE);
+                if (!Manager.calculateisStart(dataList.get(position).getCreatedate())) {
+                    holder.layoutItem.setAlpha((float) 0.5);
+                } else if (Manager.calculateDday(dataList.get(position).getDate()) < 0) {
+                    holder.layoutItem.setAlpha((float) 0.5);
+                } else {
+                    holder.layoutItem.setAlpha(1);
+                }
+                break;
+            case(2):
+                holder.ivSchedule.setVisibility(View.VISIBLE);
+                holder.tvAch.setVisibility(View.GONE);
+                holder.pb.setVisibility(View.GONE);
                 holder.layoutItem.setAlpha(1);
-            }
+                break;
         }
         try {
-            if (DBManager.DATA_DDAY >= 10 || DBManager.DATA_DDAY <= -10) {
+            if (dataList.get(position).getDday() >= 10 || dataList.get(position).getDday() <= -10) {
                 holder.tvDday.setTextSize(16);
             } else {
                 holder.tvDday.setTextSize(21);
@@ -148,19 +151,18 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
         } catch (Exception e) {
             holder.tvDday.setTextSize(16);
         }
-        holder.pb.setProgress(DBManager.DATA_ACH);
-        holder.pb.setSecondaryProgress(Manager.getSuggestAch(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE));
+        holder.pb.setProgress(dataList.get(position).getAch());
+        holder.pb.setSecondaryProgress(Manager.getSuggestAch(dataList.get(position).getCreatedate(), dataList.get(position).getDate()));
         holder.layoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Intent intent = new Intent(activity, InfoActivity.class);
-                dbManager.getValue("_position", position);
-                intent.putExtra("_id", DBManager.DATA_id);
+                intent.putExtra("_id", dataList.get(position).getId());
                 if (Manager.isAnimationActive) {
                     List<Pair<View, String>> pairs = new ArrayList<>();
-                    pairs.add(Pair.create((View) holder.layoutItem, "layout_head"));
-                    Bundle options = ActivityOptions.makeSceneTransitionAnimation(activity,
-                            pairs.toArray(new Pair[pairs.size()])).toBundle();
+                    Bundle options = ActivityOptions.makeSceneTransitionAnimation(activity, (View)holder.layoutItem, "layout_head").toBundle();
+//                    pairs.add(Pair.create((View) holder.layoutItem, "layout_head"));
+//                    Bundle options = ActivityOptions.makeSceneTransitionAnimation(activity, pairs.toArray(new Pair[pairs.size()])).toBundle();
                     activity.startActivityForResult(intent, Manager.RC_LIST_TO_INFO, options);
                 } else {
                     activity.startActivityForResult(intent, Manager.RC_LIST_TO_INFO);
@@ -192,15 +194,14 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     }
 
     private void removeItemView(int position) {
-        dbManager.getValue("_position", position);
-        dbManager.delete(DBManager.DATA_id);
+        dbManager.delete(dataList.get(position).getId());
+        dataList = dbManager.getValueList();
         notifyItemRemoved(position);
-        dbManager.setPosition();
         notifyItemRangeChanged(position, dbManager.getSize()); // 지워진 만큼 다시 채워넣기.
     }
 
     public void refresh() {
-        dbManager.setPosition();
+        dataList = dbManager.getValueList();
         notifyDataSetChanged();
     }
 }

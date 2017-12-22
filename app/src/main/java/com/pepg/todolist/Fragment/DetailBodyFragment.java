@@ -39,7 +39,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
 
     Activity activity;
     View includePB, borderAch, borderAlarm;
-    int id, isDateType, step;
+    int id, step;
     RoundCornerProgressBar pbBody;
     DBManager dbManager;
     LinearLayout layoutDate, layoutAch, layoutAlarm, layoutMemo, layoutBody;
@@ -114,11 +114,14 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         }
         Manager.viewState = 0;
         tvDate.setText(DBManager.DATA_DATE);
-        if (!DBManager.DATA_DATE.equals(DBManager.DATA_CREATEDATE)) {
-            tvStartDate.setText(DBManager.DATA_CREATEDATE);
-        } else {
-            tvStartDate.setVisibility(View.GONE);
-            tvDateMiddle.setVisibility(View.GONE);
+        switch(DBManager.DATA_TYPE){
+            case(1):
+                tvStartDate.setText(DBManager.DATA_CREATEDATE);
+                break;
+            case(2):
+                tvStartDate.setVisibility(View.GONE);
+                tvDateMiddle.setVisibility(View.GONE);
+                break;
         }
         tvMemo.setText(DBManager.DATA_MEMO);
         tvAlarmSize.setText(dbManager.getAlarmSize(DBManager.DATA_id)+"");
@@ -249,7 +252,8 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         builder.setTitle("항목의 유형을 선택해주세요.");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                isDateType = which;
+                which++;
+                DBManager.DATA_TYPE = which;
                 if (Manager.isOnFastAdd) {
                     DateSelectOption();
                 } else {
@@ -264,8 +268,8 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         step++;
         List<String> itemAlready = new ArrayList<>();
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        switch (isDateType) {
-            case (0):
+        switch (DBManager.DATA_TYPE) {
+            case (1):
                 if (step == 1) {
                     builder.setTitle("할 일의 시작 날짜를 선택해주세요.");
                     itemAlready.add("오늘부터");
@@ -277,7 +281,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                     itemAlready.add(activity.getString(R.string.new_date));
                 }
                 break;
-            case (1):
+            case (2):
                 builder.setTitle("일정 날짜를 선택해주세요.");
                 itemAlready.addAll(Arrays.asList(getResources().getStringArray(R.array.itemlist_date)));
                 itemAlready.add(activity.getString(R.string.new_date));
@@ -295,8 +299,8 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                 Calendar cal = Calendar.getInstance();
                 if (!items[which].toString().equals(activity.getString(R.string.new_date))) {
                     SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    switch (isDateType) {
-                        case (0):
+                    switch (DBManager.DATA_TYPE) {
+                        case (1):
                             if (step == 1) {
                                 switch (which) {
                                     case (0):
@@ -330,7 +334,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                                 refresh();
                             }
                             break;
-                        case (1):
+                        case (2):
                             switch (which) {
                                 case (0):
                                     cal.add(Calendar.DATE, 1);
@@ -356,7 +360,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                     SimpleDateFormat CurYearFormat = new SimpleDateFormat("yyyy");
                     SimpleDateFormat CurMonthFormat = new SimpleDateFormat("MM");
                     SimpleDateFormat CurDayFormat = new SimpleDateFormat("dd");
-                    if (isDateType == 0 && step == 2) {
+                    if (DBManager.DATA_TYPE == 1 && step == 2) {
                         strings = DBManager.DATA_CREATEDATE.split("\u002D");
                         dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
                         cal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
@@ -383,7 +387,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         SimpleDateFormat CurYearFormat = new SimpleDateFormat("yyyy");
         SimpleDateFormat CurMonthFormat = new SimpleDateFormat("MM");
         SimpleDateFormat CurDayFormat = new SimpleDateFormat("dd");
-        if (isDateType == 0 && step == 2) {
+        if (DBManager.DATA_TYPE == 1 && step == 2) {
             strings = DBManager.DATA_CREATEDATE.split("\u002D");
             dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
             cal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
@@ -392,15 +396,15 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         } else {
             dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(CurYearFormat.format(date).toString()), Integer.parseInt(CurMonthFormat.format(date).toString()) - 1, Integer.parseInt(CurDayFormat.format(date).toString()));
         }
-        switch (isDateType) {
-            case (0):
+        switch (DBManager.DATA_TYPE) {
+            case (1):
                 if (step == 1) {
                     dpDialog.setTitle("할 일의 시작 날짜를 선택해주세요.");
                 } else if (step == 2) {
                     dpDialog.setTitle("할 일의 종료 날짜를 선택해주세요.");
                 }
                 break;
-            case (1):
+            case (2):
                 dpDialog.setTitle("일정 날짜를 선택해주세요.");
                 break;
         }
@@ -422,8 +426,8 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
             }
             sb.append(dayOfMonth + "");
             result = sb.toString();
-            switch (isDateType) {
-                case (0):
+            switch (DBManager.DATA_TYPE) {
+                case (1):
                     if (step == 1) {
                         DBManager.DATA_CREATEDATE = result;
                         if (Manager.isOnFastAdd) {
@@ -437,7 +441,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                         refresh();
                     }
                     break;
-                case (1):
+                case (2):
                     DBManager.DATA_CREATEDATE = result;
                     DBManager.DATA_DATE = result;
                     dbManager.updateSimply();

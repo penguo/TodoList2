@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static int DBVERSION = 3;
+    public static int DBVERSION = 4;
 
     Button btnList;
     TextView tvTitle, tvInfo;
@@ -39,12 +39,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvInfo = (TextView) findViewById(R.id.mainA_tv_info);
 
         // TODO: BUILD INFO SET
-        tvInfo.setText("build 0.171130.1701");
+        tvInfo.setText("build 0.171222.0935");
 
         btnList.setOnClickListener(this);
 
-        Log.e("CHECK",Session.getCurrentSession().checkAndImplicitOpen()+"");
+//        Log.e("CHECK",Session.getCurrentSession().checkAndImplicitOpen()+"");
         initSetting();
+        startApplication();
     }
 
     public void initSetting(){
@@ -54,12 +55,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
-                Toast.makeText(MainActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                Toast.makeText(MainActivity.this, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
             }
         };
         getPermission();
@@ -67,22 +68,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        Intent intent;
         switch (v.getId()) {
             case (R.id.mainA_btn_list):
-                dbManager.DATA_SORTTYPE = "DEFAULT";
-                if (Session.getCurrentSession().checkAndImplicitOpen()) {
-                    intent = new Intent(this, KakaoSignupActivity.class);
-                    startActivity(intent);
-                } else {
-                    intent = new Intent(MainActivity.this, ListActivity.class);
-                    startActivity(intent);
-                }
-                finish();
+                startApplication();
                 break;
             case (R.id.mainA_tv_title):
                 break;
         }
+    }
+
+    private void startApplication(){
+        Intent intent;
+        dbManager.DATA_SORTTYPE = "DEFAULT";
+        if (Session.getCurrentSession().checkAndImplicitOpen()) {
+            intent = new Intent(this, KakaoSignupActivity.class);
+            startActivity(intent);
+        } else {
+            intent = new Intent(MainActivity.this, ListActivity.class);
+            startActivity(intent);
+        }
+        finish();
     }
 
     public void getPermission(){

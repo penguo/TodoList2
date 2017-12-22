@@ -50,10 +50,10 @@ import java.util.List;
 public class Step2Fragment extends Fragment {
 
     DBManager dbManager;
-    LinearLayout layoutTodo, layoutSchedule, layoutDate;
+    LinearLayout layoutTodo, layoutSchedule, layoutDate, layoutBucket;
     TextView tvStartDate, tvDateMiddle, tvDate;
-    ImageView ivCheckSchedule, ivCheckTodo;
-    int step, isDateType;
+    ImageView ivCheckSchedule, ivCheckTodo, ivCheckBucket;
+    int step;
     Activity activity;
     String[] items, strings;
     String result;
@@ -91,7 +91,7 @@ public class Step2Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 step = 0;
-                isDateType = 0;
+                DBManager.DATA_TYPE = 1;
                 if (Manager.isOnFastAdd) {
                     DateSelectOption();
                 } else {
@@ -103,7 +103,19 @@ public class Step2Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 step = 0;
-                isDateType = 1;
+                DBManager.DATA_TYPE = 2;
+                if (Manager.isOnFastAdd) {
+                    DateSelectOption();
+                } else {
+                    DateSelectOption2();
+                }
+            }
+        });
+        layoutSchedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                step = 0;
+                DBManager.DATA_TYPE = 2;
                 if (Manager.isOnFastAdd) {
                     DateSelectOption();
                 } else {
@@ -126,28 +138,29 @@ public class Step2Fragment extends Fragment {
     }
 
     public void setData() {
+        switch(DBManager.DATA_TYPE){
+            case(1): // 할 일
+                layoutDate.setVisibility(View.VISIBLE);
+                ivCheckSchedule.setVisibility(View.GONE);
+                ivCheckTodo.setVisibility(View.VISIBLE);
+                tvStartDate.setVisibility(View.VISIBLE);
+                tvDateMiddle.setVisibility(View.VISIBLE);
+                tvStartDate.setText(DBManager.DATA_CREATEDATE);
+                break;
+            case(2): // 일정
+                tvStartDate.setVisibility(View.GONE);
+                tvDateMiddle.setVisibility(View.GONE);
+                layoutDate.setVisibility(View.VISIBLE);
+                ivCheckSchedule.setVisibility(View.VISIBLE);
+                ivCheckTodo.setVisibility(View.GONE);
+                break;
+        }
         if (DBManager.DATA_DATE.equals(getString(R.string.unregistered))) {
             layoutDate.setVisibility(View.GONE);
             ivCheckTodo.setVisibility(View.GONE);
             ivCheckSchedule.setVisibility(View.GONE);
-        } else if (DBManager.DATA_DATE.equals(DBManager.DATA_CREATEDATE)) { // 일정
-            layoutDate.setVisibility(View.VISIBLE);
-            ivCheckSchedule.setVisibility(View.VISIBLE);
-            ivCheckTodo.setVisibility(View.GONE);
-        } else { // 할일
-            layoutDate.setVisibility(View.VISIBLE);
-            ivCheckSchedule.setVisibility(View.GONE);
-            ivCheckTodo.setVisibility(View.VISIBLE);
         }
         tvDate.setText(DBManager.DATA_DATE);
-        if (!DBManager.DATA_DATE.equals(DBManager.DATA_CREATEDATE)) {
-            tvStartDate.setVisibility(View.VISIBLE);
-            tvDateMiddle.setVisibility(View.VISIBLE);
-            tvStartDate.setText(DBManager.DATA_CREATEDATE);
-        } else {
-            tvStartDate.setVisibility(View.GONE);
-            tvDateMiddle.setVisibility(View.GONE);
-        }
     }
 
     // DetailBodyFragment 의 복사
@@ -156,8 +169,8 @@ public class Step2Fragment extends Fragment {
         step++;
         List<String> itemAlready = new ArrayList<>();
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        switch (isDateType) {
-            case (0):
+        switch (DBManager.DATA_TYPE) {
+            case (1):
                 if (step == 1) {
                     builder.setTitle("할 일의 시작 날짜를 선택해주세요.");
                     itemAlready.add("오늘부터");
@@ -169,7 +182,7 @@ public class Step2Fragment extends Fragment {
                     itemAlready.add(activity.getString(R.string.new_date));
                 }
                 break;
-            case (1):
+            case (2):
                 builder.setTitle("일정 날짜를 선택해주세요.");
                 itemAlready.addAll(Arrays.asList(getResources().getStringArray(R.array.itemlist_date)));
                 itemAlready.add(activity.getString(R.string.new_date));
@@ -188,8 +201,8 @@ public class Step2Fragment extends Fragment {
                 Calendar cal = Calendar.getInstance();
                 if (!items[which].toString().equals(activity.getString(R.string.new_date))) {
                     SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    switch (isDateType) {
-                        case (0):
+                    switch (DBManager.DATA_TYPE) {
+                        case (1):
                             if (step == 1) {
                                 switch (which) {
                                     case (0):
@@ -223,7 +236,7 @@ public class Step2Fragment extends Fragment {
                                 ((AddguideActivity) getActivity()).setData(2);
                             }
                             break;
-                        case (1):
+                        case (2):
                             switch (which) {
                                 case (0):
                                     cal.add(Calendar.DATE, 1);
@@ -249,7 +262,7 @@ public class Step2Fragment extends Fragment {
                     SimpleDateFormat CurYearFormat = new SimpleDateFormat("yyyy");
                     SimpleDateFormat CurMonthFormat = new SimpleDateFormat("MM");
                     SimpleDateFormat CurDayFormat = new SimpleDateFormat("dd");
-                    if (isDateType == 0 && step == 2) {
+                    if (DBManager.DATA_TYPE == 1 && step == 2) {
                         strings = DBManager.DATA_CREATEDATE.split("\u002D");
                         dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
                         cal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
@@ -277,7 +290,7 @@ public class Step2Fragment extends Fragment {
         SimpleDateFormat CurYearFormat = new SimpleDateFormat("yyyy");
         SimpleDateFormat CurMonthFormat = new SimpleDateFormat("MM");
         SimpleDateFormat CurDayFormat = new SimpleDateFormat("dd");
-        if (isDateType == 0 && step == 2) {
+        if (DBManager.DATA_TYPE == 1 && step == 2) {
             strings = DBManager.DATA_CREATEDATE.split("\u002D");
             dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
             cal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
@@ -288,15 +301,15 @@ public class Step2Fragment extends Fragment {
         }
 
 
-        switch (isDateType) {
-            case (0):
+        switch (DBManager.DATA_TYPE) {
+            case (1):
                 if (step == 1) {
                     dpDialog.setTitle("시작 날짜");
                 } else if (step == 2) {
                     dpDialog.setTitle("종료 날짜");
                 }
                 break;
-            case (1):
+            case (2):
                 break;
         }
 
@@ -318,8 +331,8 @@ public class Step2Fragment extends Fragment {
             }
             sb.append(dayOfMonth + "");
             result = sb.toString();
-            switch (isDateType) {
-                case (0):
+            switch (DBManager.DATA_TYPE) {
+                case (1):
                     if (step == 1) {
                         DBManager.DATA_CREATEDATE = result;
                         if (Manager.isOnFastAdd) {
@@ -333,7 +346,7 @@ public class Step2Fragment extends Fragment {
                         ((AddguideActivity) getActivity()).setData(2);
                     }
                     break;
-                case (1):
+                case (2):
                     DBManager.DATA_CREATEDATE = result;
                     DBManager.DATA_DATE = result;
                     setData();
@@ -342,6 +355,4 @@ public class Step2Fragment extends Fragment {
             }
         }
     };
-
-
 }

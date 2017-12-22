@@ -282,16 +282,21 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         dbManager.getValue("_id", DBManager.DATA_id);
         pbHead.setProgress(DBManager.DATA_ACH);
         pbHead.setSecondaryProgress(Manager.getSuggestAch(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE));
-        if (DBManager.DATA_DATE.equals(DBManager.DATA_CREATEDATE)) {
-            ivSchedule.setVisibility(View.VISIBLE);
-            tvAch.setVisibility(View.GONE);
-            pbHead.setVisibility(View.GONE);
-        } else {
-            tvAch.setText(DBManager.DATA_ACH + "%");
-            ivSchedule.setVisibility(View.GONE);
-            tvAch.setVisibility(View.VISIBLE);
-            pbHead.setVisibility(View.VISIBLE);
+
+        switch(DBManager.DATA_TYPE){
+            case(1):
+                tvAch.setText(DBManager.DATA_ACH + "%");
+                ivSchedule.setVisibility(View.GONE);
+                tvAch.setVisibility(View.VISIBLE);
+                pbHead.setVisibility(View.VISIBLE);
+                break;
+            case(2):
+                ivSchedule.setVisibility(View.VISIBLE);
+                tvAch.setVisibility(View.GONE);
+                pbHead.setVisibility(View.GONE);
+                break;
         }
+
         switch (Manager.viewState) {
             case (0):
                 DetailBodyFragment dbf = (DetailBodyFragment) getFragmentManager().findFragmentById(R.id.info_linearlayout_fragment);

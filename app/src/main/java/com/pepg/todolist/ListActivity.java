@@ -201,6 +201,9 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         if (requestCode == Manager.RC_LIST_TO_SETTINGS) {
             onRefresh();
         }
+        if (requestCode == Manager.RC_LIST_TO_ANALYSIS) {
+            onRefresh();
+        }
     }
 
     @Override
@@ -281,7 +284,8 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 onRefresh();
                 break;
             case(R.id.nav_analysis):
-                Toast.makeText(this, "준비 중 입니다.", Toast.LENGTH_SHORT).show();
+                intent = new Intent(ListActivity.this, AnalysisActivity.class);
+                startActivityForResult(intent, Manager.RC_LIST_TO_ANALYSIS);
                 break;
         }
         return true;

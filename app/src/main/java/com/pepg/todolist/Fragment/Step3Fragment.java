@@ -31,7 +31,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
-import com.pepg.todolist.Adapter.SimpleRcvAdapter;
 
 import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.MainActivity;

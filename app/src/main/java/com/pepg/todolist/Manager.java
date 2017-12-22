@@ -52,6 +52,7 @@ public class Manager {
     public final static int RC_DETAIL_TO_UPDATE = 1002;
     public final static int RC_LIST_TO_ADDGUIDE = 1003;
     public final static int RC_LIST_TO_SETTINGS = 1006;
+    public final static int RC_LIST_TO_ANALYSIS = 1007;
     public static boolean editMode, isLogin;
     public static int viewState;
     public static UserProfile userProfile;

@@ -82,8 +82,6 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         dbManager.getSemiValue("_position", position);
-
-//        holder.ivWeight.setImageResource(Manager.getDrawableResId("letter" + dbManager.DATA_semi_WEIGHT));
         holder.isSet = false;
         holder.tvTitle.setText(DBManager.DATA_semi_TITLE);
         if(DBManager.DATA_semi_MEMO.equals("")){
