@@ -89,12 +89,12 @@
                     android:textStyle="bold|italic" />
 
                 <ImageView
-                    android:id="@+id/todo_iv_schedule"
+                    android:id="@+id/todo_iv_icon"
                     style="@style/icon"
                     android:layout_margin="12dp"
                     android:background="@null"
                     android:clickable="false"
-                    app:srcCompat="@drawable/ic_event_black" />
+                    app:srcCompat="@drawable/ic_error_black" />
 
             </android.support.design.widget.CoordinatorLayout>
 
@@ -128,14 +128,6 @@
                     android:layout_height="wrap_content"
                     android:text="TITLE VIEW POINT"
                     android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/todo_tv_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="DATE VIEW POINT"
-                    android:textSize="14sp"
-                    android:visibility="gone" />
 
             </LinearLayout>
 

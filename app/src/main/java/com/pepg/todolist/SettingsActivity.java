@@ -5,8 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.pepg.todolist.Fragment.SettingsFragment;
+
+import static com.pepg.todolist.MainActivity.APPVERSION;
 
 
 /**
@@ -16,7 +19,7 @@ import com.pepg.todolist.Fragment.SettingsFragment;
 public class SettingsActivity extends AppCompatActivity {
 
     ImageButton btnReturn;
-
+    TextView tvVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +33,8 @@ public class SettingsActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+        tvVersion = (TextView) findViewById(R.id.setting_tv_version);
+        tvVersion.setText(APPVERSION);
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction()
                 .replace(R.id.setting_framelayout, new SettingsFragment())

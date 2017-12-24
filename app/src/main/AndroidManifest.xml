@@ -55,7 +55,8 @@
 
         <activity android:name=".Login.KakaoSignupActivity" />
         <activity android:name=".Login.LoginActivity" />
-        <activity android:name=".AnalysisActivity"></activity>
+        <activity android:name=".AnalysisActivity" />
+        <activity android:name=".TodayActivity"></activity>
     </application>
 
 </manifest>

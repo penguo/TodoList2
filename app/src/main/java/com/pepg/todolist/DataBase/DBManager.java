@@ -57,7 +57,8 @@ public class DBManager extends SQLiteOpenHelper {
                 " TITLE TEXT, " +
                 " ACH INTEGER DEFAULT 0," +
                 " ACHMAX INTEGER DEFAULT 100," +
-                " MEMO TEXT );");
+                " MEMO TEXT," +
+                " NUMBER INTEGER DEFAULT 1 );");
         db.execSQL(" CREATE TABLE SETTING ( " +
                 " _id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 " TYPE TEXT, " +
@@ -74,7 +75,7 @@ public class DBManager extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {
-            case 3:
+            case (3):
                 try {
                     db.beginTransaction();
                     db.execSQL("ALTER TABLE TODOLIST ADD COLUMN TYPE Integer DEFAULT 1");
@@ -84,7 +85,17 @@ public class DBManager extends SQLiteOpenHelper {
                 } finally {
                     db.endTransaction();
                 }
-                ;
+                break;
+            case (4):
+                try {
+                    db.beginTransaction();
+                    db.execSQL("ALTER TABLE SEMITODO ADD COLUMN NUMBER Integer DEFAULT 0");
+                    db.setTransactionSuccessful();
+                } catch (IllegalStateException e) {
+                    Log.e("dbUpgrade error", e.toString());
+                } finally {
+                    db.endTransaction();
+                }
                 break;
         }
     }
@@ -362,7 +373,8 @@ public class DBManager extends SQLiteOpenHelper {
                 "'" + title + "', " +
                 "0," +
                 "100," +
-                "'" + memo + "');");
+                "'" + memo + "'," +
+                "1);");
         setSemiPosition(parentId);
         db.close();
     }

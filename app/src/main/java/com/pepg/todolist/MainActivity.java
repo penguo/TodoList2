@@ -22,7 +22,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static int DBVERSION = 4;
+    public static int DBVERSION = 5;
+    public static String APPVERSION = "alpha 1.0.1";
 
     Button btnList;
     TextView tvTitle, tvInfo;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvInfo = (TextView) findViewById(R.id.mainA_tv_info);
 
         // TODO: BUILD INFO SET
-        tvInfo.setText("build 0.171222.0935");
+        tvInfo.setText("Version " + APPVERSION);
 
         btnList.setOnClickListener(this);
 
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startApplication();
     }
 
-    public void initSetting(){
+    public void initSetting() {
         Manager.editMode = false;
         Manager.isAnimationActive = true;
         Manager.setSetting(this);
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void startApplication(){
+    private void startApplication() {
         Intent intent;
         dbManager.DATA_SORTTYPE = "DEFAULT";
         if (Session.getCurrentSession().checkAndImplicitOpen()) {
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         finish();
     }
 
-    public void getPermission(){
+    public void getPermission() {
         TedPermission.with(this)
                 .setPermissionListener(permissionlistener)
                 .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")

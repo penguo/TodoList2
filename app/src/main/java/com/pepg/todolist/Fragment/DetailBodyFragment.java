@@ -114,17 +114,17 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         }
         Manager.viewState = 0;
         tvDate.setText(DBManager.DATA_DATE);
-        switch(DBManager.DATA_TYPE){
-            case(1):
+        switch (DBManager.DATA_TYPE) {
+            case (1):
                 tvStartDate.setText(DBManager.DATA_CREATEDATE);
                 break;
-            case(2):
+            case (2):
                 tvStartDate.setVisibility(View.GONE);
                 tvDateMiddle.setVisibility(View.GONE);
                 break;
         }
         tvMemo.setText(DBManager.DATA_MEMO);
-        tvAlarmSize.setText(dbManager.getAlarmSize(DBManager.DATA_id)+"");
+        tvAlarmSize.setText(dbManager.getAlarmSize(DBManager.DATA_id) + "");
         fragmentManager = getFragmentManager();
         detailSemiFragment = new DetailSemiFragment();
         detailAlarmFragment = new DetailAlarmFragment();
@@ -247,138 +247,20 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
 
     public void DateEdit() {
         step = 0;
-        final String[] items = {"할 일(~부터 ~까지)", "일정(선택한 날짜에)"};
+        final String[] items = {"할 일(~부터 ~까지)", "일정(선택한 날짜에)", "버킷 리스트(언젠가)", "꾸준하게(반복적으로)"};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("항목의 유형을 선택해주세요.");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 which++;
                 DBManager.DATA_TYPE = which;
-                if (Manager.isOnFastAdd) {
-                    DateSelectOption();
-                } else {
-                    DateSelectOption2();
-                }
+                DateSelectOption();
             }
         });
         builder.show();
     }
 
     public void DateSelectOption() {
-        step++;
-        List<String> itemAlready = new ArrayList<>();
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        switch (DBManager.DATA_TYPE) {
-            case (1):
-                if (step == 1) {
-                    builder.setTitle("할 일의 시작 날짜를 선택해주세요.");
-                    itemAlready.add("오늘부터");
-                    itemAlready.add(activity.getString(R.string.new_date));
-                } else if (step == 2) {
-                    builder.setTitle("할 일의 종료 날짜를 선택해주세요.");
-                    itemAlready.addAll(Arrays.asList(getResources().getStringArray(R.array.itemlist_date)));
-                    itemAlready.add(activity.getString(R.string.date_forever));
-                    itemAlready.add(activity.getString(R.string.new_date));
-                }
-                break;
-            case (2):
-                builder.setTitle("일정 날짜를 선택해주세요.");
-                itemAlready.addAll(Arrays.asList(getResources().getStringArray(R.array.itemlist_date)));
-                itemAlready.add(activity.getString(R.string.new_date));
-                break;
-        }
-        items = new String[itemAlready.size()];
-        for (int i = 0; i < itemAlready.size(); i++) {
-            items[i] = itemAlready.get(i);
-        }
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                long now = System.currentTimeMillis();
-                Date date = new Date(now);
-                Calendar cal = Calendar.getInstance();
-                if (!items[which].toString().equals(activity.getString(R.string.new_date))) {
-                    SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    switch (DBManager.DATA_TYPE) {
-                        case (1):
-                            if (step == 1) {
-                                switch (which) {
-                                    case (0):
-                                        result = CurDateFormat.format(cal.getTime()) + "";
-                                        break;
-                                }
-                                DBManager.DATA_CREATEDATE = result;
-                                DateSelectOption();
-                            } else if (step == 2) {
-                                strings = DBManager.DATA_CREATEDATE.split("\u002D");
-                                cal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
-                                switch (which) {
-                                    case (0):
-                                        cal.add(Calendar.DATE, 1);
-                                        result = CurDateFormat.format(cal.getTime()) + "";
-                                        break;
-                                    case (1):
-                                        cal.add(Calendar.DATE, 7);
-                                        result = CurDateFormat.format(cal.getTime()) + "";
-                                        break;
-                                    case (2):
-                                        cal.add(Calendar.MONTH, 1);
-                                        result = CurDateFormat.format(cal.getTime()) + "";
-                                        break;
-                                    case (3):
-                                        result = activity.getString(R.string.date_forever);
-                                        break;
-                                }
-                                DBManager.DATA_DATE = result;
-                                dbManager.updateSimply();
-                                refresh();
-                            }
-                            break;
-                        case (2):
-                            switch (which) {
-                                case (0):
-                                    cal.add(Calendar.DATE, 1);
-                                    result = CurDateFormat.format(cal.getTime()) + "";
-                                    break;
-                                case (1):
-                                    cal.add(Calendar.DATE, 7);
-                                    result = CurDateFormat.format(cal.getTime()) + "";
-                                    break;
-                                case (2):
-                                    cal.add(Calendar.MONTH, 1);
-                                    result = CurDateFormat.format(cal.getTime()) + "";
-                                    break;
-                            }
-                            DBManager.DATA_CREATEDATE = result;
-                            DBManager.DATA_DATE = result;
-                            dbManager.updateSimply();
-                            refresh();
-                            break;
-                    }
-                } else {
-                    DatePickerDialog dpDialog;
-                    SimpleDateFormat CurYearFormat = new SimpleDateFormat("yyyy");
-                    SimpleDateFormat CurMonthFormat = new SimpleDateFormat("MM");
-                    SimpleDateFormat CurDayFormat = new SimpleDateFormat("dd");
-                    if (DBManager.DATA_TYPE == 1 && step == 2) {
-                        strings = DBManager.DATA_CREATEDATE.split("\u002D");
-                        dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
-                        cal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
-                        cal.add(Calendar.DATE, 1);
-                        dpDialog.getDatePicker().setMinDate(cal.getTimeInMillis());
-                    } else {
-                        dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(CurYearFormat.format(date).toString()), Integer.parseInt(CurMonthFormat.format(date).toString()) - 1, Integer.parseInt(CurDayFormat.format(date).toString()));
-
-                    }
-                    dpDialog.show();
-                }
-                dialog.dismiss();
-            }
-        });
-        builder.show();
-    }
-
-    public void DateSelectOption2() {
         step++;
         DatePickerDialog dpDialog;
         Calendar cal = Calendar.getInstance();
@@ -387,28 +269,46 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         SimpleDateFormat CurYearFormat = new SimpleDateFormat("yyyy");
         SimpleDateFormat CurMonthFormat = new SimpleDateFormat("MM");
         SimpleDateFormat CurDayFormat = new SimpleDateFormat("dd");
-        if (DBManager.DATA_TYPE == 1 && step == 2) {
-            strings = DBManager.DATA_CREATEDATE.split("\u002D");
-            dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
-            cal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
-            cal.add(Calendar.DATE, 1);
-            dpDialog.getDatePicker().setMinDate(cal.getTimeInMillis());
-        } else {
-            dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(CurYearFormat.format(date).toString()), Integer.parseInt(CurMonthFormat.format(date).toString()) - 1, Integer.parseInt(CurDayFormat.format(date).toString()));
-        }
+
+        dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(CurYearFormat.format(date).toString()), Integer.parseInt(CurMonthFormat.format(date).toString()) - 1, Integer.parseInt(CurDayFormat.format(date).toString()));
+
         switch (DBManager.DATA_TYPE) {
             case (1):
                 if (step == 1) {
                     dpDialog.setTitle("할 일의 시작 날짜를 선택해주세요.");
                 } else if (step == 2) {
                     dpDialog.setTitle("할 일의 종료 날짜를 선택해주세요.");
+                    strings = DBManager.DATA_CREATEDATE.split("\u002D");
+                    dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
+                    cal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
+                    cal.add(Calendar.DATE, 1);
+                    dpDialog.getDatePicker().setMinDate(cal.getTimeInMillis());
                 }
+                dpDialog.show();
                 break;
             case (2):
                 dpDialog.setTitle("일정 날짜를 선택해주세요.");
+                dpDialog.show();
+                break;
+            case (3):
+                DBManager.DATA_CREATEDATE = activity.getString(R.string.date_forever);
+                DBManager.DATA_DATE = activity.getString(R.string.date_forever);
+                refresh();
+                break;
+            case (4):
+                if (step == 1) {
+                    dpDialog.setTitle("할 일의 시작 날짜를 선택해주세요.");
+                } else if (step == 2) {
+                    dpDialog.setTitle("할 일의 종료 날짜를 선택해주세요.");
+                    strings = DBManager.DATA_CREATEDATE.split("\u002D");
+                    dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
+                    cal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
+                    cal.add(Calendar.DATE, 1);
+                    dpDialog.getDatePicker().setMinDate(cal.getTimeInMillis());
+                }
+                dpDialog.show();
                 break;
         }
-        dpDialog.show();
     }
 
     private DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
@@ -430,11 +330,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                 case (1):
                     if (step == 1) {
                         DBManager.DATA_CREATEDATE = result;
-                        if (Manager.isOnFastAdd) {
-                            DateSelectOption();
-                        } else {
-                            DateSelectOption2();
-                        }
+                        DateSelectOption();
                     } else if (step == 2) {
                         DBManager.DATA_DATE = result;
                         dbManager.updateSimply();
@@ -446,6 +342,19 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                     DBManager.DATA_DATE = result;
                     dbManager.updateSimply();
                     refresh();
+                    break;
+                case (3):
+                    // 여기로 넘어올 일 없다.
+                    break;
+                case (4):
+                    if (step == 1) {
+                        DBManager.DATA_CREATEDATE = result;
+                        DateSelectOption();
+                    } else if (step == 2) {
+                        DBManager.DATA_DATE = result;
+                        dbManager.updateSimply();
+                        refresh();
+                    }
                     break;
             }
         }

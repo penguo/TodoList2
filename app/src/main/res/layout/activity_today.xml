@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.pepg.todolist.ListActivity"
-    tools:openDrawer="start">
+    tools:context="com.pepg.todolist.TodayActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -22,7 +21,7 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/listA_toolbar"
+            android:id="@+id/today_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
@@ -43,52 +42,33 @@
                 android:paddingBottom="4dp"
                 android:paddingTop="4dp">
 
-                <android.support.design.widget.CoordinatorLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="16dp"
-                    android:layout_weight="1">
+                <ImageButton
+                    android:id="@+id/today_btn_drawer"
+                    style="@style/icon"
+                    app:srcCompat="@drawable/ic_menu" />
 
-                    <ImageButton
-                        android:id="@+id/listA_btn_sort"
-                        style="@style/icon"
-                        android:layout_gravity="left|center_vertical"
-                        app:srcCompat="@drawable/ic_menu" />
-
-                    <TextView
-                        android:id="@+id/listA_tv_toolbar_title"
-                        style="@style/ToolbarTitle"
+                    <android.support.design.widget.CoordinatorLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="72dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:text="TodoList"
-                        android:visibility="visible" />
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_weight="1">
 
-                    <Spinner
-                        android:id="@+id/listA_spinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_gravity="bottom"
-                        android:layout_weight="1" />
+                        <TextView
+                            style="@style/ToolbarTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:text="Today"
+                            android:visibility="visible" />
 
-                    <ImageView
-                        android:id="@+id/listA_iv_dropdown"
-                        style="@style/icon"
-                        android:layout_gravity="right|center_vertical"
-                        android:clickable="false"
-                        android:visibility="gone"
-                        app:srcCompat="@drawable/ic_arrow_dropdown" />
-
-
-                </android.support.design.widget.CoordinatorLayout>
+                    </android.support.design.widget.CoordinatorLayout>
 
                 <ImageButton
-                    android:id="@+id/listA_btn_setting"
+                    android:id="@+id/detail_btn_edit"
                     style="@style/icon"
-                    android:layout_gravity="right|center_vertical"
-                    app:srcCompat="@drawable/ic_setting" />
+                    app:srcCompat="@drawable/ic_edit" />
 
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
@@ -99,26 +79,13 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/listA_fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_margin="20dp"
-                android:alpha="0.7"
-                android:clickable="true"
-                android:transitionName="list_fab"
-                app:backgroundTint="@color/colorPrimary"
-                app:fabSize="normal"
-                app:srcCompat="@drawable/ic_add" />
-
             <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/listA_swipe"
+                android:id="@+id/today_swipe"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/listA_rcv_todo"
+                    android:id="@+id/today_rcv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/xml_item"
@@ -131,7 +98,7 @@
     </LinearLayout>
 
     <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
+        android:id="@+id/today_nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"

@@ -20,7 +20,6 @@ import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.DataBase.DBSortManager;
 import com.pepg.todolist.DataBase.DataTodo;
 import com.pepg.todolist.InfoActivity;
-import com.pepg.todolist.ListActivity;
 import com.pepg.todolist.Manager;
 
 import com.pepg.todolist.DataBase.DBManager;
@@ -34,7 +33,7 @@ import java.util.List;
  * Created by pengu on 2017-08-10.
  */
 
-public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHolder>{
+public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHolder> {
     private Activity activity;
 
     DBManager dbManager;
@@ -52,8 +51,8 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView ivSchedule;
-        TextView tvTitle, tvDate, tvCategory, tvAch, tvDday, tvSubTitle;
+        ImageView ivIcon;
+        TextView tvTitle, tvCategory, tvAch, tvDday, tvSubTitle;
         RoundCornerProgressBar pb;
         LinearLayout layoutItem, layoutUpperMargin, layoutSubTitle;
 
@@ -62,9 +61,8 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
         /**************************************************/
         public ViewHolder(View itemView) {
             super(itemView);
-            ivSchedule = (ImageView) itemView.findViewById(R.id.todo_iv_schedule);
+            ivIcon = (ImageView) itemView.findViewById(R.id.todo_iv_icon);
             tvTitle = (TextView) itemView.findViewById(R.id.todo_tv_title);
-            tvDate = (TextView) itemView.findViewById(R.id.todo_tv_date);
             tvCategory = (TextView) itemView.findViewById(R.id.todo_tv_category);
             tvAch = (TextView) itemView.findViewById(R.id.todo_tv_ach);
             tvDday = (TextView) itemView.findViewById(R.id.todo_tv_dday);
@@ -118,41 +116,43 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
             holder.tvTitle.setText(dataList.get(position).getCategory());
             holder.tvCategory.setVisibility(View.GONE);
         }
-        holder.tvDate.setText("~ " + dataList.get(position).getDate());
-        holder.tvDday.setText(Manager.getDdayString(dataList.get(position).getDday()));
 
-        switch(dataList.get(position).getType()){
-            case(1):
-                holder.tvAch.setText(dataList.get(position).getAch() + "%");
-                holder.ivSchedule.setVisibility(View.GONE);
+        holder.tvAch.setVisibility(View.INVISIBLE);
+        holder.pb.setVisibility(View.INVISIBLE);
+        holder.ivIcon.setVisibility(View.INVISIBLE);
+        holder.tvDday.setVisibility(View.INVISIBLE);
+        holder.layoutItem.setAlpha(1);
+        switch (dataList.get(position).getType()) {
+            case (1):
                 holder.tvAch.setVisibility(View.VISIBLE);
+                holder.tvAch.setTextSize(18);
+                holder.tvAch.setText(dataList.get(position).getAch() + "%");
                 holder.pb.setVisibility(View.VISIBLE);
-                if (!Manager.calculateisStart(dataList.get(position).getCreatedate())) {
+                holder.pb.setProgress(dataList.get(position).getAch());
+                holder.pb.setSecondaryProgress(Manager.getSuggestAch(dataList.get(position).getCreatedate(), dataList.get(position).getDate()));
+                if (!Manager.calculateisStart(dataList.get(position).getCreatedate())) { // 할 일 시작 전
+                    holder.layoutItem.setAlpha((float) 0.7);
+                    holder.tvAch.setText("Wait");
+                } else if (Manager.calculateDday(dataList.get(position).getDate()) < 0) { // 할 일 종료
                     holder.layoutItem.setAlpha((float) 0.5);
-                } else if (Manager.calculateDday(dataList.get(position).getDate()) < 0) {
-                    holder.layoutItem.setAlpha((float) 0.5);
-                } else {
-                    holder.layoutItem.setAlpha(1);
                 }
+                setTvDday(holder, position);
                 break;
-            case(2):
-                holder.ivSchedule.setVisibility(View.VISIBLE);
-                holder.tvAch.setVisibility(View.GONE);
-                holder.pb.setVisibility(View.GONE);
-                holder.layoutItem.setAlpha(1);
+            case (2):
+                holder.ivIcon.setVisibility(View.VISIBLE);
+                holder.ivIcon.setImageResource(R.drawable.ic_event_black);
+                setTvDday(holder, position);
+                break;
+            case (3):
+                holder.ivIcon.setVisibility(View.VISIBLE);
+                holder.ivIcon.setImageResource(R.drawable.ic_label_black);
+                break;
+            case (4):
+                holder.ivIcon.setVisibility(View.VISIBLE);
+                holder.ivIcon.setImageResource(R.drawable.ic_update_black);
                 break;
         }
-        try {
-            if (dataList.get(position).getDday() >= 10 || dataList.get(position).getDday() <= -10) {
-                holder.tvDday.setTextSize(16);
-            } else {
-                holder.tvDday.setTextSize(21);
-            }
-        } catch (Exception e) {
-            holder.tvDday.setTextSize(16);
-        }
-        holder.pb.setProgress(dataList.get(position).getAch());
-        holder.pb.setSecondaryProgress(Manager.getSuggestAch(dataList.get(position).getCreatedate(), dataList.get(position).getDate()));
+
         holder.layoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -160,7 +160,7 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
                 intent.putExtra("_id", dataList.get(position).getId());
                 if (Manager.isAnimationActive) {
                     List<Pair<View, String>> pairs = new ArrayList<>();
-                    Bundle options = ActivityOptions.makeSceneTransitionAnimation(activity, (View)holder.layoutItem, "layout_head").toBundle();
+                    Bundle options = ActivityOptions.makeSceneTransitionAnimation(activity, (View) holder.layoutItem, "layout_head").toBundle();
 //                    pairs.add(Pair.create((View) holder.layoutItem, "layout_head"));
 //                    Bundle options = ActivityOptions.makeSceneTransitionAnimation(activity, pairs.toArray(new Pair[pairs.size()])).toBundle();
                     activity.startActivityForResult(intent, Manager.RC_LIST_TO_INFO, options);
@@ -191,6 +191,20 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
                 return false;
             }
         });
+    }
+
+    private void setTvDday(final ViewHolder holder, final int position){
+        holder.tvDday.setVisibility(View.VISIBLE);
+        holder.tvDday.setText(Manager.getDdayString(dataList.get(position).getDday()));
+        try {
+            if (dataList.get(position).getDday() >= 10 || dataList.get(position).getDday() <= -10) {
+                holder.tvDday.setTextSize(16);
+            } else {
+                holder.tvDday.setTextSize(21);
+            }
+        } catch (Exception e) {
+            holder.tvDday.setTextSize(16);
+        }
     }
 
     private void removeItemView(int position) {

@@ -60,7 +60,7 @@ public class Manager {
     // setting option
     public static boolean isAnimationActive;
     public static boolean isViewSubTitle;
-    public static boolean isOnFastAdd;
+//    public static boolean isOnFastAdd;
     public static boolean notViewPastData;
     public static String addTimeType;
 
@@ -74,7 +74,7 @@ public class Manager {
 
         isAnimationActive = mySharedPreferences.getBoolean(SettingsFragment.KEY_ANIMATION, true);
         isViewSubTitle = mySharedPreferences.getBoolean(SettingsFragment.KEY_ISVIEWSUBTITLE, true);
-        isOnFastAdd = mySharedPreferences.getBoolean(SettingsFragment.KEY_FASTADD, true);
+//        isOnFastAdd = mySharedPreferences.getBoolean(SettingsFragment.KEY_FASTADD, true);
         notViewPastData = mySharedPreferences.getBoolean(SettingsFragment.KEY_NOTVIEWPASTDATA, false);
         addTimeType = mySharedPreferences.getString(SettingsFragment.KEY_ADDTIMETYPE, "");
     }

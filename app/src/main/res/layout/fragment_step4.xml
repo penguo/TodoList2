@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:elevation="1dp"
-    android:orientation="vertical"
-    android:padding="12dp">
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="12dp"
         android:gravity="center"
         android:text="알람 / 메모 설정"
         android:textSize="24sp" />
@@ -19,7 +19,8 @@
         android:id="@+id/fs4_layout_memo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:background="@drawable/xml_edititem"
         android:minHeight="72dp"
         android:orientation="horizontal"
