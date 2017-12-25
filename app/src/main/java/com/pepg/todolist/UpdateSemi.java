@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
 import com.pepg.todolist.DataBase.DBManager;
+import com.pepg.todolist.DataBase.DataSemi;
 
 /**
  * Created by pengu on 2017-09-19.
@@ -23,7 +24,6 @@ public class UpdateSemi implements View.OnClickListener {
     DBManager dbManager;
     Context context;
     Activity activity;
-    int parentId;
 
     public UpdateSemi(SemiListRcvAdapter semiRcvAdapter, Activity activity, DBManager DBManager) {
         this.semiRcvAdapter = semiRcvAdapter;
@@ -31,7 +31,7 @@ public class UpdateSemi implements View.OnClickListener {
         this.activity = activity;
     }
 
-    public void updateSemi(final int id, Context cont, final boolean isNewSemi) {
+    public void updateSemi(Context cont, final DataSemi data) {
         context = cont;
 
         LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -41,27 +41,23 @@ public class UpdateSemi implements View.OnClickListener {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         AlertDialog dialog;
 
-        if (isNewSemi) {
-            parentId = id;
-            title.setText("");
-            memo.setText("");
+        title.setText(data.getTitle());
+        memo.setText(data.getMemo());
+
+        if (data.isNew()) {
             builder.setTitle("세부todo 추가");
         } else {
-            dbManager.getSemiValue("_id", id);
-            title.setText(DBManager.DATA_semi_TITLE);
-            memo.setText(DBManager.DATA_semi_MEMO);
             builder.setTitle("세부todo 수정");
         }
         builder.setView(updateLayout);
 
-
         builder.setPositiveButton("저장", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (isNewSemi) {
-                    dbManager.semiInsert(parentId, title.getText().toString(), memo.getText().toString());
+                if (data.isNew()) {
+                    dbManager.insertSemi(data);
                 } else {
-                    dbManager.semiUpdate(id, title.getText().toString(), memo.getText().toString());
+                    dbManager.updateSemi(data);
                 }
                 switch (activity.getLocalClassName()) {
                     case ("InfoActivity"):

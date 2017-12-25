@@ -38,6 +38,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.pepg.todolist.AddguideActivity.DATA_STATIC;
+
 /**
  * author @Fobid
  */
@@ -91,7 +93,7 @@ public class Step2Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 step = 0;
-                DBManager.DATA_TYPE = 1;
+                DATA_STATIC.setType(1);
                 DateSelectOption();
             }
         });
@@ -99,7 +101,7 @@ public class Step2Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 step = 0;
-                DBManager.DATA_TYPE = 2;
+                DATA_STATIC.setType(2);
                 DateSelectOption();
             }
         });
@@ -107,7 +109,7 @@ public class Step2Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 step = 0;
-                DBManager.DATA_TYPE = 3;
+                DATA_STATIC.setType(3);
                 DateSelectOption();
             }
         });
@@ -115,7 +117,7 @@ public class Step2Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 step = 0;
-                DBManager.DATA_TYPE = 4;
+                DATA_STATIC.setType(4);
                 DateSelectOption();
             }
         });
@@ -134,7 +136,7 @@ public class Step2Fragment extends Fragment {
         ivCheckTodo.setVisibility(View.GONE);
         ivCheckBucket.setVisibility(View.GONE);
         ivCheckConti.setVisibility(View.GONE);
-        switch (DBManager.DATA_TYPE) {
+        switch (DATA_STATIC.getType()) {
             case (1): // 할 일
                 layoutDate.setVisibility(View.VISIBLE);
                 ivCheckTodo.setVisibility(View.VISIBLE);
@@ -142,7 +144,7 @@ public class Step2Fragment extends Fragment {
                 tvStartDate.setVisibility(View.VISIBLE);
                 tvDateMiddle.setVisibility(View.VISIBLE);
 
-                tvStartDate.setText(DBManager.DATA_CREATEDATE);
+                tvStartDate.setText(DATA_STATIC.getCreatedate());
                 break;
             case (2): // 일정
                 layoutDate.setVisibility(View.VISIBLE);
@@ -165,15 +167,15 @@ public class Step2Fragment extends Fragment {
                 tvStartDate.setVisibility(View.VISIBLE);
                 tvDateMiddle.setVisibility(View.VISIBLE);
 
-                tvStartDate.setText(DBManager.DATA_CREATEDATE);
+                tvStartDate.setText(DATA_STATIC.getCreatedate());
                 break;
         }
-        if (DBManager.DATA_DATE.equals(getString(R.string.unregistered))) {
+        if (DATA_STATIC.getDate().equals(getString(R.string.unregistered))) {
             layoutDate.setVisibility(View.GONE);
             ivCheckTodo.setVisibility(View.GONE);
             ivCheckSchedule.setVisibility(View.GONE);
         }
-        tvDate.setText(DBManager.DATA_DATE);
+        tvDate.setText(DATA_STATIC.getDate());
     }
 
     public void DateSelectOption() {
@@ -188,7 +190,7 @@ public class Step2Fragment extends Fragment {
 
         dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(CurYearFormat.format(date).toString()), Integer.parseInt(CurMonthFormat.format(date).toString()) - 1, Integer.parseInt(CurDayFormat.format(date).toString()));
 
-        switch (DBManager.DATA_TYPE) {
+        switch (DATA_STATIC.getType()) {
             case (1):
                 if (step == 1) {
                     dpDialog.setTitle("시작 날짜");
@@ -196,7 +198,7 @@ public class Step2Fragment extends Fragment {
                     dpDialog.setTitle("종료 날짜");
 
                     // 종료 날짜의 최소날짜 제한
-                    strings = DBManager.DATA_CREATEDATE.split("\u002D");
+                    strings = DATA_STATIC.getCreatedate().split("\u002D");
                     dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
                     cal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
                     cal.add(Calendar.DATE, 1);
@@ -208,8 +210,8 @@ public class Step2Fragment extends Fragment {
                 dpDialog.show();
                 break;
             case (3):
-                DBManager.DATA_CREATEDATE = activity.getString(R.string.date_forever);
-                DBManager.DATA_DATE = activity.getString(R.string.date_forever);
+                DATA_STATIC.setCreatedate(activity.getString(R.string.date_forever));
+                DATA_STATIC.setDate(activity.getString(R.string.date_forever));
                 setData();
                 ((AddguideActivity) getActivity()).setData(2);
                 break;
@@ -235,20 +237,20 @@ public class Step2Fragment extends Fragment {
             }
             sb.append(dayOfMonth + "");
             result = sb.toString();
-            switch (DBManager.DATA_TYPE) {
+            switch (DATA_STATIC.getType()) {
                 case (1):
                     if (step == 1) {
-                        DBManager.DATA_CREATEDATE = result;
+                        DATA_STATIC.setCreatedate(result);
                         DateSelectOption();
                     } else if (step == 2) {
-                        DBManager.DATA_DATE = result;
+                        DATA_STATIC.setDate(result);
                         setData();
                         ((AddguideActivity) getActivity()).setData(2);
                     }
                     break;
                 case (2):
-                    DBManager.DATA_CREATEDATE = result;
-                    DBManager.DATA_DATE = result;
+                    DATA_STATIC.setCreatedate(result);
+                    DATA_STATIC.setDate(result);
                     setData();
                     ((AddguideActivity) getActivity()).setData(2);
                     break;
@@ -257,10 +259,10 @@ public class Step2Fragment extends Fragment {
                     break;
                 case(4):
                     if (step == 1) {
-                        DBManager.DATA_CREATEDATE = result;
+                        DATA_STATIC.setCreatedate(result);
                         DateSelectOption();
                     } else if (step == 2) {
-                        DBManager.DATA_DATE = result;
+                        DATA_STATIC.setDate(result);
                         setData();
                         ((AddguideActivity) getActivity()).setData(2);
                     }

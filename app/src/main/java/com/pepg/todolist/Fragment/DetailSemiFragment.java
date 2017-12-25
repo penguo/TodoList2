@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
+import com.pepg.todolist.DataBase.DataSemi;
+import com.pepg.todolist.DataBase.DataTodo;
 import com.pepg.todolist.InfoActivity;
 import com.pepg.todolist.MainActivity;
 import com.pepg.todolist.Manager;
@@ -38,12 +40,12 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
     SemiListRcvAdapter semiRcvAdapter;
     UpdateSemi us;
     Activity activity;
-    int id;
     DBManager dbManager;
     FloatingActionButton fab;
     TextView tvAch;
     RoundCornerProgressBar pb;
     ImageButton btnLibraryAdd;
+    DataTodo data;
 
     public DetailSemiFragment() {
     }
@@ -75,7 +77,7 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         activity = this.getActivity();
-        id = dbManager.DATA_id;
+        data = ((InfoActivity)activity).getData();
         Manager.viewState = 2;
 
         dbManager = new DBManager(activity, "todolist2.db", null, MainActivity.DBVERSION);
@@ -84,7 +86,7 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
         rcvSemi.setLayoutManager(rcvLayoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(activity, rcvLayoutManager.getOrientation());
         rcvSemi.addItemDecoration(dividerItemDecoration);
-        semiRcvAdapter = new SemiListRcvAdapter(dbManager, activity, id);
+        semiRcvAdapter = new SemiListRcvAdapter(dbManager, activity, data);
         rcvSemi.setAdapter(semiRcvAdapter);
 
         us = new UpdateSemi(semiRcvAdapter, activity, dbManager);
@@ -100,13 +102,13 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                us.updateSemi(id, activity, true);
+                us.updateSemi(activity, new DataSemi(data.getId()));
             }
         });
         btnLibraryAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Manager.callSemiLibraryAddLayout(activity, dbManager, id, semiRcvAdapter);
+                Manager.callSemiLibraryAddLayout(activity, dbManager, data.getId(), semiRcvAdapter);
             }
         });
 
@@ -116,14 +118,14 @@ public class DetailSemiFragment extends Fragment implements SwipeRefreshLayout.O
 
     public void setData() {
         ((InfoActivity) activity).resetHeadEdit();
-        pb.setSecondaryProgress(Manager.getSuggestAch(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE));
+        pb.setSecondaryProgress(Manager.getSuggestAch(data));
         updateAch();
         checkEditMode();
     }
 
     public void updateAch() {
-        pb.setProgress(DBManager.DATA_ACH);
-        tvAch.setText((DBManager.DATA_ACH_FINISH / 100) + " / " + (DBManager.DATA_ACH_MAX / 100));
+        pb.setProgress(data.getAch());
+        tvAch.setText(data.getAch()+"");
     }
 
     @Override

@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
 
 import com.pepg.todolist.DataBase.DBManager;
+import com.pepg.todolist.DataBase.DataSemi;
 import com.pepg.todolist.MainActivity;
 import com.pepg.todolist.Manager;
 import com.pepg.todolist.R;
@@ -101,7 +102,7 @@ public class Step3Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                us.updateSemi(0, activity, true);
+                us.updateSemi(activity, new DataSemi(0));
             }
         });
         btnLibraryAdd.setOnClickListener(new View.OnClickListener() {

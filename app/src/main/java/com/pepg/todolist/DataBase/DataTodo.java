@@ -8,15 +8,21 @@ import com.pepg.todolist.Manager;
 
 public class DataTodo {
 
-    private int id, position, ach, dday, ach_finish, ach_max, type;
+    private int id, ach, dday, ach_finish, ach_max, type;
     private String title, category, date, createdate, memo;
 
     public DataTodo(){
+        this.id = 0;
+        this.title = "";
+        this.category = "";
+        this.date = "";
+        this.memo = "";
+        this.createdate = "";
+        this.type = 0;
     }
 
     public DataTodo(int id, int position, String title, String category, String date, String memo, String createDate, int type) {
         this.id = id;
-        this.position = position;
         this.title = title;
         this.category = category;
         this.date = date;
@@ -66,10 +72,6 @@ public class DataTodo {
         this.memo = memo;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
     public void setType(int type) {
         this.type = type;
     }
@@ -100,10 +102,6 @@ public class DataTodo {
 
     public int getDday() {
         return dday;
-    }
-
-    public int getPosition() {
-        return position;
     }
 
     public String getCategory() {

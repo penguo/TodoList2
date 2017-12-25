@@ -1,6 +1,5 @@
 package com.pepg.todolist;
 
-import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -15,8 +14,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.util.Pair;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,19 +25,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.pepg.todolist.Adapter.ListRcvAdapter;
 import com.pepg.todolist.DataBase.DBManager;
-import com.pepg.todolist.Login.KakaoLoginActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
@@ -124,18 +115,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
             case (R.id.listA_fab):
                 dbManager.deleteDummyData_Semi();
                 dbManager.deleteDummyData_Alarm();
-                dbManager.resetPublicData();
-                DBManager.DATA_DATE = getString(R.string.unregistered);
-                DBManager.DATA_CREATEDATE = getString(R.string.unregistered);
-                DBManager.DATA_CATEGORY = getString(R.string.unregistered);
                 intent = new Intent(ListActivity.this, AddguideActivity.class);
-//                intent.putExtra("_id", 0);
-//                List<Pair<View, String>> pairs = new ArrayList<>();
-//                pairs.add(Pair.create((View) fabAdd, "list_fab"));
-//                Bundle options = ActivityOptions.makeSceneTransitionAnimation(this,
-//                        pairs.toArray(new Pair[pairs.size()])).toBundle();
-//                startActivity(intent, options);
-
                 intent.putExtra("_id", 0);
                 startActivityForResult(intent, Manager.RC_LIST_TO_ADDGUIDE);
                 break;
@@ -185,7 +165,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Manager.RC_LIST_TO_UPDATE) {
             if (resultCode == RESULT_OK) {
-                dbManager.DATA_SORTTYPE = "DEFAULT";
+                dbManager.DATA_SORTbyCATEGORY = "DEFAULT";
                 onRefresh();
             }
         }
@@ -194,7 +174,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (requestCode == Manager.RC_LIST_TO_ADDGUIDE) {
             if (resultCode == RESULT_OK) {
-                dbManager.DATA_SORTTYPE = "DEFAULT";
+                dbManager.DATA_SORTbyCATEGORY = "DEFAULT";
                 onRefresh();
             }
         }
@@ -215,8 +195,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
         if (!items.get(position).equals(getString(R.string.all))) {
-            DBManager.DATA_SORTTYPE = "CATEGORY";
-            DBManager.DATA_SORTTYPEEQUAL = items.get(position);
+            DBManager.DATA_SORTbyCATEGORY = items.get(position);
             tvToolbarTitle.setText(items.get(position));
             ivDropdown.setVisibility(View.VISIBLE);
             isSortView = true;
@@ -232,9 +211,8 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void resetSort() {
-        DBManager.DATA_SORTTYPE = "DEFAULT";
-        DBManager.DATA_SORTTYPE2 = "";
-        DBManager.DATA_SORTTYPEEQUAL = "";
+        DBManager.DATA_SORTbyCATEGORY = "DEFAULT";
+        DBManager.DATA_SORTbyTYPE = 0;
         tvToolbarTitle.setText("TodoList");
         ivDropdown.setVisibility(View.GONE);
         isSortView = false;
@@ -267,15 +245,15 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(ListActivity.this, SettingsActivity.class);
                 startActivityForResult(intent, Manager.RC_LIST_TO_SETTINGS);
                 break;
-            case(R.id.nav_sortschedule):
-                DBManager.DATA_SORTTYPE2 = "SCHEDULE";
-                tvToolbarTitle.setText("일정");
+            case(R.id.nav_sorttodo):
+                DBManager.DATA_SORTbyTYPE = 1;
+                tvToolbarTitle.setText("할 일");
                 isSortView = true;
                 onRefresh();
                 break;
-            case(R.id.nav_sorttodo):
-                DBManager.DATA_SORTTYPE2 = "TODO";
-                tvToolbarTitle.setText("할 일");
+            case(R.id.nav_sortschedule):
+                DBManager.DATA_SORTbyTYPE = 2;
+                tvToolbarTitle.setText("일정");
                 isSortView = true;
                 onRefresh();
                 break;
@@ -299,8 +277,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                DBManager.DATA_SORTTYPE = "CATEGORY";
-                DBManager.DATA_SORTTYPEEQUAL = items[which].toString();
+                DBManager.DATA_SORTbyCATEGORY = items[which].toString();
                 tvToolbarTitle.setText(items[which] + "");
                 ivDropdown.setVisibility(View.VISIBLE);
                 isSortView = true;

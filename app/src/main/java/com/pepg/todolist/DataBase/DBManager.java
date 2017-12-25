@@ -5,14 +5,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.pepg.todolist.Manager;
-import com.pepg.todolist.R;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -23,20 +19,15 @@ public class DBManager extends SQLiteOpenHelper {
 
     SQLiteDatabase db, dbr;
     Cursor cursor;
-    DBSortManager dbSortManager;
     Context context;
+
+    public static String DATA_SORTbyCATEGORY;
+    public static int DATA_SORTbyTYPE;
 
     public DBManager(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         this.context = context;
     }
-
-    public static int DATA_id, DATA_position, DATA_ACH, DATA_DDAY, DATA_ACH_FINISH, DATA_ACH_MAX, DATA_TYPE;
-    public static String DATA_TITLE, DATA_CATEGORY, DATA_DATE, DATA_CREATEDATE, DATA_MEMO;
-    public static int DATA_semi_id, DATA_semi_position, DATA_semi_parentId, DATA_semi_ACH, DATA_semi_ACHMAX;
-    public static String DATA_semi_TITLE, DATA_semi_MEMO;
-    public static String DATA_SORTTYPE = "DEFAULT", DATA_SORTTYPEEQUAL = "";
-    public static String DATA_SORTTYPE2 = "";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -110,41 +101,37 @@ public class DBManager extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void insert(String title, String category, String date, int ach, String memo, String createDate, int type) {
-        if (title.equals("")) {
-            title = context.getString(R.string.empty_data);
-        }
+    public void insertTodo(DataTodo data) {
         db = getWritableDatabase();
+        dbr = getReadableDatabase();
         db.execSQL(" INSERT INTO TODOLIST VALUES ( " +
                 " null, " +
                 " 0, " +
-                "'" + title + "', " +
-                "'" + category + "', " +
-                "'" + date + "', " +
-                ach + "," +
-                "'" + memo + "'," +
-                "'" + createDate + "'," +
-                type + ");");
-        setDummyData_Semi(title);
-        setDummyData_Alarm(title);
-        db.close();
+                "'" + data.getTitle() + "', " +
+                "'" + data.getCategory() + "', " +
+                "'" + data.getDate() + "', " +
+                data.getAch() + "," +
+                "'" + data.getMemo() + "'," +
+                "'" + data.getCreatedate() + "'," +
+                data.getType() + ");");
+        cursor = dbr.rawQuery("SELECT _id FROM TODOLIST WHERE TITLE = '" + data.getTitle() + "';", null);
+        int id = 0;
+        while (cursor.moveToLast()) {
+            id = cursor.getInt(0);
+        }
+        setDummyData_Semi(id);
+        setDummyData_Alarm(id);
     }
 
-    public void setDummyData_Semi(String title) {
+    public void setDummyData_Semi(int parentId) {
         // _parentId == 0 인 더미데이터들을 해당 _parentId에 배분합니다.
         db = getWritableDatabase();
         dbr = getReadableDatabase();
-        // getId
-        cursor = dbr.rawQuery("SELECT _id FROM TODOLIST WHERE title = '" + title + "';", null);
-        while (cursor.moveToNext()) {
-            DATA_semi_parentId = cursor.getInt(0);
-        }
         cursor = dbr.rawQuery("SELECT _id FROM SEMITODO WHERE _parentId = 0;", null);
         while (cursor.moveToNext()) {
-            DATA_semi_id = cursor.getInt(0);
             db.execSQL(" UPDATE SEMITODO SET " +
-                    "_parentId = '" + DATA_semi_parentId + "' " +
-                    "WHERE _id = '" + DATA_semi_id + "'; ");
+                    "_parentId = '" + parentId + "' " +
+                    "WHERE _id = '" + cursor.getInt(0) + "'; ");
         }
     }
 
@@ -153,20 +140,14 @@ public class DBManager extends SQLiteOpenHelper {
         db = getReadableDatabase();
         cursor = db.rawQuery("SELECT _id FROM SEMITODO WHERE _parentId = 0;", null);
         while (cursor.moveToNext()) {
-            semiDelete(cursor.getInt(0));
+            deleteSemi(cursor.getInt(0));
         }
     }
 
-    public void setDummyData_Alarm(String title) {
+    public void setDummyData_Alarm(int parentId) {
         // _parentId == 0 인 더미데이터들을 해당 _parentId에 배분합니다.
         db = getWritableDatabase();
         dbr = getReadableDatabase();
-        int parentId = 0;
-        // getId
-        cursor = dbr.rawQuery("SELECT _id FROM TODOLIST WHERE title = '" + title + "';", null);
-        while (cursor.moveToNext()) {
-            parentId = cursor.getInt(0);
-        }
         cursor = dbr.rawQuery("SELECT _AlarmId FROM ALARM WHERE id = 0;", null);
         while (cursor.moveToNext()) {
             db.execSQL(" UPDATE ALARM SET " +
@@ -184,110 +165,82 @@ public class DBManager extends SQLiteOpenHelper {
         }
     }
 
-    public void insertSimply() {
-        insert(DATA_TITLE, DATA_CATEGORY, DATA_DATE, DATA_ACH, DATA_MEMO, DATA_CREATEDATE, DATA_TYPE);
-    }
-
-    public void update(int id, String title, String category, String date, String createDate, int ach, String memo, int type) {
-        if (title.equals("")) {
-            title = context.getString(R.string.empty_data);
-        }
+    public void updateTodo(DataTodo data) {
         db = getWritableDatabase();
         db.execSQL(" UPDATE TODOLIST SET " +
-                "TITLE = '" + title + "', " +
-                "CATEGORY = '" + category + "', " +
-                "DATE = '" + date + "', " +
-                "ACH = " + ach + "," +
-                "MEMO = '" + memo + "'," +
-                "CREATEDATE = '" + createDate + "'," +
-                "TYPE = " + type + " " +
-                "WHERE _id = " + id + " ; ");
+                "TITLE = '" + data.getTitle() + "', " +
+                "CATEGORY = '" + data.getCategory() + "', " +
+                "DATE = '" + data.getDate() + "', " +
+                "ACH = " + data.getAch() + "," +
+                "MEMO = '" + data.getMemo() + "'," +
+                "CREATEDATE = '" + data.getCreatedate() + "'," +
+                "TYPE = " + data.getType() + " " +
+                "WHERE _id = " + data.getId() + " ; ");
         db.close();
     }
 
-    public void updateSimply() {
-        update(DATA_id, DATA_TITLE, DATA_CATEGORY, DATA_DATE, DATA_CREATEDATE, DATA_ACH, DATA_MEMO, DATA_TYPE);
-    }
-
-    public void delete(int id) {
+    public void deleteTodo(int id) {
         db = getWritableDatabase();
         db.execSQL("DELETE FROM TODOLIST WHERE _id = '" + id + "';");
         db.execSQL("DELETE FROM SEMITODO WHERE _parentId = '" + id + "';");
         db.close();
     }
 
-    public void getValue(String where, int equal) {
-        db = getReadableDatabase();
-        cursor = db.rawQuery("SELECT * FROM TODOLIST WHERE " + where + " = '" + equal + "';", null);
-        while (cursor.moveToNext()) {
-            DATA_id = cursor.getInt(0);
-            DATA_position = cursor.getInt(1);
-            DATA_TITLE = cursor.getString(2);
-            DATA_CATEGORY = cursor.getString(3);
-            DATA_DATE = cursor.getString(4);
-            DATA_MEMO = cursor.getString(6);
-            DATA_CREATEDATE = cursor.getString(7);
-            DATA_TYPE = cursor.getInt(8);
-        }
-        DATA_DDAY = Manager.calculateDday(DBManager.DATA_DATE);
-        cursor.close();
-        cursor = db.rawQuery("SELECT ACH, ACHMAX FROM SEMITODO WHERE _parentId = " + DATA_id + " ;", null);
-        if (cursor.getCount() == 0) // Semi 데이터가 없을 경우 - 직접 설정한 퍼센트로 적용.
-        {
-            DATA_ACH_FINISH = 0;
-            DATA_ACH_MAX = 0;
-            DATA_ACH = 0;
-        } else { // Semi 데이터가 하나 이상 있을 경우 - Semi의 완수도에 따라 적용.
-            int totalAch = 0, totalAchMax = 0;
-            while (cursor.moveToNext()) {
-                totalAch += cursor.getInt(0);
-                totalAchMax += cursor.getInt(1);
-            }
-            DATA_ACH_FINISH = totalAch;
-            DATA_ACH_MAX = totalAchMax;
-            DATA_ACH = (totalAch * 100) / totalAchMax;
-        }
-        cursor.close();
-    }
-
     public ArrayList<DataTodo> getValueList() {
-        setPosition();
+        db = getReadableDatabase();
+        DataTodo data;
         ArrayList<DataTodo> list = new ArrayList<>();
-        for (int i = 0; i <= getSize(); i++) {
-            list.add(getValue2("_position", i));
-        }
-        return list;
-    }
-
-    public ArrayList<DataTodo> getValueListAll() {
-        db = getWritableDatabase();
-        dbr = getReadableDatabase();
-        db.execSQL("UPDATE TODOLIST SET _position = -1;");
-        cursor = dbr.rawQuery("SELECT _id, DATE FROM TODOLIST;", null);
-        int i = 0;
+        cursor = db.rawQuery("SELECT * FROM TODOLIST;", null);
         while (cursor.moveToNext()) {
-            if (Manager.calculateDday(cursor.getString(1)) < 0) {
-                db.execSQL("UPDATE TODOLIST SET _position = " + i + " WHERE _id = " + cursor.getInt(0) + ";");
-                i++;
-            }
+            data = new DataTodo(cursor.getInt(0),
+                    cursor.getInt(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                    cursor.getString(6),
+                    cursor.getString(7),
+                    cursor.getInt(8));
+            list.add(data);
         }
         cursor.close();
-        ArrayList<DataTodo> list = new ArrayList<>();
-        for (i = 0; i < getSize(); i++) {
-            list.add(getValue2("_position", i));
+        for (int i = 0; i < list.size(); i++) {
+            cursor = db.rawQuery("SELECT ACH, ACHMAX FROM SEMITODO WHERE _parentId = " + list.get(i).getId() + " ;", null);
+            if (cursor.getCount() == 0) // Semi 데이터가 없을 경우 - 직접 설정한 퍼센트로 적용.
+            {
+                list.get(i).setAch_finish(0);
+                list.get(i).setAch_max(0);
+                list.get(i).setAch(0);
+            } else { // Semi 데이터가 하나 이상 있을 경우 - Semi의 완수도에 따라 적용.
+                int totalAch = 0, totalAchMax = 0;
+                while (cursor.moveToNext()) {
+                    totalAch += cursor.getInt(0);
+                    totalAchMax += cursor.getInt(1);
+                }
+                list.get(i).setAch_finish(totalAch);
+                list.get(i).setAch_max(totalAchMax);
+                list.get(i).setAch((totalAch * 100) / totalAchMax);
+            }
+            cursor.close();
         }
+        list = setPosition(list);
         return list;
     }
 
-    public DataTodo getValue2(String where, int equal) {
+    public DataTodo getValue(int id) {
         db = getReadableDatabase();
         DataTodo data = new DataTodo();
-        cursor = db.rawQuery("SELECT * FROM TODOLIST WHERE " + where + " = '" + equal + "';", null);
+        cursor = db.rawQuery("SELECT * FROM TODOLIST WHERE _id = " + id + ";", null);
         while (cursor.moveToNext()) {
-            data = new DataTodo(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(6), cursor.getString(7), cursor.getInt(8));
+            data = new DataTodo(cursor.getInt(0),
+                    cursor.getInt(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                    cursor.getString(6),
+                    cursor.getString(7),
+                    cursor.getInt(8));
         }
         cursor.close();
-
         cursor = db.rawQuery("SELECT ACH, ACHMAX FROM SEMITODO WHERE _parentId = " + data.getId() + " ;", null);
         if (cursor.getCount() == 0) // Semi 데이터가 없을 경우 - 직접 설정한 퍼센트로 적용.
         {
@@ -308,149 +261,101 @@ public class DBManager extends SQLiteOpenHelper {
         return data;
     }
 
-    public void setPosition() {
-        db = getWritableDatabase();
-        dbr = getReadableDatabase();
-        db.execSQL("UPDATE TODOLIST SET _position = -1;");
-        dbSortManager = new DBSortManager(this, context, db, dbr);
-        switch (DATA_SORTTYPE) {
-            case ("DEFAULT"):
-                dbSortManager.sort();
-                break;
-            case ("CATEGORY"):
-                dbSortManager.sortByCategory(DATA_SORTTYPEEQUAL);
-                break;
-        }
-        if (!DATA_SORTTYPE2.equals("")) {
-            cursor = dbr.rawQuery("SELECT _id, CREATEDATE, DATE FROM TODOLIST WHERE _position > -1", null);
-            while (cursor.moveToNext()) {
-                if (DATA_SORTTYPE2.equals("SCHEDULE")) {
-                    if (!cursor.getString(1).equals(cursor.getString(2))) {
-                        db.execSQL("UPDATE TODOLIST SET _position = -1 WHERE _id = " + cursor.getInt(0) + ";");
-                    }
-                } else if (DATA_SORTTYPE2.equals("TODO")) {
-                    if (cursor.getString(1).equals(cursor.getString(2))) {
-                        db.execSQL("UPDATE TODOLIST SET _position = -1 WHERE _id = " + cursor.getInt(0) + ";");
-                    }
+    public ArrayList<DataTodo> setPosition(ArrayList<DataTodo> list) {
+        ArrayList<DataTodo> sortedList = new ArrayList<>();
+        int i;
+        if (DATA_SORTbyCATEGORY.equals("") || DATA_SORTbyCATEGORY.equals("DEFAULT")) {
+            for (i = 0; i < list.size(); i++) {
+                sortedList.add(list.get(i));
+            }
+        } else {
+            for (i = 0; i < list.size(); i++) {
+                if (list.get(i).getCategory().equals(DATA_SORTbyCATEGORY)) {
+                    sortedList.add(list.get(i));
                 }
             }
-            cursor.close();
+        }
+        list = sortedList;
+        sortedList = new ArrayList<>();
+        if (DATA_SORTbyTYPE != 0) {
+            for (i = 0; i < list.size(); i++) {
+                if (list.get(i).getType() == DATA_SORTbyTYPE) {
+                    sortedList.add(list.get(i));
+                }
+            }
+            list = sortedList;
+            sortedList = new ArrayList<>();
         }
         if (Manager.notViewPastData) {
-            cursor = dbr.rawQuery("SELECT _id, DATE FROM TODOLIST WHERE _position > -1", null);
-            int i;
-            while (cursor.moveToNext()) {
-                i = Manager.calculateDday(cursor.getString(1));
-                if (i < 0) {
-                    db.execSQL("UPDATE TODOLIST SET _position = -1 WHERE _id = " + cursor.getInt(0) + ";");
+            for (i = 0; i < list.size(); i++) {
+                if (Manager.calculateDday(list.get(i).getDate()) >= 0) {
+                    sortedList.add(list.get(i));
                 }
             }
-            cursor.close();
+            list = sortedList;
         }
-        dbSortManager.sortByDate();
-        if (Manager.isViewSubTitle) {
-            dbSortManager.setSubtitlePosition();
+
+        // 날짜별로 정렬
+        DataTodo pivot;
+        int size = list.size();
+        sortedList = new ArrayList<>();
+        while (size != 0) {
+            pivot = list.get(0);
+            for (i = 1; i < list.size(); i++) {
+                if (pivot.getDday() > list.get(i).getDday()) {
+                    pivot = list.get(i);
+                }
+            }
+            sortedList.add(pivot);
+            list.remove(pivot);
+            size--;
         }
+        return sortedList;
     }
 
-    public void setSemiPosition(int parentId) {
-        db = getWritableDatabase();
-        dbr = getReadableDatabase();
-        db.execSQL("UPDATE SEMITODO SET _position = -1;");
-        dbSortManager = new DBSortManager(this, context, db, dbr);
-        dbSortManager.sortSemiByAch(parentId);
-    }
-
-    public void semiInsert(int parentId, String title, String memo) {
-        if (title.equals("")) {
-            title = context.getString(R.string.empty_data);
-        }
+    public void insertSemi(DataSemi data){
         db = getWritableDatabase();
         db.execSQL(" INSERT INTO SEMITODO VALUES ( " +
                 "null, " +
                 "null, " +
-                parentId + ", " +
-                "'" + title + "', " +
+                data.getParentId() + ", " +
+                "'" + data.getTitle() + "', " +
                 "0," +
                 "100," +
-                "'" + memo + "'," +
-                "1);");
-        setSemiPosition(parentId);
+                "'" + data.getMemo() + "'," +
+                data.getNumber() + ");");
         db.close();
     }
 
-    public void semiUpdate(int id, String title, int ach, int achmax, String memo) {
-        if (title.equals("")) {
-            title = context.getString(R.string.empty_data);
-        }
+    public void updateSemi(DataSemi data){
         db = getWritableDatabase();
         db.execSQL(" UPDATE SEMITODO SET " +
-                "TITLE = '" + title + "', " +
-                "ACH = '" + ach + "'," +
-                "ACHMAX = '" + achmax + "'," +
-                "MEMO = '" + memo + "'" +
-                "WHERE _id = " + id + "; ");
+                "TITLE = '" + data.getTitle() + "', " +
+                "ACH = '" + data.getAch() + "'," +
+                "ACHMAX = '" + data.getAchMax() + "'," +
+                "MEMO = '" + data.getMemo() + "'," +
+                "NUMBER = " + data.getNumber() + " " +
+                "WHERE _id = " + data.getId() + "; ");
     }
 
-    public void semiUpdate(int id, String title, String memo) {
-        if (title.equals("")) {
-            title = context.getString(R.string.empty_data);
-        }
-        db = getWritableDatabase();
-        db.execSQL(" UPDATE SEMITODO SET " +
-                "TITLE = '" + title + "', " +
-                "MEMO = '" + memo + "'" +
-                "WHERE _id = " + id + "; ");
-    }
-
-    public void semiUpdateSimply() {
-        semiUpdate(DATA_semi_id, DATA_semi_TITLE, DATA_semi_ACH, DATA_semi_ACHMAX, DATA_semi_MEMO);
-    }
-
-    public void semiDelete(int id) {
+    public void deleteSemi(int id) {
         db = getWritableDatabase();
         db.execSQL("DELETE FROM SEMITODO WHERE _id = '" + id + "';");
         db.close();
     }
 
-    public void getSemiValue(String where, int equal) {
-        db = getReadableDatabase();
-        cursor = db.rawQuery("SELECT * FROM SEMITODO WHERE " + where + " = '" + equal + "';", null);
-        while (cursor.moveToNext()) {
-            DATA_semi_id = cursor.getInt(0);
-            DATA_semi_position = cursor.getInt(1);
-            DATA_semi_parentId = cursor.getInt(2);
-            DATA_semi_TITLE = cursor.getString(3);
-            DATA_semi_MEMO = cursor.getString(6);
-            try {
-                DATA_semi_ACH = cursor.getInt(4);
-            } catch (Exception e) {
-                DATA_semi_ACH = 0;
-            }
-            try {
-                DATA_semi_ACHMAX = cursor.getInt(5);
-            } catch (Exception e) {
-                DATA_semi_ACHMAX = 0;
-            }
-        }
-        cursor.close();
-    }
-
     public ArrayList<DataSemi> getSemiValueList(int parentId) {
-        setSemiPosition(parentId);
-        ArrayList<DataSemi> list = new ArrayList<>();
-        for (int i = 0; i <= getSemiSize(parentId); i++) {
-            list.add(getSemiValue2("_position", i));
-        }
-        return list;
-    }
-
-    public DataSemi getSemiValue2(String where, int equal) {
         db = getReadableDatabase();
-        DataSemi data = new DataSemi();
-        cursor = db.rawQuery("SELECT * FROM SEMITODO WHERE " + where + " = '" + equal + "';", null);
+        ArrayList<DataSemi> list = new ArrayList<>();
+        DataSemi data;
+        cursor = db.rawQuery("SELECT * FROM SEMITODO WHERE _parentId = " + parentId + ";", null);
         while (cursor.moveToNext()) {
-            data = new DataSemi(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2), cursor.getString(3), cursor.getString(6));
+            data = new DataSemi(cursor.getInt(0),
+                    cursor.getInt(1),
+                    cursor.getInt(2),
+                    cursor.getString(3),
+                    cursor.getString(6),
+                    cursor.getInt(7));
             try {
                 data.setAch(cursor.getInt(4));
             } catch (Exception e) {
@@ -461,42 +366,10 @@ public class DBManager extends SQLiteOpenHelper {
             } catch (Exception e) {
                 data.setAchMax(0);
             }
+            list.add(data);
         }
         cursor.close();
-        return data;
-    }
-
-    public void resetPublicData() {
-        DATA_TITLE = "";
-        DATA_CATEGORY = "";
-        DATA_DATE = "";
-        DATA_CREATEDATE = "";
-        DATA_MEMO = "";
-        DATA_semi_TITLE = "";
-        DATA_semi_MEMO = "";
-    }
-
-    public int getSize() {
-        db = getReadableDatabase();
-        switch (DATA_SORTTYPE) {
-            case ("DEFAULT"):
-                cursor = db.rawQuery("SELECT _id FROM TODOLIST WHERE _position > -1;", null);
-                break;
-            case ("CATEGORY"):
-                cursor = db.rawQuery("SELECT _id FROM TODOLIST WHERE CATEGORY = '" + DATA_SORTTYPEEQUAL + "'AND _position > -1;", null);
-                break;
-        }
-        int result = cursor.getCount();
-        cursor.close();
-        return result;
-    }
-
-    public int getSemiSize(int parentId) {
-        db = getReadableDatabase();
-        cursor = db.rawQuery("SELECT _id FROM SEMITODO WHERE _parentId = " + parentId + " ;", null);
-        int result = cursor.getCount();
-        cursor.close();
-        return result;
+        return list;
     }
 
     public List getSettingList(String type) {
@@ -552,10 +425,7 @@ public class DBManager extends SQLiteOpenHelper {
         db.execSQL(" INSERT INTO SETTING VALUES ( null, 'default', '');");
     }
 
-
     // ALARM
-
-
     public void insertAlarm(int id, String time, String detail) {
         db = getWritableDatabase();
         db.execSQL(" INSERT INTO ALARM VALUES ( " +
@@ -594,10 +464,10 @@ public class DBManager extends SQLiteOpenHelper {
 
     public ArrayList getAlarmValue() {
         db = getReadableDatabase();
-        ArrayList<AlarmData> result = new ArrayList<>();
+        ArrayList<DataAlarm> result = new ArrayList<>();
         cursor = db.rawQuery("SELECT * FROM ALARM;", null);
         while (cursor.moveToNext()) {
-            result.add(new AlarmData(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getInt(3), cursor.getString(4)));
+            result.add(new DataAlarm(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getInt(3), cursor.getString(4)));
         }
         cursor.close();
         return result;
@@ -610,12 +480,16 @@ public class DBManager extends SQLiteOpenHelper {
         return result;
     }
 
-    public ArrayList<AlarmData> getAlarmOnesValue(int id) {
+    public ArrayList<DataAlarm> getAlarmOnesValue(int id) {
         db = getReadableDatabase();
-        ArrayList<AlarmData> result = new ArrayList<>();
+        ArrayList<DataAlarm> result = new ArrayList<>();
         cursor = db.rawQuery("SELECT * FROM ALARM WHERE id = " + id + ";", null);
         while (cursor.moveToNext()) {
-            result.add(new AlarmData(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getInt(3), cursor.getString(4)));
+            result.add(new DataAlarm(cursor.getInt(0),
+                    cursor.getInt(1),
+                    cursor.getString(2),
+                    cursor.getInt(3),
+                    cursor.getString(4)));
         }
         cursor.close();
         return result;

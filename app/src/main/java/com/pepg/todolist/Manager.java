@@ -12,15 +12,11 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
 import android.transition.ChangeBounds;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -29,14 +25,14 @@ import android.widget.TextView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
-import com.pepg.todolist.DataBase.AlarmData;
+import com.pepg.todolist.DataBase.DataAlarm;
 import com.pepg.todolist.DataBase.DBManager;
+import com.pepg.todolist.DataBase.DataSemi;
+import com.pepg.todolist.DataBase.DataTodo;
 import com.pepg.todolist.Fragment.SettingsFragment;
 
 import static android.content.Context.ALARM_SERVICE;
@@ -60,7 +56,7 @@ public class Manager {
     // setting option
     public static boolean isAnimationActive;
     public static boolean isViewSubTitle;
-//    public static boolean isOnFastAdd;
+    //    public static boolean isOnFastAdd;
     public static boolean notViewPastData;
     public static String addTimeType;
 
@@ -110,7 +106,6 @@ public class Manager {
             strings = date.split("\u002D");
             readCal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
         } catch (Exception e) {
-            DBManager.DATA_DDAY = 9999;
             return 9999;
         }
         todayCal.set(todayCal.get(Calendar.YEAR), todayCal.get(Calendar.MONTH), todayCal.get(Calendar.DATE));
@@ -118,7 +113,6 @@ public class Manager {
         ddayTime = readCal.getTimeInMillis() / 86400000;
 
         resultDday = (int) (ddayTime - todayTime);
-        DBManager.DATA_DDAY = resultDday;
         return resultDday;
     }
 
@@ -129,7 +123,6 @@ public class Manager {
             strings = startDate.split("\u002D");
             startCal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
         } catch (Exception e) {
-            DBManager.DATA_DDAY = 9999;
             return false;
         }
         todayCal.set(todayCal.get(Calendar.YEAR), todayCal.get(Calendar.MONTH), todayCal.get(Calendar.DATE));
@@ -171,7 +164,9 @@ public class Manager {
         return (int) value;
     }
 
-    public static int getSuggestAch(String createDate, String goalDate) {
+    public static int getSuggestAch(DataTodo data) {
+        String createDate = data.getCreatedate();
+        String goalDate = data.getDate();
         todayCal = Calendar.getInstance();
         readCal = Calendar.getInstance();
         try {
@@ -203,17 +198,17 @@ public class Manager {
 
     public static void notificationInfo(Context context, Resources res, int id, DBManager dbManager) {
 
-        dbManager.getValue("_id", id);
+        DataTodo data = dbManager.getValue(id);
 
         Intent notificationIntent = new Intent(context, InfoActivity.class);
-        notificationIntent.putExtra("notificationId", DBManager.DATA_id); //전달할 값
+        notificationIntent.putExtra("notificationId", id); //전달할 값
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
-        builder.setContentTitle(DBManager.DATA_CATEGORY + " - " + DBManager.DATA_TITLE)
-                .setContentText(getDdayString(DBManager.DATA_DDAY) + ", " + DBManager.DATA_ACH + "% 완료.")
-                .setTicker("TODO: " + DBManager.DATA_TITLE + " 알림")
+        builder.setContentTitle(data.getCategory() + " - " + data.getTitle())
+                .setContentText(getDdayString(data.getDday()) + ", " + data.getAch() + "% 완료.")
+                .setTicker("TODO: " + data.getTitle() + " 알림")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher_todo))
                 .setContentIntent(contentIntent)
@@ -223,8 +218,8 @@ public class Manager {
 
         NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle(builder);
         style.setSummaryText("자세한 내용 보기 +");
-        style.setBigContentTitle(DBManager.DATA_CATEGORY + " - " + DBManager.DATA_TITLE);
-        style.bigText(calculateDday(DBManager.DATA_DATE) + "일 남았습니다. 현재 " + DBManager.DATA_ACH + "% 완료하셨습니다.");
+        style.setBigContentTitle(data.getCategory() + " - " + data.getTitle());
+        style.bigText(data.getDday() + "일 남았습니다. 현재 " + data.getAch() + "% 완료하셨습니다.");
 
         builder.setStyle(style);
 
@@ -240,7 +235,7 @@ public class Manager {
 
 
     public static void alarmSet(Activity activity, DBManager dbManager) {
-        ArrayList<AlarmData> list = dbManager.getAlarmValue();
+        ArrayList<DataAlarm> list = dbManager.getAlarmValue();
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getCurrentState() == 0) {
                 strings = list.get(i).getDate().split("\u002D");
@@ -256,7 +251,7 @@ public class Manager {
         }
     }
 
-    public static void callSetTitleLayout(Activity activity, DBManager dbManager, int id, final TextView tvTitle) {
+    public static void callSetTitleLayout(Activity activity, final DBManager dbManager, final DataTodo data, final TextView tvTitle) {
         LayoutInflater li = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout updateLayout = (LinearLayout) li.inflate(R.layout.update_edittext1, null);
         final EditText title = (EditText) updateLayout.findViewById(R.id.upitem_et);
@@ -264,19 +259,15 @@ public class Manager {
         AlertDialog dialog;
 
         builder.setTitle("제목을 입력해주세요.");
-        if (id == 0) {
-            title.setText("");
-        } else {
-            dbManager.getValue("_id", id);
-            title.setText(DBManager.DATA_TITLE);
-        }
+        title.setText(data.getTitle());
         builder.setView(updateLayout);
 
         builder.setPositiveButton("저장", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                DBManager.DATA_TITLE = title.getText().toString();
-                tvTitle.setText(DBManager.DATA_TITLE);
+                data.setTitle(title.getText().toString());
+                tvTitle.setText(data.getTitle());
+                dbManager.updateTodo(data);
                 dialog.dismiss();
             }
         });
@@ -305,12 +296,14 @@ public class Manager {
         title.setText("");
         builder.setView(updateLayout);
 
+
         builder.setPositiveButton("저장", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 strings = title.getText().toString().split("\n");
                 for (int i = 0; i < strings.length; i++) {
-                    dbManager.semiInsert(parentId, strings[i], "");
+                    DataSemi data = new DataSemi(0, -1, parentId, strings[i], "", 1);
+                    dbManager.insertSemi(data);
                 }
                 switch (activity.getLocalClassName()) {
                     case ("InfoActivity"):
@@ -335,7 +328,7 @@ public class Manager {
         dialog.show();
     }
 
-    public static void callMemoLayout(Activity activity, final TextView tvMemo){
+    public static void callMemoLayout(Activity activity, final DBManager dbManager, final DataTodo data, final TextView tvMemo) {
         LayoutInflater li = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout updateLayout = (LinearLayout) li.inflate(R.layout.update_edittext2, null);
         final EditText editText = (EditText) updateLayout.findViewById(R.id.upitem2_et);
@@ -349,8 +342,9 @@ public class Manager {
         builder.setPositiveButton("저장", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                DBManager.DATA_MEMO = editText.getText().toString();
-                tvMemo.setText(DBManager.DATA_MEMO);
+                data.setMemo(editText.getText().toString());
+                tvMemo.setText(data.getMemo());
+                dbManager.updateTodo(data);
                 dialog.dismiss();
             }
         });

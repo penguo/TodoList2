@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.pepg.todolist.DataBase.DBManager;
+import com.pepg.todolist.DataBase.DataTodo;
 import com.pepg.todolist.Fragment.Step1Fragment;
 import com.pepg.todolist.Fragment.Step2Fragment;
 import com.pepg.todolist.Fragment.Step3Fragment;
@@ -29,6 +30,7 @@ public class AddguideActivity extends AppCompatActivity implements View.OnClickL
     ImageButton btnReturn, btnSave;
 
     public static int ENABLED_ITEM_SIZE;
+    public static DataTodo DATA_STATIC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,8 @@ public class AddguideActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_addguide);
 
         activity = this;
+
+        DATA_STATIC = new DataTodo();
 
         vp = (ViewPager) findViewById(R.id.aguide_vp);
         nts = (NavigationTabStrip) findViewById(R.id.aguide_nts);
@@ -81,7 +85,7 @@ public class AddguideActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void save() {
-        dbManager.insertSimply();
+        dbManager.insertTodo(DATA_STATIC);
         setResult(RESULT_OK);
         finish();
     }
@@ -99,10 +103,10 @@ public class AddguideActivity extends AppCompatActivity implements View.OnClickL
                 case 1:
                     return new Step2Fragment();
                 case 2:
-                    DBManager.DATA_TITLE = fs1.getEtTitle();
+//                    DBManager.DATA_TITLE = fs1.getEtTitle();
                     return new Step3Fragment();
                 case 3:
-                    DBManager.DATA_TITLE = fs1.getEtTitle();
+//                    DBManager.DATA_TITLE = fs1.getEtTitle();
                     return new Step4Fragment();
                 default:
                     return null;

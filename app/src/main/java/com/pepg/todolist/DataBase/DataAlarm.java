@@ -4,12 +4,12 @@ package com.pepg.todolist.DataBase;
  * Created by pengu on 2017-11-28.
  */
 
-public class AlarmData {
+public class DataAlarm {
 
     int alarmId, id, currentState;
     String date, detail;
 
-    public AlarmData(int alarmId, int id, String date, int currentState, String detail) {
+    public DataAlarm(int alarmId, int id, String date, int currentState, String detail) {
         this.alarmId = alarmId;
         this.id = id;
         this.date = date;

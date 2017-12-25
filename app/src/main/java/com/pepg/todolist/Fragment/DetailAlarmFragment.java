@@ -28,6 +28,8 @@ import android.widget.Toast;
 
 import com.pepg.todolist.Adapter.AlarmRcvAdapter;
 import com.pepg.todolist.Adapter.SemiListRcvAdapter;
+import com.pepg.todolist.DataBase.DataTodo;
+import com.pepg.todolist.InfoActivity;
 import com.pepg.todolist.MainActivity;
 import com.pepg.todolist.Manager;
 import com.pepg.todolist.R;
@@ -46,7 +48,6 @@ import static android.content.Context.ALARM_SERVICE;
 public class DetailAlarmFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     Activity activity;
-    int id;
     DBManager dbManager;
     FloatingActionButton fabAdd;
     RecyclerView rcvAlarm;
@@ -54,6 +55,7 @@ public class DetailAlarmFragment extends Fragment implements SwipeRefreshLayout.
     AlarmRcvAdapter alarmRcvAdapter;
     String result;
     TextView tvAlarmSize;
+    DataTodo data;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,15 +65,12 @@ public class DetailAlarmFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_detail_alarm, container, false);
-        activity = this.getActivity();
-        id = dbManager.DATA_id;
-        Manager.viewState = 3;
 
         dbManager = new DBManager(activity, "todolist2.db", null, MainActivity.DBVERSION);
         fabAdd = (FloatingActionButton) layout.findViewById(R.id.fdalarm_fab);
         rcvAlarm = (RecyclerView) layout.findViewById(R.id.fdalarm_rcv);
         swipe = (SwipeRefreshLayout) layout.findViewById(R.id.fdalarm_swipe);
-        tvAlarmSize = (TextView)layout.findViewById(R.id.fdalarm_tv_alarmsize);
+        tvAlarmSize = (TextView) layout.findViewById(R.id.fdalarm_tv_alarmsize);
 
         return layout;
     }
@@ -80,14 +79,18 @@ public class DetailAlarmFragment extends Fragment implements SwipeRefreshLayout.
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        activity = this.getActivity();
+        data = ((InfoActivity) getActivity()).getData();
+        Manager.viewState = 3;
+
         LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(activity);
         rcvAlarm.setLayoutManager(rcvLayoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(activity, rcvLayoutManager.getOrientation());
         rcvAlarm.addItemDecoration(dividerItemDecoration);
-        alarmRcvAdapter = new AlarmRcvAdapter(dbManager, activity, id);
+        alarmRcvAdapter = new AlarmRcvAdapter(dbManager, activity, data.getId());
         rcvAlarm.setAdapter(alarmRcvAdapter);
 
-        tvAlarmSize.setText(dbManager.getAlarmSize(id)+"");
+        tvAlarmSize.setText(dbManager.getAlarmSize(data.getId()) + "");
 
 
         swipe.setColorSchemeResources(
@@ -158,7 +161,7 @@ public class DetailAlarmFragment extends Fragment implements SwipeRefreshLayout.
             }
             sb.append(minute);
             result = result + sb.toString();
-            dbManager.insertAlarm(id, result, "");
+            dbManager.insertAlarm(data.getId(), result, "");
             Manager.alarmSet(activity, dbManager);
             alarmRcvAdapter.refresh();
         }

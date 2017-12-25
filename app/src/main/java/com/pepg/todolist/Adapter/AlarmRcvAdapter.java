@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.pepg.todolist.DataBase.AlarmData;
+import com.pepg.todolist.DataBase.DataAlarm;
 import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.Manager;
 import com.pepg.todolist.R;
@@ -27,7 +27,7 @@ public class AlarmRcvAdapter extends RecyclerView.Adapter<AlarmRcvAdapter.ViewHo
     private Activity activity;
     DBManager dbManager;
     int id;
-    ArrayList<AlarmData> list;
+    ArrayList<DataAlarm> list;
     String[] strings;
     Calendar cal, calNow;
 
@@ -40,7 +40,7 @@ public class AlarmRcvAdapter extends RecyclerView.Adapter<AlarmRcvAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return dbManager.getAlarmSize(id);
+        return list.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -115,7 +115,7 @@ public class AlarmRcvAdapter extends RecyclerView.Adapter<AlarmRcvAdapter.ViewHo
         dbManager.deleteAlarm(list.get(position).getAlarmId());
         notifyItemRemoved(position);
         list = dbManager.getAlarmOnesValue(id);
-        notifyItemRangeChanged(position, dbManager.getAlarmSize(id));
+        notifyItemRangeChanged(position, list.size());
     }
 
     public void refresh() {

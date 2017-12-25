@@ -8,22 +8,25 @@ import com.pepg.todolist.Manager;
 
 public class DataSemi {
 
-    private int id, position, parentId, ach, achMax;
+    private int id, parentId, ach, achMax, number;
     private String title, memo;
+    private boolean isNew;
 
-    public DataSemi() {
+    public DataSemi(int parentId) {
+        this.id = 0;
+        this.title = "";
+        this.memo = "";
+        this.number = 0;
+        this.isNew = true;
     }
 
-    public DataSemi(int id, int position, int parentId, String title, String memo) {
+    public DataSemi(int id, int position, int parentId, String title, String memo, int number) {
         this.id = id;
-        this.position = position;
         this.parentId = parentId;
         this.title = title;
         this.memo = memo;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
+        this.number = number;
+        this.isNew = false;
     }
 
     public void setMemo(String memo) {
@@ -50,12 +53,12 @@ public class DataSemi {
         this.title = title;
     }
 
-    public String getMemo() {
-        return memo;
+    public void setNumber(int number) {
+        this.number = number;
     }
 
-    public int getPosition() {
-        return position;
+    public String getMemo() {
+        return memo;
     }
 
     public int getAch() {
@@ -76,5 +79,13 @@ public class DataSemi {
 
     public int getParentId() {
         return parentId;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public boolean isNew() {
+        return isNew;
     }
 }

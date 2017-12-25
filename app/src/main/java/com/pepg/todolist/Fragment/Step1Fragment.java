@@ -22,10 +22,11 @@ import android.widget.Toast;
 import com.pepg.todolist.AddguideActivity;
 import com.pepg.todolist.DataBase.DBManager;
 import com.pepg.todolist.MainActivity;
-import com.pepg.todolist.Manager;
 import com.pepg.todolist.R;
 
 import java.util.List;
+
+import static com.pepg.todolist.AddguideActivity.DATA_STATIC;
 
 public class Step1Fragment extends Fragment {
 
@@ -59,7 +60,7 @@ public class Step1Fragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        etTitle.setText(DBManager.DATA_TITLE);
+        etTitle.setText(DATA_STATIC.getTitle());
         etTitle.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         etTitle.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -74,7 +75,7 @@ public class Step1Fragment extends Fragment {
                 return false;
             }
         });
-        tvCategory.setText(DBManager.DATA_CATEGORY);
+        tvCategory.setText(DATA_STATIC.getCategory());
         layoutTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,8 +104,8 @@ public class Step1Fragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (!items[which].toString().equals(getString(R.string.new_category))) {
-                    DBManager.DATA_CATEGORY = items[which].toString();
-                    tvCategory.setText(DBManager.DATA_CATEGORY);
+                    DATA_STATIC.setCategory(items[which].toString());
+                    tvCategory.setText(DATA_STATIC.getCategory());
                 } else {
                     DialogAdd();
                 }
@@ -133,8 +134,8 @@ public class Step1Fragment extends Fragment {
                 } else {
                     Toast.makeText(activity, "이미 존재하는 카테고리입니다. 해당 카테고리로 선택되었습니다.", Toast.LENGTH_SHORT).show();
                 }
-                DBManager.DATA_CATEGORY = selected;
-                tvCategory.setText(DBManager.DATA_CATEGORY);
+                DATA_STATIC.setCategory(selected);
+                tvCategory.setText(DATA_STATIC.getCategory());
                 dialog.dismiss();
             }
         });
@@ -150,9 +151,5 @@ public class Step1Fragment extends Fragment {
         dialog = builder.create(); //builder.show()를 create하여 dialog에 저장하는 방식.
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
-    }
-
-    public String getEtTitle(){
-        return etTitle.getText().toString();
     }
 }

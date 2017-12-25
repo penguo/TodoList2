@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
-import com.pepg.todolist.DataBase.DBSortManager;
 import com.pepg.todolist.DataBase.DataTodo;
 import com.pepg.todolist.InfoActivity;
 import com.pepg.todolist.Manager;
@@ -47,7 +46,7 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return dbManager.getSize();
+        return dataList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -85,29 +84,29 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.layoutSubTitle.setVisibility(View.GONE);
         holder.layoutUpperMargin.setVisibility(View.GONE);
-        if (Manager.isViewSubTitle) {
-            for (int i = 0; i < DBSortManager.subtitlePosition.size(); i++)
-                if (DBSortManager.subtitlePosition.get(i) == position) {
-                    if (position != 0) {
-                        holder.layoutUpperMargin.setVisibility(View.VISIBLE);
-                    }
-                    holder.layoutSubTitle.setVisibility(View.VISIBLE);
-                    switch (i) {
-                        case (0):
-                            holder.tvSubTitle.setText("과거");
-                            break;
-                        case (1):
-                            holder.tvSubTitle.setText("오늘");
-                            break;
-                        case (2):
-                            holder.tvSubTitle.setText("이번 주");
-                            break;
-                        case (3):
-                            holder.tvSubTitle.setText("그 외");
-                            break;
-                    }
-                }
-        }
+//        if (Manager.isViewSubTitle) {
+//            for (int i = 0; i < DBSortManager.subtitlePosition.size(); i++)
+//                if (DBSortManager.subtitlePosition.get(i) == position) {
+//                    if (position != 0) {
+//                        holder.layoutUpperMargin.setVisibility(View.VISIBLE);
+//                    }
+//                    holder.layoutSubTitle.setVisibility(View.VISIBLE);
+//                    switch (i) {
+//                        case (0):
+//                            holder.tvSubTitle.setText("과거");
+//                            break;
+//                        case (1):
+//                            holder.tvSubTitle.setText("오늘");
+//                            break;
+//                        case (2):
+//                            holder.tvSubTitle.setText("이번 주");
+//                            break;
+//                        case (3):
+//                            holder.tvSubTitle.setText("그 외");
+//                            break;
+//                    }
+//                }
+//        }
         if (!dataList.get(position).getTitle().equals(activity.getString(R.string.empty_data))) {
             holder.tvTitle.setText(dataList.get(position).getTitle());
             holder.tvCategory.setText(dataList.get(position).getCategory());
@@ -129,7 +128,7 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
                 holder.tvAch.setText(dataList.get(position).getAch() + "%");
                 holder.pb.setVisibility(View.VISIBLE);
                 holder.pb.setProgress(dataList.get(position).getAch());
-                holder.pb.setSecondaryProgress(Manager.getSuggestAch(dataList.get(position).getCreatedate(), dataList.get(position).getDate()));
+                holder.pb.setSecondaryProgress(Manager.getSuggestAch(dataList.get(position)));
                 if (!Manager.calculateisStart(dataList.get(position).getCreatedate())) { // 할 일 시작 전
                     holder.layoutItem.setAlpha((float) 0.7);
                     holder.tvAch.setText("Wait");
@@ -208,10 +207,10 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     }
 
     private void removeItemView(int position) {
-        dbManager.delete(dataList.get(position).getId());
+        dbManager.deleteTodo(dataList.get(position).getId());
         dataList = dbManager.getValueList();
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, dbManager.getSize()); // 지워진 만큼 다시 채워넣기.
+        notifyItemRangeChanged(position, dataList.size()); // 지워진 만큼 다시 채워넣기.
     }
 
     public void refresh() {

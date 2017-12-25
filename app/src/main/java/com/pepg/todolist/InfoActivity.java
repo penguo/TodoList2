@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.pepg.todolist.DataBase.DBManager;
+import com.pepg.todolist.DataBase.DataTodo;
 import com.pepg.todolist.Fragment.DetailAlarmFragment;
 import com.pepg.todolist.Fragment.DetailBodyFragment;
 import com.pepg.todolist.Fragment.DetailSemiFragment;
@@ -52,6 +53,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     CoordinatorLayout layoutAch;
     boolean cancelEditMode;
     ImageView ivSchedule;
+    DataTodo data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +115,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i) {
                     case (0):
-                        Manager.notificationInfo(activity, getResources(), DBManager.DATA_id, dbManager);
+                        Manager.notificationInfo(activity, getResources(), id, dbManager);
                         break;
                     case (1):
                         dialog = new AlertDialog.Builder(activity);
@@ -122,8 +124,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
                         dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                dbManager.delete(DBManager.DATA_id);
-
+                                dbManager.deleteTodo(data.getId());
                                 supportFinishAfterTransition();
                                 dialog.dismiss();
                             }
@@ -178,15 +179,15 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
                 DialogSelectOption();
                 break;
             case (R.id.head_layout_title_edit):
-                Manager.callSetTitleLayout(activity, dbManager, id, tvTitleEdit);
+                Manager.callSetTitleLayout(activity, dbManager, data, tvTitleEdit);
                 break;
         }
     }
 
     public void resetHeadEdit() {
         if (!cancelEditMode) {
-            dbManager.updateSimply();
-            dbManager.getValue("_id", id);
+            dbManager.updateTodo(data);
+            data = dbManager.getValue(id);
         }
         layoutData.setVisibility(View.VISIBLE);
         layoutDataEditMode.setVisibility(View.GONE);
@@ -194,29 +195,29 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         btnHeadEdit.setImageResource(R.drawable.ic_edit);
         btnHeadEdit.setOnClickListener(null);
         btnHeadEdit.setClickable(false);
-        if (!DBManager.DATA_TITLE.equals(getString(R.string.empty_data))) {
-            tvTitle.setText(DBManager.DATA_TITLE);
-            tvCategory.setText(DBManager.DATA_CATEGORY);
+        if (!data.getTitle().equals(getString(R.string.empty_data))) {
+            tvTitle.setText(data.getTitle());
+            tvCategory.setText(data.getCategory());
             tvCategory.setVisibility(View.VISIBLE);
         } else {
-            tvTitle.setText(DBManager.DATA_CATEGORY);
+            tvTitle.setText(data.getCategory());
             tvCategory.setVisibility(View.GONE);
         }
     }
 
     public void setData() {
         id = getIntent().getIntExtra("_id", -1);
-        dbManager.getValue("_id", id);
-        if (!DBManager.DATA_TITLE.equals(getString(R.string.empty_data))) {
-            tvTitle.setText(DBManager.DATA_TITLE);
-            tvCategory.setText(DBManager.DATA_CATEGORY);
+        data = dbManager.getValue(id);
+        if (!data.getTitle().equals(getString(R.string.empty_data))) {
+            tvTitle.setText(data.getTitle());
+            tvCategory.setText(data.getCategory());
             tvCategory.setVisibility(View.VISIBLE);
         } else {
-            tvTitle.setText(DBManager.DATA_CATEGORY);
+            tvTitle.setText(data.getCategory());
             tvCategory.setVisibility(View.GONE);
         }
-        tvTitleEdit.setText(DBManager.DATA_TITLE);
-        tvCategoryEdit.setText(DBManager.DATA_CATEGORY);
+        tvTitleEdit.setText(data.getTitle());
+        tvCategoryEdit.setText(data.getCategory());
         setDday();
         viewBody();
         Manager.editMode = false;
@@ -225,9 +226,9 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void setDday() {
-        tvDday.setText(Manager.getDdayString(DBManager.DATA_DDAY));
+        tvDday.setText(Manager.getDdayString(data.getDday()));
         try {
-            if (DBManager.DATA_DDAY >= 10 || DBManager.DATA_DDAY <= -10) {
+            if (data.getDday() >= 10 || data.getDday() <= -10) {
                 tvDday.setTextSize(16);
             } else {
                 tvDday.setTextSize(21);
@@ -279,13 +280,13 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void updateAch() {
-        dbManager.getValue("_id", DBManager.DATA_id);
-        pbHead.setProgress(DBManager.DATA_ACH);
-        pbHead.setSecondaryProgress(Manager.getSuggestAch(DBManager.DATA_CREATEDATE, DBManager.DATA_DATE));
+        data = dbManager.getValue(id);
+        pbHead.setProgress(data.getAch());
+        pbHead.setSecondaryProgress(Manager.getSuggestAch(data));
 
-        switch(DBManager.DATA_TYPE){
+        switch(data.getType()){
             case(1):
-                tvAch.setText(DBManager.DATA_ACH + "%");
+                tvAch.setText(data.getAch() + "%");
                 ivSchedule.setVisibility(View.GONE);
                 tvAch.setVisibility(View.VISIBLE);
                 pbHead.setVisibility(View.VISIBLE);
@@ -352,8 +353,9 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (!items[which].toString().equals(getString(R.string.new_category))) {
-                    DBManager.DATA_CATEGORY = items[which].toString();
-                    tvCategoryEdit.setText(DBManager.DATA_CATEGORY);
+                    data.setCategory(items[which].toString());
+                    dbManager.updateTodo(data);
+                    tvCategoryEdit.setText(data.getCategory());
                 } else {
                     DialogAdd();
                 }
@@ -382,8 +384,9 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     Toast.makeText(activity, "이미 존재하는 카테고리입니다. 해당 카테고리로 선택되었습니다.", Toast.LENGTH_SHORT).show();
                 }
-                DBManager.DATA_CATEGORY = selected;
-                tvCategoryEdit.setText(DBManager.DATA_CATEGORY);
+                data.setCategory(selected);
+                dbManager.updateTodo(data);
+                tvCategoryEdit.setText(data.getCategory());
                 dialog.dismiss();
             }
         });
@@ -401,4 +404,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         dialog.show();
     }
 
+    public DataTodo getData(){
+        return data;
+    }
 }

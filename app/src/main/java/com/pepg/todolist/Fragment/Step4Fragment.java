@@ -45,6 +45,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.pepg.todolist.AddguideActivity.DATA_STATIC;
+
 /**
  * author @Fobid
  */
@@ -110,11 +112,11 @@ public class Step4Fragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
         });
 
-        tvMemo.setText(DBManager.DATA_MEMO);
+        tvMemo.setText(DATA_STATIC.getMemo());
         layoutMemo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Manager.callMemoLayout(activity, tvMemo);
+                Manager.callMemoLayout(activity, dbManager, DATA_STATIC, tvMemo);
             }
         });
     }

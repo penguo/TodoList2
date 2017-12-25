@@ -51,7 +51,7 @@ public class AnalysisActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void setData() {
-        dataList = dbManager.getValueListAll();
+        dataList = dbManager.getValueList();
         if (dataList.size() < 20) {
             layoutAlert.setVisibility(View.VISIBLE);
         }

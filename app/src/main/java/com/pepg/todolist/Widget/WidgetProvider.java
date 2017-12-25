@@ -74,7 +74,7 @@ public class WidgetProvider extends AppWidgetProvider {
         svcIntent.setData(Uri.parse(svcIntent.toUri(Intent.URI_INTENT_SCHEME)));
         //setting adapter to listview of the widget
         remoteViews.setRemoteAdapter(appWidgetId, R.id.widget_listview, svcIntent);
-        //setting an empty view in case of no data
+        //setting an empty view in case of no STATIC_DATA
         remoteViews.setEmptyView(R.id.widget_listview, R.id.widget_tv_1);
         return remoteViews;
     }

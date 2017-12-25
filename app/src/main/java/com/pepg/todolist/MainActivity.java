@@ -2,12 +2,9 @@ package com.pepg.todolist;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageInstaller;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethod;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +20,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static int DBVERSION = 5;
-    public static String APPVERSION = "alpha 1.0.1";
+    public static String APPVERSION = "alpha 1.1.0 debug20171225.1244";
 
     Button btnList;
     TextView tvTitle, tvInfo;
@@ -80,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void startApplication() {
         Intent intent;
-        dbManager.DATA_SORTTYPE = "DEFAULT";
+        dbManager.DATA_SORTbyCATEGORY = "DEFAULT";
         if (Session.getCurrentSession().checkAndImplicitOpen()) {
             intent = new Intent(this, KakaoSignupActivity.class);
             startActivity(intent);
