@@ -94,11 +94,6 @@ public class Manager {
         }
     }
 
-    public static String todayDate() {
-        todayCal = Calendar.getInstance();
-        return todayCal.get(Calendar.YEAR) + "-" + (todayCal.get(Calendar.MONTH) + 1) + "-" + todayCal.get(Calendar.DATE);
-    }
-
     public static int calculateDday(String date) {
         todayCal = Calendar.getInstance();
         readCal = Calendar.getInstance();
@@ -114,6 +109,23 @@ public class Manager {
 
         resultDday = (int) (ddayTime - todayTime);
         return resultDday;
+    }
+
+    public static int getIntervalDay(String startDate, String pivotDate) {
+        startCal = Calendar.getInstance();
+        todayCal = Calendar.getInstance();
+        try {
+            strings = startDate.split("\u002D");
+            startCal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
+            strings = pivotDate.split("\u002D");
+            todayCal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
+        } catch (Exception e) {
+            return 9999;
+        }
+        startTime = startCal.getTimeInMillis() / 86400000;
+        todayTime = todayCal.getTimeInMillis() / 86400000;
+
+        return (int) (todayTime - startTime);
     }
 
     public static boolean calculateisStart(String startDate) {
@@ -154,14 +166,60 @@ public class Manager {
         }
     }
 
-    public static int convertPixelsToDp(float px, Context context) {
-        int value = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, context.getResources().getDisplayMetrics());
-        return value;
+    public static ArrayList<Integer> getDateCut(String date) {
+        ArrayList<Integer> list = new ArrayList<>();
+        strings = date.split("\u002D");
+        list.add(Integer.parseInt(strings[0]));
+        list.add(Integer.parseInt(strings[1]));
+        list.add(Integer.parseInt(strings[2]));
+
+        todayCal = Calendar.getInstance();
+        todayCal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
+        switch (todayCal.get(Calendar.DAY_OF_WEEK)) {
+            case (Calendar.SUNDAY):
+                list.add(0);
+                break;
+            case (Calendar.MONDAY):
+                list.add(1);
+                break;
+            case (Calendar.TUESDAY):
+                list.add(2);
+                break;
+            case (Calendar.WEDNESDAY):
+                list.add(3);
+                break;
+            case (Calendar.THURSDAY):
+                list.add(4);
+                break;
+            case (Calendar.FRIDAY):
+                list.add(5);
+                break;
+            case (Calendar.SATURDAY):
+                list.add(6);
+                break;
+        }
+        return list;
     }
 
-    public static int convertDpToPixels(int dp, Context context) {
-        float value = (float) (dp / context.getResources().getDisplayMetrics().density);
-        return (int) value;
+    public static String getDayOfWeek(int i) {
+        switch (i) {
+            case (0):
+                return "일";
+            case (1):
+                return "월";
+            case (2):
+                return "화";
+            case (3):
+                return "수";
+            case (4):
+                return "목";
+            case (5):
+                return "금";
+            case (6):
+                return "토";
+            default:
+                return "null";
+        }
     }
 
     public static int getSuggestAch(DataTodo data) {
@@ -171,9 +229,9 @@ public class Manager {
         readCal = Calendar.getInstance();
         try {
             strings = createDate.split("\u002D");
-            todayCal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]), Integer.parseInt(strings[2]));
+            todayCal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
             strings = goalDate.split("\u002D");
-            readCal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]), Integer.parseInt(strings[2]));
+            readCal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
         } catch (Exception e) {
             return 0;
         }
@@ -302,7 +360,7 @@ public class Manager {
             public void onClick(DialogInterface dialog, int which) {
                 strings = title.getText().toString().split("\n");
                 for (int i = 0; i < strings.length; i++) {
-                    DataSemi data = new DataSemi(0, -1, parentId, strings[i], "", 1);
+                    DataSemi data = new DataSemi(0, -1, parentId, strings[i], "", 1, "");
                     dbManager.insertSemi(data);
                 }
                 switch (activity.getLocalClassName()) {
@@ -310,7 +368,7 @@ public class Manager {
                         ((InfoActivity) activity).refreshRcv();
                         break;
                     default:
-                        semiListRcvAdapter.notifyDataSetChanged();
+                        semiListRcvAdapter.refresh();
                 }
                 dialog.dismiss();
             }

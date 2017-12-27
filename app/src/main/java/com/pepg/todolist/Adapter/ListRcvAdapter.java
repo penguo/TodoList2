@@ -76,7 +76,6 @@ public class ListRcvAdapter extends RecyclerView.Adapter<ListRcvAdapter.ViewHold
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_todo, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        Log.e("onCreateViewHolder", "called");
         return viewHolder;
     }
 

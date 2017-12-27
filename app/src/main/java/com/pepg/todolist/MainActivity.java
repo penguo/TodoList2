@@ -19,8 +19,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static int DBVERSION = 5;
-    public static String APPVERSION = "alpha 1.1.0 debug20171225.1244";
+    public static int DBVERSION = 6;
+    public static String APPVERSION = "alpha 1.1.0 debug20171227";
 
     Button btnList;
     TextView tvTitle, tvInfo;

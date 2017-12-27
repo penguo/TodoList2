@@ -49,7 +49,7 @@ public class Step1Fragment extends Fragment {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_step1, container, false);
         dbManager = new DBManager(this.getContext(), "todolist2.db", null, MainActivity.DBVERSION);
         activity = getActivity();
-        layoutBody = (LinearLayout)layout.findViewById(R.id.fs1_layout);
+        layoutBody = (LinearLayout) layout.findViewById(R.id.fs1_layout);
         layoutTitle = (LinearLayout) layout.findViewById(R.id.fs1_layout_title);
         layoutCategory = (LinearLayout) layout.findViewById(R.id.fs1_layout_category);
         tvCategory = (TextView) layout.findViewById(R.id.fs1_tv_category);
@@ -62,13 +62,10 @@ public class Step1Fragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         etTitle.setText(DATA_STATIC.getTitle());
         etTitle.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-        etTitle.setOnEditorActionListener(new TextView.OnEditorActionListener()
-        {
+        etTitle.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
-            {
-                if(actionId == EditorInfo.IME_ACTION_NEXT)
-                {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     ((AddguideActivity) getActivity()).setData(1);
                     return true;
                 }
@@ -151,5 +148,9 @@ public class Step1Fragment extends Fragment {
         dialog = builder.create(); //builder.show()를 create하여 dialog에 저장하는 방식.
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
+    }
+
+    public String getEtTitle() {
+        return etTitle.getText().toString();
     }
 }

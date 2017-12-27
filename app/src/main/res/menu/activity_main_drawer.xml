@@ -46,12 +46,15 @@
     </item>
 
 
-    <item
-        android:title="Debug"
-        android:visible="false">
+    <item android:title="Debug">
         <menu>
             <item
+                android:id="@+id/nav_todayactivity"
+                android:icon="@drawable/ic_update_black"
+                android:title="TodayActivity" />
+            <item
                 android:id="@+id/nav_clear"
+                android:icon="@drawable/ic_update_black"
                 android:title="데이터베이스 초기화" />
 
         </menu>

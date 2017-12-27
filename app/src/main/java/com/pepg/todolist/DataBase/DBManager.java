@@ -49,7 +49,8 @@ public class DBManager extends SQLiteOpenHelper {
                 " ACH INTEGER DEFAULT 0," +
                 " ACHMAX INTEGER DEFAULT 100," +
                 " MEMO TEXT," +
-                " NUMBER INTEGER DEFAULT 1 );");
+                " NUMBER INTEGER DEFAULT 1," +
+                " DATE TEXT DEFAULT '' );");
         db.execSQL(" CREATE TABLE SETTING ( " +
                 " _id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 " TYPE TEXT, " +
@@ -88,6 +89,17 @@ public class DBManager extends SQLiteOpenHelper {
                     db.endTransaction();
                 }
                 break;
+            case (5):
+                try {
+                    db.beginTransaction();
+                    db.execSQL("ALTER TABLE SEMITODO ADD COLUMN DATE TEXT DEFAULT ''");
+                    db.setTransactionSuccessful();
+                } catch (IllegalStateException e) {
+                    Log.e("dbUpgrade error", e.toString());
+                } finally {
+                    db.endTransaction();
+                }
+                break;
         }
     }
 
@@ -116,9 +128,10 @@ public class DBManager extends SQLiteOpenHelper {
                 data.getType() + ");");
         cursor = dbr.rawQuery("SELECT _id FROM TODOLIST WHERE TITLE = '" + data.getTitle() + "';", null);
         int id = 0;
-        while (cursor.moveToLast()) {
+        while (cursor.moveToNext()) {
             id = cursor.getInt(0);
         }
+        cursor.close();
         setDummyData_Semi(id);
         setDummyData_Alarm(id);
     }
@@ -264,15 +277,22 @@ public class DBManager extends SQLiteOpenHelper {
     public ArrayList<DataTodo> setPosition(ArrayList<DataTodo> list) {
         ArrayList<DataTodo> sortedList = new ArrayList<>();
         int i;
-        if (DATA_SORTbyCATEGORY.equals("") || DATA_SORTbyCATEGORY.equals("DEFAULT")) {
-            for (i = 0; i < list.size(); i++) {
-                sortedList.add(list.get(i));
-            }
-        } else {
-            for (i = 0; i < list.size(); i++) {
-                if (list.get(i).getCategory().equals(DATA_SORTbyCATEGORY)) {
+        try {
+            if (DATA_SORTbyCATEGORY.equals("") || DATA_SORTbyCATEGORY.equals("DEFAULT")) {
+                for (i = 0; i < list.size(); i++) {
                     sortedList.add(list.get(i));
                 }
+            } else {
+                for (i = 0; i < list.size(); i++) {
+                    if (list.get(i).getCategory().equals(DATA_SORTbyCATEGORY)) {
+                        sortedList.add(list.get(i));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            DATA_SORTbyCATEGORY = "DEFAULT";
+            for (i = 0; i < list.size(); i++) {
+                sortedList.add(list.get(i));
             }
         }
         list = sortedList;
@@ -313,7 +333,7 @@ public class DBManager extends SQLiteOpenHelper {
         return sortedList;
     }
 
-    public void insertSemi(DataSemi data){
+    public void insertSemi(DataSemi data) {
         db = getWritableDatabase();
         db.execSQL(" INSERT INTO SEMITODO VALUES ( " +
                 "null, " +
@@ -323,18 +343,20 @@ public class DBManager extends SQLiteOpenHelper {
                 "0," +
                 "100," +
                 "'" + data.getMemo() + "'," +
-                data.getNumber() + ");");
+                data.getNumber() + "," +
+                "'" + data.getDate() + "');");
         db.close();
     }
 
-    public void updateSemi(DataSemi data){
+    public void updateSemi(DataSemi data) {
         db = getWritableDatabase();
         db.execSQL(" UPDATE SEMITODO SET " +
                 "TITLE = '" + data.getTitle() + "', " +
                 "ACH = '" + data.getAch() + "'," +
                 "ACHMAX = '" + data.getAchMax() + "'," +
                 "MEMO = '" + data.getMemo() + "'," +
-                "NUMBER = " + data.getNumber() + " " +
+                "NUMBER = " + data.getNumber() + ", " +
+                "DATE = '" + data.getDate() + "' " +
                 "WHERE _id = " + data.getId() + "; ");
     }
 
@@ -355,7 +377,8 @@ public class DBManager extends SQLiteOpenHelper {
                     cursor.getInt(2),
                     cursor.getString(3),
                     cursor.getString(6),
-                    cursor.getInt(7));
+                    cursor.getInt(7),
+                    cursor.getString(8));
             try {
                 data.setAch(cursor.getInt(4));
             } catch (Exception e) {
@@ -403,14 +426,6 @@ public class DBManager extends SQLiteOpenHelper {
                 "'" + type + "', " +
                 "'" + content + "');");
         db.close();
-    }
-
-    public int getSettingSize(String type) {
-        db = getReadableDatabase();
-        cursor = db.rawQuery("SELECT _id FROM SETTING WHERE TYPE = '" + type + "';", null);
-        int result = cursor.getCount();
-        cursor.close();
-        return result;
     }
 
     // TODO updateSetting, deleteSetting
@@ -494,4 +509,60 @@ public class DBManager extends SQLiteOpenHelper {
         cursor.close();
         return result;
     }
+
+
+    public ArrayList<DataToday> getTodayList(String date, boolean isToday) {
+        db = getReadableDatabase();
+        ArrayList<DataTodo> todoList = getValueList();
+        ArrayList<DataToday> list = new ArrayList<>();
+        ArrayList<DataToday> pastDayList = new ArrayList<>();
+        ArrayList<DataToday> todayList = new ArrayList<>();
+        ArrayList<DataToday> futureDayList = new ArrayList<>();
+        DataSemi dataSemi;
+        for (int i = 0; i < todoList.size(); i++) {
+            cursor = db.rawQuery("SELECT * FROM SEMITODO WHERE _parentId = " + todoList.get(i).getId() + ";", null);
+            while (cursor.moveToNext()) {
+                dataSemi = new DataSemi(cursor.getInt(0),
+                        cursor.getInt(1),
+                        cursor.getInt(2),
+                        cursor.getString(3),
+                        cursor.getString(6),
+                        cursor.getInt(7),
+                        cursor.getString(8));
+                try {
+                    dataSemi.setAch(cursor.getInt(4));
+                } catch (Exception e) {
+                    dataSemi.setAch(0);
+                }
+                try {
+                    dataSemi.setAchMax(cursor.getInt(5));
+                } catch (Exception e) {
+                    dataSemi.setAchMax(0);
+                }
+                switch (Manager.getIntervalDay(date, cursor.getString(8))) {
+                    case (-2):
+                    case (-1):
+                        pastDayList.add(new DataToday(todoList.get(i), dataSemi, 0));
+                        break;
+                    case (0):
+                        todayList.add(new DataToday(todoList.get(i), dataSemi, 1));
+                        break;
+                    case (1):
+                    case (2):
+                        futureDayList.add(new DataToday(todoList.get(i), dataSemi, 2));
+                        break;
+                }
+            }
+            cursor.close();
+        }
+        if (isToday) {
+            list.addAll(pastDayList);
+            list.addAll(todayList);
+            list.addAll(futureDayList);
+        }else{
+            list.addAll(todayList);
+        }
+        return list;
+    }
+
 }

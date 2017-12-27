@@ -265,6 +265,10 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(ListActivity.this, AnalysisActivity.class);
                 startActivityForResult(intent, Manager.RC_LIST_TO_ANALYSIS);
                 break;
+            case(R.id.nav_todayactivity):
+                intent = new Intent(ListActivity.this, TodayActivity.class);
+                startActivity(intent);
+                break;
         }
         return true;
     }

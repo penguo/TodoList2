@@ -62,7 +62,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvMemo;
+        TextView tvTitle, tvMemo, tvDate;
         SmoothCheckBox scb;
         LinearLayout layoutTop;
         boolean isSet;
@@ -72,6 +72,7 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.semi_tv_title);
             tvMemo = (TextView) itemView.findViewById(R.id.semi_tv_memo);
+            tvDate = (TextView) itemView.findViewById(R.id.semi_tv_date);
             scb = (SmoothCheckBox) itemView.findViewById(R.id.semi_scb);
             layoutTop = (LinearLayout) itemView.findViewById(R.id.semi_layout);
             layoutEditMode = (FrameLayout) itemView.findViewById(R.id.semi_editmode);
@@ -88,6 +89,12 @@ public class SemiListRcvAdapter extends RecyclerView.Adapter<SemiListRcvAdapter.
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.isSet = false;
         holder.tvTitle.setText(semiList.get(position).getTitle());
+        if (semiList.get(position).getDate().equals("")) {
+            holder.tvDate.setVisibility(View.GONE);
+        } else {
+            holder.tvDate.setVisibility(View.VISIBLE);
+            holder.tvDate.setText(semiList.get(position).getDate());
+        }
         if (semiList.get(position).getMemo().equals("")) {
             holder.tvMemo.setVisibility(View.GONE);
         } else {

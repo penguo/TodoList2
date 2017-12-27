@@ -32,6 +32,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.pepg.todolist.InfoActivity.DATA_INFO;
+
 public class DetailBodyFragment extends Fragment implements View.OnClickListener {
 
     Activity activity;
@@ -48,7 +50,6 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
     final Handler handler = new Handler();
     String result;
     String[] strings;
-    DataTodo data;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,7 +95,6 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         super.onViewCreated(view, savedInstanceState);
 
         activity = this.getActivity();
-        data = ((InfoActivity) getActivity()).getData();
         dbManager = new DBManager(activity, "todolist2.db", null, MainActivity.DBVERSION);
 
         layoutDate.setOnClickListener(this);
@@ -103,7 +103,6 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         layoutMemo.setOnClickListener(this);
 
         setData();
-        editMode();
     }
 
     public void setData() {
@@ -111,18 +110,18 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
             checkViewState();
         }
         Manager.viewState = 0;
-        tvDate.setText(data.getDate());
-        switch (data.getType()) {
+        tvDate.setText(DATA_INFO.getDate());
+        switch (DATA_INFO.getType()) {
             case (1):
-                tvStartDate.setText(data.getCreatedate());
+                tvStartDate.setText(DATA_INFO.getCreatedate());
                 break;
             case (2):
                 tvStartDate.setVisibility(View.GONE);
                 tvDateMiddle.setVisibility(View.GONE);
                 break;
         }
-        tvMemo.setText(data.getMemo());
-        tvAlarmSize.setText(dbManager.getAlarmSize(data.getId()) + "");
+        tvMemo.setText(DATA_INFO.getMemo());
+        tvAlarmSize.setText(dbManager.getAlarmSize(DATA_INFO.getId()) + "");
         fragmentManager = getFragmentManager();
         detailSemiFragment = new DetailSemiFragment();
         detailAlarmFragment = new DetailAlarmFragment();
@@ -136,7 +135,6 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         if (!Manager.editMode) {
             ivEditMemo.setVisibility(View.GONE);
             tvMemo.setVisibility(View.VISIBLE);
-            dbManager.updateTodo(data);
             ivEditDate.setVisibility(View.GONE);
         } else {
             ivEditMemo.setVisibility(View.VISIBLE);
@@ -147,9 +145,9 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
     }
 
     public void updateAch() {
-        tvAch.setText(data.getAch()+"");
-        pbBody.setProgress(data.getAch());
-        pbBody.setSecondaryProgress(Manager.getSuggestAch(data));
+        tvAch.setText((DATA_INFO.getAch_finish() / 100) + " / " + (DATA_INFO.getAch_max() / 100));
+        pbBody.setProgress(DATA_INFO.getAch());
+        pbBody.setSecondaryProgress(Manager.getSuggestAch(DATA_INFO));
     }
 
     public void checkViewState() {
@@ -237,7 +235,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                 break;
             case (R.id.detail_layout_memo):
                 if (Manager.editMode) {
-                    Manager.callMemoLayout(activity, dbManager, data, tvMemo);
+                    Manager.callMemoLayout(activity, dbManager, DATA_INFO, tvMemo);
                 }
                 break;
         }
@@ -251,7 +249,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 which++;
-                data.setType(which);
+                DATA_INFO.setType(which);
                 DateSelectOption();
             }
         });
@@ -270,13 +268,13 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
 
         dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(CurYearFormat.format(date).toString()), Integer.parseInt(CurMonthFormat.format(date).toString()) - 1, Integer.parseInt(CurDayFormat.format(date).toString()));
 
-        switch (data.getType()) {
+        switch (DATA_INFO.getType()) {
             case (1):
                 if (step == 1) {
                     dpDialog.setTitle("할 일의 시작 날짜를 선택해주세요.");
                 } else if (step == 2) {
                     dpDialog.setTitle("할 일의 종료 날짜를 선택해주세요.");
-                    strings = data.getCreatedate().split("\u002D");
+                    strings = DATA_INFO.getCreatedate().split("\u002D");
                     dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
                     cal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
                     cal.add(Calendar.DATE, 1);
@@ -289,8 +287,8 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                 dpDialog.show();
                 break;
             case (3):
-                data.setCreatedate(activity.getString(R.string.date_forever));
-                data.setDate(activity.getString(R.string.date_forever));
+                DATA_INFO.setCreatedate(activity.getString(R.string.date_forever));
+                DATA_INFO.setDate(activity.getString(R.string.date_forever));
                 refresh();
                 break;
             case (4):
@@ -298,7 +296,7 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                     dpDialog.setTitle("할 일의 시작 날짜를 선택해주세요.");
                 } else if (step == 2) {
                     dpDialog.setTitle("할 일의 종료 날짜를 선택해주세요.");
-                    strings = data.getCreatedate().split("\u002D");
+                    strings = DATA_INFO.getCreatedate().split("\u002D");
                     dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
                     cal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
                     cal.add(Calendar.DATE, 1);
@@ -324,21 +322,21 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
             }
             sb.append(dayOfMonth + "");
             result = sb.toString();
-            switch (data.getType()) {
+            switch (DATA_INFO.getType()) {
                 case (1):
                     if (step == 1) {
-                        data.setCreatedate(result);
+                        DATA_INFO.setCreatedate(result);
                         DateSelectOption();
                     } else if (step == 2) {
-                        data.setDate(result);
-                        dbManager.updateTodo(data);
+                        DATA_INFO.setDate(result);
+                        dbManager.updateTodo(DATA_INFO);
                         refresh();
                     }
                     break;
                 case (2):
-                    data.setCreatedate(result);
-                    data.setDate(result);
-                    dbManager.updateTodo(data);
+                    DATA_INFO.setCreatedate(result);
+                    DATA_INFO.setDate(result);
+                    dbManager.updateTodo(DATA_INFO);
                     refresh();
                     break;
                 case (3):
@@ -346,11 +344,11 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
                     break;
                 case (4):
                     if (step == 1) {
-                        data.setCreatedate(result);
+                        DATA_INFO.setCreatedate(result);
                         DateSelectOption();
                     } else if (step == 2) {
-                        data.setDate(result);
-                        dbManager.updateTodo(data);
+                        DATA_INFO.setDate(result);
+                        dbManager.updateTodo(DATA_INFO);
                         refresh();
                     }
                     break;
@@ -359,7 +357,6 @@ public class DetailBodyFragment extends Fragment implements View.OnClickListener
     };
 
     public void refresh() {
-        data = ((InfoActivity) activity).getData();
         setData();
         ((InfoActivity) activity).updateAch();
         ((InfoActivity) activity).setDday();

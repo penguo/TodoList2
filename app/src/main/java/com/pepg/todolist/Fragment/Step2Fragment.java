@@ -48,11 +48,11 @@ public class Step2Fragment extends Fragment {
 
     DBManager dbManager;
     LinearLayout layoutTodo, layoutSchedule, layoutDate, layoutBucket, layoutConti;
-    TextView tvStartDate, tvDateMiddle, tvDate;
+    TextView tvStartDate, tvDate;
     ImageView ivCheckSchedule, ivCheckTodo, ivCheckBucket, ivCheckConti;
     int step;
     Activity activity;
-    String[] items, strings;
+    String[] strings;
     String result;
 
     public Step2Fragment() {
@@ -80,7 +80,6 @@ public class Step2Fragment extends Fragment {
 
         layoutDate = (LinearLayout) layout.findViewById(R.id.fs2_layout_date);
         tvStartDate = (TextView) layout.findViewById(R.id.fs2_tv_startdate);
-        tvDateMiddle = (TextView) layout.findViewById(R.id.fs2_tv_datemiddle);
         tvDate = (TextView) layout.findViewById(R.id.fs2_tv_date);
 
         return layout;
@@ -136,36 +135,33 @@ public class Step2Fragment extends Fragment {
         ivCheckTodo.setVisibility(View.GONE);
         ivCheckBucket.setVisibility(View.GONE);
         ivCheckConti.setVisibility(View.GONE);
+        layoutDate.setVisibility(View.GONE);
         switch (DATA_STATIC.getType()) {
             case (1): // 할 일
                 layoutDate.setVisibility(View.VISIBLE);
                 ivCheckTodo.setVisibility(View.VISIBLE);
 
                 tvStartDate.setVisibility(View.VISIBLE);
-                tvDateMiddle.setVisibility(View.VISIBLE);
 
-                tvStartDate.setText(DATA_STATIC.getCreatedate());
+                tvStartDate.setText(DATA_STATIC.getCreatedate() + "  ~  ");
                 break;
             case (2): // 일정
                 layoutDate.setVisibility(View.VISIBLE);
                 ivCheckSchedule.setVisibility(View.VISIBLE);
 
                 tvStartDate.setVisibility(View.GONE);
-                tvDateMiddle.setVisibility(View.GONE);
                 break;
             case (3): // 버킷리스트
                 layoutDate.setVisibility(View.VISIBLE);
                 ivCheckBucket.setVisibility(View.VISIBLE);
 
                 tvStartDate.setVisibility(View.GONE);
-                tvDateMiddle.setVisibility(View.GONE);
                 break;
             case (4): // 계속
                 layoutDate.setVisibility(View.VISIBLE);
                 ivCheckConti.setVisibility(View.VISIBLE);
 
                 tvStartDate.setVisibility(View.VISIBLE);
-                tvDateMiddle.setVisibility(View.VISIBLE);
 
                 tvStartDate.setText(DATA_STATIC.getCreatedate());
                 break;
@@ -216,6 +212,18 @@ public class Step2Fragment extends Fragment {
                 ((AddguideActivity) getActivity()).setData(2);
                 break;
             case (4):
+                if (step == 1) {
+                    dpDialog.setTitle("시작 날짜");
+                } else if (step == 2) {
+                    dpDialog.setTitle("종료 날짜");
+
+                    // 종료 날짜의 최소날짜 제한
+                    strings = DATA_STATIC.getCreatedate().split("\u002D");
+                    dpDialog = new DatePickerDialog(activity, listener, Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
+                    cal.set(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]) - 1, Integer.parseInt(strings[2]));
+                    cal.add(Calendar.DATE, 1);
+                    dpDialog.getDatePicker().setMinDate(cal.getTimeInMillis());
+                }
                 dpDialog.show();
                 break;
         }

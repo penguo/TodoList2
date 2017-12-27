@@ -85,6 +85,7 @@ public class AddguideActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void save() {
+        DATA_STATIC.setTitle(fs1.getEtTitle().toString());
         dbManager.insertTodo(DATA_STATIC);
         setResult(RESULT_OK);
         finish();

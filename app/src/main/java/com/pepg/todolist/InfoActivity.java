@@ -52,8 +52,8 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     Activity activity;
     CoordinatorLayout layoutAch;
     boolean cancelEditMode;
-    ImageView ivSchedule;
-    DataTodo data;
+    ImageView ivIcon;
+    public static DataTodo DATA_INFO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +85,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         layoutData = incHead.findViewById(R.id.head_layout_data);
         layoutDataEditMode = incHead.findViewById(R.id.head_layout_data_editmode);
         layoutAch = incHead.findViewById(R.id.head_layout_ach);
-        ivSchedule = incHead.findViewById(R.id.head_iv_schedule);
+        ivIcon = incHead.findViewById(R.id.head_iv_icon);
         layoutCategoryEdit = incHead.findViewById(R.id.head_layout_category_edit);
         layoutTitleEdit = incHead.findViewById(R.id.head_layout_title_edit);
         tvCategoryEdit = incHead.findViewById(R.id.head_tv_category_edit);
@@ -124,7 +124,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
                         dialog.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                dbManager.deleteTodo(data.getId());
+                                dbManager.deleteTodo(DATA_INFO.getId());
                                 supportFinishAfterTransition();
                                 dialog.dismiss();
                             }
@@ -145,9 +145,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-
         setData();
-
     }
 
     @Override
@@ -179,15 +177,15 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
                 DialogSelectOption();
                 break;
             case (R.id.head_layout_title_edit):
-                Manager.callSetTitleLayout(activity, dbManager, data, tvTitleEdit);
+                Manager.callSetTitleLayout(activity, dbManager, DATA_INFO, tvTitleEdit);
                 break;
         }
     }
 
     public void resetHeadEdit() {
         if (!cancelEditMode) {
-            dbManager.updateTodo(data);
-            data = dbManager.getValue(id);
+            dbManager.updateTodo(DATA_INFO);
+            DATA_INFO = dbManager.getValue(id);
         }
         layoutData.setVisibility(View.VISIBLE);
         layoutDataEditMode.setVisibility(View.GONE);
@@ -195,29 +193,29 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         btnHeadEdit.setImageResource(R.drawable.ic_edit);
         btnHeadEdit.setOnClickListener(null);
         btnHeadEdit.setClickable(false);
-        if (!data.getTitle().equals(getString(R.string.empty_data))) {
-            tvTitle.setText(data.getTitle());
-            tvCategory.setText(data.getCategory());
+        if (!DATA_INFO.getTitle().equals(getString(R.string.empty_data))) {
+            tvTitle.setText(DATA_INFO.getTitle());
+            tvCategory.setText(DATA_INFO.getCategory());
             tvCategory.setVisibility(View.VISIBLE);
         } else {
-            tvTitle.setText(data.getCategory());
+            tvTitle.setText(DATA_INFO.getCategory());
             tvCategory.setVisibility(View.GONE);
         }
     }
 
     public void setData() {
         id = getIntent().getIntExtra("_id", -1);
-        data = dbManager.getValue(id);
-        if (!data.getTitle().equals(getString(R.string.empty_data))) {
-            tvTitle.setText(data.getTitle());
-            tvCategory.setText(data.getCategory());
+        DATA_INFO = dbManager.getValue(id);
+        if (!DATA_INFO.getTitle().equals(getString(R.string.empty_data))) {
+            tvTitle.setText(DATA_INFO.getTitle());
+            tvCategory.setText(DATA_INFO.getCategory());
             tvCategory.setVisibility(View.VISIBLE);
         } else {
-            tvTitle.setText(data.getCategory());
+            tvTitle.setText(DATA_INFO.getCategory());
             tvCategory.setVisibility(View.GONE);
         }
-        tvTitleEdit.setText(data.getTitle());
-        tvCategoryEdit.setText(data.getCategory());
+        tvTitleEdit.setText(DATA_INFO.getTitle());
+        tvCategoryEdit.setText(DATA_INFO.getCategory());
         setDday();
         viewBody();
         Manager.editMode = false;
@@ -226,9 +224,9 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void setDday() {
-        tvDday.setText(Manager.getDdayString(data.getDday()));
+        tvDday.setText(Manager.getDdayString(DATA_INFO.getDday()));
         try {
-            if (data.getDday() >= 10 || data.getDday() <= -10) {
+            if (DATA_INFO.getDday() >= 10 || DATA_INFO.getDday() <= -10) {
                 tvDday.setTextSize(16);
             } else {
                 tvDday.setTextSize(21);
@@ -280,22 +278,30 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void updateAch() {
-        data = dbManager.getValue(id);
-        pbHead.setProgress(data.getAch());
-        pbHead.setSecondaryProgress(Manager.getSuggestAch(data));
+        DATA_INFO = dbManager.getValue(id);
+        pbHead.setProgress(DATA_INFO.getAch());
+        pbHead.setSecondaryProgress(Manager.getSuggestAch(DATA_INFO));
 
-        switch(data.getType()){
+        ivIcon.setVisibility(View.GONE);
+        tvAch.setVisibility(View.GONE);
+        pbHead.setVisibility(View.GONE);
+        switch(DATA_INFO.getType()){
             case(1):
-                tvAch.setText(data.getAch() + "%");
-                ivSchedule.setVisibility(View.GONE);
+                tvAch.setText(DATA_INFO.getAch() + "%");
                 tvAch.setVisibility(View.VISIBLE);
                 pbHead.setVisibility(View.VISIBLE);
                 break;
-            case(2):
-                ivSchedule.setVisibility(View.VISIBLE);
-                tvAch.setVisibility(View.GONE);
-                pbHead.setVisibility(View.GONE);
+            case (2):
+                ivIcon.setVisibility(View.VISIBLE);
+                ivIcon.setImageResource(R.drawable.ic_event);
                 break;
+            case (3):
+                ivIcon.setVisibility(View.VISIBLE);
+                ivIcon.setImageResource(R.drawable.ic_label);
+                break;
+            case (4):
+                ivIcon.setVisibility(View.VISIBLE);
+                ivIcon.setImageResource(R.drawable.ic_update);
         }
 
         switch (Manager.viewState) {
@@ -353,9 +359,9 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (!items[which].toString().equals(getString(R.string.new_category))) {
-                    data.setCategory(items[which].toString());
-                    dbManager.updateTodo(data);
-                    tvCategoryEdit.setText(data.getCategory());
+                    DATA_INFO.setCategory(items[which].toString());
+                    dbManager.updateTodo(DATA_INFO);
+                    tvCategoryEdit.setText(DATA_INFO.getCategory());
                 } else {
                     DialogAdd();
                 }
@@ -384,9 +390,9 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     Toast.makeText(activity, "이미 존재하는 카테고리입니다. 해당 카테고리로 선택되었습니다.", Toast.LENGTH_SHORT).show();
                 }
-                data.setCategory(selected);
-                dbManager.updateTodo(data);
-                tvCategoryEdit.setText(data.getCategory());
+                DATA_INFO.setCategory(selected);
+                dbManager.updateTodo(DATA_INFO);
+                tvCategoryEdit.setText(DATA_INFO.getCategory());
                 dialog.dismiss();
             }
         });
@@ -402,9 +408,5 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         dialog = builder.create(); //builder.show()를 create하여 dialog에 저장하는 방식.
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         dialog.show();
-    }
-
-    public DataTodo getData(){
-        return data;
     }
 }

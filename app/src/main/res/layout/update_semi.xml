@@ -44,6 +44,46 @@
             android:alpha="0.7"
             android:background="@null"
             android:padding="0dp"
+            app:srcCompat="@drawable/ic_event_black" />
+
+        <TextView
+            android:id="@+id/semiup_tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/xml_edititem"
+            android:ems="10"
+            android:gravity="center_vertical"
+            android:inputType="text"
+            android:minHeight="36dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="4dp"
+            android:text="DATE"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ImageView
+            style="@style/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="4dp"
+            android:alpha="0.7"
+            android:background="@null"
+            android:padding="0dp"
             app:srcCompat="@drawable/ic_comment" />
 
         <EditText

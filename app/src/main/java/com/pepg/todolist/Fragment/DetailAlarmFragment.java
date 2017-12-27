@@ -1,19 +1,13 @@
 package com.pepg.todolist.Fragment;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,10 +18,8 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.pepg.todolist.Adapter.AlarmRcvAdapter;
-import com.pepg.todolist.Adapter.SemiListRcvAdapter;
 import com.pepg.todolist.DataBase.DataTodo;
 import com.pepg.todolist.InfoActivity;
 import com.pepg.todolist.MainActivity;
@@ -39,7 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import static android.content.Context.ALARM_SERVICE;
+import static com.pepg.todolist.InfoActivity.DATA_INFO;
 
 /**
  * Created by pengu on 2017-11-20.
@@ -55,7 +47,6 @@ public class DetailAlarmFragment extends Fragment implements SwipeRefreshLayout.
     AlarmRcvAdapter alarmRcvAdapter;
     String result;
     TextView tvAlarmSize;
-    DataTodo data;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +57,6 @@ public class DetailAlarmFragment extends Fragment implements SwipeRefreshLayout.
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.fragment_detail_alarm, container, false);
 
-        dbManager = new DBManager(activity, "todolist2.db", null, MainActivity.DBVERSION);
         fabAdd = (FloatingActionButton) layout.findViewById(R.id.fdalarm_fab);
         rcvAlarm = (RecyclerView) layout.findViewById(R.id.fdalarm_rcv);
         swipe = (SwipeRefreshLayout) layout.findViewById(R.id.fdalarm_swipe);
@@ -80,17 +70,17 @@ public class DetailAlarmFragment extends Fragment implements SwipeRefreshLayout.
         super.onViewCreated(view, savedInstanceState);
 
         activity = this.getActivity();
-        data = ((InfoActivity) getActivity()).getData();
         Manager.viewState = 3;
+        dbManager = new DBManager(activity, "todolist2.db", null, MainActivity.DBVERSION);
 
         LinearLayoutManager rcvLayoutManager = new LinearLayoutManager(activity);
         rcvAlarm.setLayoutManager(rcvLayoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(activity, rcvLayoutManager.getOrientation());
         rcvAlarm.addItemDecoration(dividerItemDecoration);
-        alarmRcvAdapter = new AlarmRcvAdapter(dbManager, activity, data.getId());
+        alarmRcvAdapter = new AlarmRcvAdapter(dbManager, activity, DATA_INFO.getId());
         rcvAlarm.setAdapter(alarmRcvAdapter);
 
-        tvAlarmSize.setText(dbManager.getAlarmSize(data.getId()) + "");
+        tvAlarmSize.setText(dbManager.getAlarmSize(DATA_INFO.getId()) + "");
 
 
         swipe.setColorSchemeResources(
@@ -161,7 +151,7 @@ public class DetailAlarmFragment extends Fragment implements SwipeRefreshLayout.
             }
             sb.append(minute);
             result = result + sb.toString();
-            dbManager.insertAlarm(data.getId(), result, "");
+            dbManager.insertAlarm(DATA_INFO.getId(), result, "");
             Manager.alarmSet(activity, dbManager);
             alarmRcvAdapter.refresh();
         }
