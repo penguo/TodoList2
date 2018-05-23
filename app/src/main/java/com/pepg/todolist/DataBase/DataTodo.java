@@ -2,6 +2,9 @@ package com.pepg.todolist.DataBase;
 
 import com.pepg.todolist.Manager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by pengu on 2017-12-01.
  */
@@ -11,7 +14,7 @@ public class DataTodo {
     private int id, ach, dday, ach_finish, ach_max, type;
     private String title, category, date, createdate, memo;
 
-    public DataTodo(){
+    public DataTodo() {
         this.id = 0;
         this.title = "";
         this.category = "";
@@ -118,5 +121,15 @@ public class DataTodo {
 
     public int getType() {
         return type;
+    }
+
+    public ArrayList<String> getCategoryList() {
+        ArrayList<String> list = new ArrayList<>();
+        String[] splitData = category.split("\u0023");
+        for (int i = 0; i < splitData.length; i++) {
+            splitData[i].split(" ");
+            list.add(splitData[0]);
+        }
+        return list;
     }
 }

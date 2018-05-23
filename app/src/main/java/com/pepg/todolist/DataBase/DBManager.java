@@ -559,7 +559,7 @@ public class DBManager extends SQLiteOpenHelper {
             list.addAll(pastDayList);
             list.addAll(todayList);
             list.addAll(futureDayList);
-        }else{
+        } else {
             list.addAll(todayList);
         }
         return list;

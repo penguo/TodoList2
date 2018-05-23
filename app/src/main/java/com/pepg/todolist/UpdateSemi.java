@@ -39,9 +39,9 @@ public class UpdateSemi {
     DataSemi data;
     TextView tvDate;
 
-    public UpdateSemi(SemiListRcvAdapter semiRcvAdapter, Activity activity, DBManager DBManager) {
+    public UpdateSemi(SemiListRcvAdapter semiRcvAdapter, Activity activity, DBManager dbManager) {
         this.semiRcvAdapter = semiRcvAdapter;
-        this.dbManager = DBManager;
+        this.dbManager = dbManager;
         this.activity = activity;
     }
 

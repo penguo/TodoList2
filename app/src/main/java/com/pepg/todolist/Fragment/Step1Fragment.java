@@ -33,8 +33,8 @@ public class Step1Fragment extends Fragment {
     DBManager dbManager;
     Activity activity;
     TextView tvCategory;
-    LinearLayout layoutBody, layoutTitle, layoutCategory;
-    EditText etTitle;
+    LinearLayout layoutBody, layoutTitle, layoutCategory, layoutCategory2;
+    EditText etTitle, etCategory;
 
     public Step1Fragment() {
     }
@@ -52,8 +52,10 @@ public class Step1Fragment extends Fragment {
         layoutBody = (LinearLayout) layout.findViewById(R.id.fs1_layout);
         layoutTitle = (LinearLayout) layout.findViewById(R.id.fs1_layout_title);
         layoutCategory = (LinearLayout) layout.findViewById(R.id.fs1_layout_category);
+        layoutCategory2 = (LinearLayout) layout.findViewById(R.id.fs1_layout_category2);
         tvCategory = (TextView) layout.findViewById(R.id.fs1_tv_category);
         etTitle = (EditText) layout.findViewById(R.id.fs1_et_title);
+        etCategory = (EditText) layout.findViewById(R.id.fs1_et_category2);
         return layout;
     }
 
@@ -85,6 +87,14 @@ public class Step1Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 DialogSelectOption();
+            }
+        });
+        layoutCategory2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                etTitle.requestFocus();
+                InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.showSoftInput(etTitle, 0);
             }
         });
         layoutBody.requestFocus();
